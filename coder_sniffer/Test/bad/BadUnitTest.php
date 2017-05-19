@@ -6,7 +6,7 @@
 /**
  * Unit test class for all bad files.
  */
-class Drupal_BadUnitTest extends CoderSniffUnitTest
+class Backdrop_BadUnitTest extends CoderSniffUnitTest
 {
 
 

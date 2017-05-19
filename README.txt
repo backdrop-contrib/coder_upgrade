@@ -4,8 +4,8 @@ a plug-in extensible hook system so contributed modules can define additional
 review standards.
 
 Built-in support for:
- - Drupal Coding Standards - http://drupal.org/node/318
- - Handle text in a secure fashion - http://drupal.org/node/28984
+ - Backdrop Coding Standards - http://backdrop.org/node/318
+ - Handle text in a secure fashion - http://backdrop.org/node/28984
 
 Coder Sniffer
 -------------

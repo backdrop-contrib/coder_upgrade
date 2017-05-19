@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Commenting_EmptyCatchCommentSniff.
+ * Backdrop_Sniffs_Commenting_EmptyCatchCommentSniff.
  *
  * PHP version 5
  *
@@ -10,7 +10,7 @@
  */
 
 /**
- * Drupal_Sniffs_Commenting_DocCommentAlignmentSniff.
+ * Backdrop_Sniffs_Commenting_DocCommentAlignmentSniff.
  *
  * Tests that the stars in a doc comment align correctly. Largely copied from
  * Squiz_Sniffs_Commenting_DocCommentAlignmentSniff.
@@ -19,7 +19,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Commenting_DocCommentAlignmentSniff implements
+class Backdrop_Sniffs_Commenting_DocCommentAlignmentSniff implements
 PHP_CodeSniffer_Sniff
 {
 

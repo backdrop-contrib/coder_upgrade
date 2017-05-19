@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\coder_review\Tests\CoderReviewTestCase.
+ * Definition of Backdrop\coder_review\Tests\CoderReviewTestCase.
  */
 
 /**
  * Defines the base class for unit testing the Coder_review functionality.
  */
-class CoderReviewTestCase extends DrupalUnitTestCase {
+class CoderReviewTestCase extends BackdropUnitTestCase {
 
   /**
    * Modules to enable.
@@ -99,7 +99,7 @@ class CoderReviewTestCase extends DrupalUnitTestCase {
     // Review the coder_review_test module.
     $coder_args = array(
       '#severity' => $severity,
-      '#filename' => drupal_get_path('module', 'coder_review_test') . '/coder_review_test.module',
+      '#filename' => backdrop_get_path('module', 'coder_review_test') . '/coder_review_test.module',
       '#php_extensions' => $ext,
       '#include_extensions' => _coder_review_get_reviews_extensions($ext, $reviews),
     );

@@ -43,7 +43,7 @@ function _batch_progress_page_nojs() {
 }
 
 --INPUT--
-function drupal_page_cache_header($cache) {
+function backdrop_page_cache_header($cache) {
   if ($if_modified_since && $if_none_match
       && $if_none_match == $etag // etag must match
       && $if_modified_since == $last_modified) {  // if-modified-since must match
@@ -52,7 +52,7 @@ function drupal_page_cache_header($cache) {
 }
 
 --EXPECT--
-function drupal_page_cache_header($cache) {
+function backdrop_page_cache_header($cache) {
   if ($if_modified_since && $if_none_match
     // etag must match
     && $if_none_match == $etag
@@ -93,7 +93,7 @@ function parse_size($size) {
 }
 
 --INPUT--
-function drupal_to_js($var) {
+function backdrop_to_js($var) {
   switch ($foo) {
     case 'boolean':
       return $var ? 'true' : 'false'; // Lowercase necessary!
@@ -101,7 +101,7 @@ function drupal_to_js($var) {
 }
 
 --EXPECT--
-function drupal_to_js($var) {
+function backdrop_to_js($var) {
   switch ($foo) {
     case 'boolean':
       // Lowercase necessary!

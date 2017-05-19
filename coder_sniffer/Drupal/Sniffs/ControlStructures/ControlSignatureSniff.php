@@ -29,7 +29,7 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === fal
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_ControlStructures_ControlSignatureSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
+class Backdrop_Sniffs_ControlStructures_ControlSignatureSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
 {
 
 
@@ -59,7 +59,7 @@ class Drupal_Sniffs_ControlStructures_ControlSignatureSniff extends PHP_CodeSnif
                 'foreach (...) {EOL',
                 // The EOL preceding the else/elseif keywords is not detected
                 // correctly, so we have
-                // Drupal_Sniffs_ControlStructures_ElseNewlineSniff to
+                // Backdrop_Sniffs_ControlStructures_ElseNewlineSniff to
                 // cover that.
                 'elseif (...) {EOL',
                 'else {EOL',

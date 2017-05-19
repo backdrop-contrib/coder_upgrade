@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_NamingConventions_ValidGlobalSniff.
+ * Backdrop_Sniffs_NamingConventions_ValidGlobalSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_NamingConventions_ValidGlobalSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_NamingConventions_ValidGlobalSniff implements PHP_CodeSniffer_Sniff
 {
 
     public $coreGlobals = array(
@@ -35,8 +35,8 @@ class Drupal_Sniffs_NamingConventions_ValidGlobalSniff implements PHP_CodeSniffe
                            '$db_prefix',
                            '$db_type',
                            '$db_url',
-                           '$drupal_hash_salt',
-                           '$drupal_test_info',
+                           '$backdrop_hash_salt',
+                           '$backdrop_test_info',
                            '$element',
                            '$forum_topic_list_header',
                            '$image',

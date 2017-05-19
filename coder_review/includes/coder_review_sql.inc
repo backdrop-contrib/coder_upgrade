@@ -37,9 +37,9 @@ function coder_review_sql_reviews() {
     '#warning' => array(
       '#text' => 'Use !db_query_range() instead of the SQL LIMIT clause',
       '#args' => array(
-        '!db_query_range' => _drupalapi('db_query_range'),
+        '!db_query_range' => _backdropapi('db_query_range'),
       ),
-      '#link' => _drupalnode(1395),
+      '#link' => _backdropnode(1395),
     ),
     '#never' => '[\s=\(](t|st|dt)\s*\(',
   );
@@ -63,13 +63,13 @@ function coder_review_sql_reviews() {
     '#value' => 'db_query\s*\(\s*[\'"]select\s+count\s*\(\s*\*\s*\)\s+from\s+',
     '#warning' => array(
       '#text' => 'You may not want to use SELECT COUNT(*), if all you want to do is check for the existance of any rows, rather than the actual number of rows.',
-      '#link' => _drupalnode(224333, 'select_count'),
+      '#link' => _backdropnode(224333, 'select_count'),
     ),
     '#severity' => 'minor',
   );
 
   $review = array(
-    '#title' => 'Drupal SQL Standards',
+    '#title' => 'Backdrop SQL Standards',
     '#rules' => $rules,
     '#description' => 'Checks for SQL strings inside db_query, since the change to DBTNG, this is less useful.',
     '#version' => 2,

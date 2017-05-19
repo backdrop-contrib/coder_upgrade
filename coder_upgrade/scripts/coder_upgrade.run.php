@@ -26,7 +26,7 @@
  * @see coder_upgrade_start()
  *
  * To execute this script, save the following shell script to a file and execute
- * the shell script from the root directory of your Drupal installation. If you
+ * the shell script from the root directory of your Backdrop installation. If you
  * have changed the default coder_upgrade output directory name, then modify
  * this script accordingly.
  *
@@ -42,13 +42,13 @@
  * php $SCRIPT -- file=$RUNTIME > $OUTPUT 2>&1
  *
  * Alternatively, replace the bracketed items in the following command and
- * execute it from the root directory of your Drupal installation.
+ * execute it from the root directory of your Backdrop installation.
  *
  * php sites/[modules_directory]/modules/coder/coder_upgrade/scripts/coder_upgrade.run.php \
  *  -- file=sites/[files_directory]/files/coder_upgrade/runtime.txt \
  *  > sites/[files_directory]/files/coder_upgrade/coder_upgrade.run.txt 2>&1
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 if (!script_is_cli()) {
@@ -62,9 +62,9 @@ $usage = array();
 save_memory_usage('start', $usage);
 
 /**
- * Root directory of Drupal installation.
+ * Root directory of Backdrop installation.
  */
-define('DRUPAL_ROOT', getcwd());
+define('BACKDROP_ROOT', getcwd());
 
 ini_set('display_errors', 1);
 ini_set('memory_limit', '128M');
@@ -109,13 +109,13 @@ $files = array(
   'includes/utility.inc',
 );
 foreach ($files as $file) {
-  require_once DRUPAL_ROOT . '/' . $path . "/$file";
+  require_once BACKDROP_ROOT . '/' . $path . "/$file";
 }
 
 coder_upgrade_path_clear('memory');
 print_memory_usage($usage);
 
-// $trace_base = DRUPAL_ROOT . '/' . $_coder_upgrade_files_base . '/coder_upgrade/coder_upgrade_';
+// $trace_base = BACKDROP_ROOT . '/' . $_coder_upgrade_files_base . '/coder_upgrade/coder_upgrade_';
 // $trace_file = $trace_base . '1.trace';
 // xdebug_start_trace($trace_file);
 coder_upgrade_memory_print('load coder_upgrade bootstrap code');
@@ -220,7 +220,7 @@ function error_handler($code, $message, $file, $line) {
 /**
  * Returns boolean indicating whether script is being run from the command line.
  *
- * @see drupal_is_cli()
+ * @see backdrop_is_cli()
  */
 function script_is_cli() {
   return (!isset($_SERVER['SERVER_SOFTWARE']) && (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));

@@ -8,7 +8,7 @@
 require_once dirname(__FILE__) . '/coder_review_test_case.tinc';
 
 /**
- * Class to test for the style of the required Drupal coding standards.
+ * Class to test for the style of the required Backdrop coding standards.
  */
 class CoderReviewStyleTest extends CoderReviewTestCase {
 

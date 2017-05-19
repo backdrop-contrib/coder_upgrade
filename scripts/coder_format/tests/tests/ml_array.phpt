@@ -77,13 +77,13 @@ $deep = array(
 );
 
 --INPUT--
-drupal_add_link(array('rel' => 'alternate',
+backdrop_add_link(array('rel' => 'alternate',
                       'type' => 'application/rss+xml',
                       'title' => $title,
                       'href' => $url));
 
 --EXPECT--
-drupal_add_link(array('rel' => 'alternate',
+backdrop_add_link(array('rel' => 'alternate',
     'type' => 'application/rss+xml',
     'title' => $title,
     'href' => $url,

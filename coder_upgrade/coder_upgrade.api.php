@@ -3,7 +3,7 @@
  * @file
  * Documents hooks provided by this module.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**

@@ -18,8 +18,8 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The $text argument to !l() should be enclosed within !t() so that it is translatable.',
       '#args' => array(
-        '!l' => _drupalapi('l'),
-        '!t' => _drupalapi('t'),
+        '!l' => _backdropapi('l'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -30,8 +30,8 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The $text argument to !l() should be enclosed within !st() so that it is translatable from within the install.',
       '#args' => array(
-        '!l' => _drupalapi('l'),
-        '!st' => _drupalapi('st'),
+        '!l' => _backdropapi('l'),
+        '!st' => _backdropapi('st'),
       ),
     ),
     '#filename' => array('install'),
@@ -43,9 +43,9 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'Use !st() instead of !t() in !hook_install()',
       '#args' => array(
-        '!st' => _drupalapi('st'),
-        '!t' => _drupalapi('t'),
-        '!hook_install' => _drupalapi('hook_install'),
+        '!st' => _backdropapi('st'),
+        '!t' => _backdropapi('t'),
+        '!hook_install' => _backdropapi('hook_install'),
       ),
     ),
     '#filename' => array('install'),
@@ -54,7 +54,7 @@ function coder_review_i18n_reviews() {
     '#type' => 'regex',
     '#value' => '[\s\(]alert\s*\(\s*[\'"]',
     '#filename' => array('js'),
-    '#warning' => 'Javascript strings should be passed through Drupal.t().',
+    '#warning' => 'Javascript strings should be passed through Backdrop.t().',
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -62,8 +62,8 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The FAPI #title should be enclosed within !t() so that it is translatable.',
       '#args' => array(
-        '!l' => _drupalapi('l'),
-        '!t' => _drupalapi('t'),
+        '!l' => _backdropapi('l'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -73,8 +73,8 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The $message argument to !form_error() should be enclosed within !t() so that it is translatable.',
       '#args' => array(
-        '!form_error' => _drupalapi('form_error'),
-        '!t' => _drupalapi('t'),
+        '!form_error' => _backdropapi('form_error'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -84,7 +84,7 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => "The 'title' option should be enclosed within !t() so that it is translatable.",
       '#args' => array(
-        '!t' => _drupalapi('t'),
+        '!t' => _backdropapi('t'),
       ),
     ),
     '#source' => 'allphp',
@@ -92,23 +92,23 @@ function coder_review_i18n_reviews() {
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_set_title\s*\(\s*[\'"]',
+    '#value' => '[\s\(]backdrop_set_title\s*\(\s*[\'"]',
     '#warning' => array(
-      '#text' => 'The $title argument to !drupal_set_title() should be enclosed within !t() so that it is translatable.',
+      '#text' => 'The $title argument to !backdrop_set_title() should be enclosed within !t() so that it is translatable.',
       '#args' => array(
-        '!drupal_set_title' => _drupalapi('drupal_set_title'),
-        '!t' => _drupalapi('t'),
+        '!backdrop_set_title' => _backdropapi('backdrop_set_title'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_set_message\s*\(\s*[\'"]',
+    '#value' => '[\s\(]backdrop_set_message\s*\(\s*[\'"]',
     '#warning' => array(
-      '#text' => 'The $message argument to !drupal_set_message() should be enclosed within !t() so that it is translatable.',
+      '#text' => 'The $message argument to !backdrop_set_message() should be enclosed within !t() so that it is translatable.',
       '#args' => array(
-        '!drupal_set_message' => _drupalapi('drupal_set_message'),
-        '!t' => _drupalapi('t'),
+        '!backdrop_set_message' => _backdropapi('backdrop_set_message'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -118,8 +118,8 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The $message argument to !watchdog() should NOT be enclosed within !t(), so that it can be properly translated at display time.',
       '#args' => array(
-        '!watchdog' => _drupalapi('watchdog'),
-        '!t' => _drupalapi('t'),
+        '!watchdog' => _backdropapi('watchdog'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -132,7 +132,7 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'Menu item titles and descriptions should NOT be enclosed within !t().',
       '#args' => array(
-        '!t' => _drupalapi('t'),
+        '!t' => _backdropapi('t'),
       ),
     ),
   );
@@ -144,9 +144,9 @@ function coder_review_i18n_reviews() {
     '#warning' => array(
       '#text' => 'The $string argument to !t() should not begin or end with a space.',
       '#args' => array(
-            '!t' => _drupalapi('t'),
+            '!t' => _backdropapi('t'),
       ),
-      '#link' => _drupalnode(304150),
+      '#link' => _backdropnode(304150),
     ),
   );
 

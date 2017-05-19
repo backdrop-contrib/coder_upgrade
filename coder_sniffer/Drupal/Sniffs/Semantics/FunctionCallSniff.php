@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semantics_FunctionCallSniff.
+ * Backdrop_Sniffs_Semantics_FunctionCallSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Semantics_FunctionCallSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Semantics_FunctionCallSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**
@@ -232,7 +232,7 @@ class Drupal_Sniffs_Semantics_FunctionCallSniff implements PHP_CodeSniffer_Sniff
     /**
      * Registers a listener object so that it will be called during processing.
      *
-     * @param Drupal_Sniffs_Semantics_FunctionCall $listener
+     * @param Backdrop_Sniffs_Semantics_FunctionCall $listener
      *   The listener object that should be notified.
      *
      * @return void

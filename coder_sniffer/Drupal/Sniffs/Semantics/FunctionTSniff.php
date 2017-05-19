@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semantics_FunctionTSniff
+ * Backdrop_Sniffs_Semantics_FunctionTSniff
  *
  * PHP version 5
  *
@@ -17,7 +17,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Semantics_FunctionTSniff extends Drupal_Sniffs_Semantics_FunctionCall
+class Backdrop_Sniffs_Semantics_FunctionTSniff extends Backdrop_Sniffs_Semantics_FunctionCall
 {
 
 
@@ -44,7 +44,7 @@ class Drupal_Sniffs_Semantics_FunctionTSniff extends Drupal_Sniffs_Semantics_Fun
      *   The position of the opening parenthesis in the stack.
      * @param int $closeBracket
      *   The position of the closing parenthesis in the stack.
-     * @param Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+     * @param Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
      *   Can be used to retreive the function's arguments with the getArgument()
      *   method.
      *
@@ -55,7 +55,7 @@ class Drupal_Sniffs_Semantics_FunctionTSniff extends Drupal_Sniffs_Semantics_Fun
         $stackPtr,
         $openBracket,
         $closeBracket,
-        Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+        Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
     ) {
         $tokens   = $phpcsFile->getTokens();
         $argument = $sniff->getArgument(1);

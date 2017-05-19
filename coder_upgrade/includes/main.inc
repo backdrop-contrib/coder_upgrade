@@ -4,10 +4,10 @@
  * Manages application of conversion routines, logging, and patch file creation.
  *
  * The functions in these conversion routine files correspond to the topics in
- * the category roadmap at http://drupal.org/node/394070 that are marked with
+ * the category roadmap at http://backdrop.org/node/394070 that are marked with
  * a green check mark in the Upgrade column.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -105,11 +105,11 @@ function coder_upgrade_load_code(&$upgrades) {
   foreach ($upgrades as $name => $upgrade) {
     $_coder_upgrade_upgrade_modules[] = $upgrade['module'];
     if (isset($upgrade['path']) && !empty($upgrade['path'])) {
-      // This is being run as a separate process outside of Drupal.
-      $path = DRUPAL_ROOT . '/' . $upgrade['path'];
+      // This is being run as a separate process outside of Backdrop.
+      $path = BACKDROP_ROOT . '/' . $upgrade['path'];
     }
     else {
-      $path = DRUPAL_ROOT . '/' . drupal_get_path('module', $upgrade['module']);
+      $path = BACKDROP_ROOT . '/' . backdrop_get_path('module', $upgrade['module']);
     }
     if (isset($upgrade['files']) && !empty($upgrade['files'])) {
       foreach ($upgrade['files'] as $file) {
@@ -153,7 +153,7 @@ function coder_upgrade_convert_begin($item) {
   coder_upgrade_log_print('Pre-processing the directory => ' . $dirname);
   coder_upgrade_log_print("*************************");
   coder_upgrade_log_print("Calling hook_upgrade_begin_alter");
-  drupal_alter('upgrade_begin', $item);
+  backdrop_alter('upgrade_begin', $item);
   coder_upgrade_log_print("Completed hook_upgrade_begin_alter");
 }
 
@@ -169,7 +169,7 @@ function coder_upgrade_convert_end($dirname) {
   coder_upgrade_log_print('Post-processing the directory => ' . $dirname);
   coder_upgrade_log_print("*************************");
   coder_upgrade_log_print("Calling hook_upgrade_end_alter");
-  drupal_alter('upgrade_end', $dirname);
+  backdrop_alter('upgrade_end', $dirname);
   coder_upgrade_log_print("Completed hook_upgrade_end_alter");
 }
 
@@ -310,19 +310,19 @@ function coder_upgrade_apply_regex($filename, &$new) {
   if ($is_info_file) {
     // Apply regular expression conversion routines for info file.
     coder_upgrade_log_print("Calling hook_upgrade_regex_info_alter");
-    drupal_alter('upgrade_regex_info', $new);
+    backdrop_alter('upgrade_regex_info', $new);
     coder_upgrade_log_print("Completed hook_upgrade_regex_info_alter");
     return;
   }
   if ($is_install_file) {
     // Apply regular expression conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_regex_install_alter");
-    drupal_alter('upgrade_regex_install', $new);
+    backdrop_alter('upgrade_regex_install', $new);
     coder_upgrade_log_print("Completed hook_upgrade_regex_install_alter");
   }
   // Apply regular expression conversion routines.
   coder_upgrade_log_print("Calling hook_upgrade_regex_alter");
-  drupal_alter('upgrade_regex', $new);
+  backdrop_alter('upgrade_regex', $new);
   coder_upgrade_log_print("Completed hook_upgrade_regex_alter");
 }
 
@@ -378,14 +378,14 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
   // Apply parser conversion routines for the file.
   coder_upgrade_log_print("Calling hook_upgrade_file_alter");
-  drupal_alter('upgrade_file', $reader);
+  backdrop_alter('upgrade_file', $reader);
   coder_upgrade_log_print("Completed hook_upgrade_file_alter");
   coder_upgrade_memory_print('apply file conversions');
 
   if ($is_install_file) {
     // Apply parser conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_parser_install_alter");
-    drupal_alter('upgrade_parser_install', $reader);
+    backdrop_alter('upgrade_parser_install', $reader);
     coder_upgrade_log_print("Completed hook_upgrade_parser_install_alter");
     coder_upgrade_memory_print('apply install file conversions');
   }
@@ -423,7 +423,7 @@ function coder_upgrade_convert_function_calls(&$reader) {
     if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // If name is an object, then it is a variable expression that is not
       // 'alterable' in the traditional sense.
-      drupal_alter('upgrade_call_' . $item->name['value'], $node, $reader);
+      backdrop_alter('upgrade_call_' . $item->name['value'], $node, $reader);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
     }
@@ -438,7 +438,7 @@ function coder_upgrade_convert_function_calls(&$reader) {
     if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // Set name because only variables may be passed by reference.
       $name = $item->name['value'];
-      drupal_alter('upgrade_call', $node, $reader, $name);
+      backdrop_alter('upgrade_call', $node, $reader, $name);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
     }
@@ -469,7 +469,7 @@ function coder_upgrade_convert_functions(&$reader) {
 
     // Convert theme_xxx function calls.
 //    if (strpos($name, 'theme_') === 0) {
-//      drupal_alter('upgrade_theme', $node, $reader);
+//      backdrop_alter('upgrade_theme', $node, $reader);
 //      continue;
 //    }
 
@@ -504,7 +504,7 @@ function coder_upgrade_convert_functions(&$reader) {
 
     // TODO The alter hooks can get the $reader from PGPReader::getInstance();
     // We could do the same in this function.
-    drupal_alter('upgrade_hook_' . $hook, $node, $reader);
+    backdrop_alter('upgrade_hook_' . $hook, $node, $reader);
 
     if (!isset($item) || !is_object($item) || !($item instanceof PGPClass) || $item->type != T_FUNCTION) {
       continue;
@@ -513,7 +513,7 @@ function coder_upgrade_convert_functions(&$reader) {
       clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
       continue;
     }
-    drupal_alter('upgrade_hook', $node, $reader, $hook);
+    backdrop_alter('upgrade_hook', $node, $reader, $hook);
   }
 }
 

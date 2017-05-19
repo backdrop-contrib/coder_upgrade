@@ -6,18 +6,18 @@
  * These routines use the grammar parser.
  *
  * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://drupal.org/node/394070 that are marked with a
+ * category roadmap at http://backdrop.org/node/394070 that are marked with a
  * green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
  * The upgrades to these functions are documented at the following urls.
  *
  * Module Info / Install
- * http://drupal.org/node/224333#afile
- * http://drupal.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
+ * http://backdrop.org/node/224333#afile
+ * http://backdrop.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
  */
 
 /**
@@ -54,7 +54,7 @@ function coder_upgrade_convert_install_file_comment(&$reader) {
   }
 
   /*
-   * A standards-compliant Drupal php file would begin with:
+   * A standards-compliant Backdrop php file would begin with:
    * <?php
    * // $\Id: .. username Exp $ (slash added to prevent CVS from changing this line)
    *

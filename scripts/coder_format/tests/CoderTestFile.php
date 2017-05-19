@@ -147,7 +147,7 @@ class CoderTestFile extends SimpleExpectation {
    * Renders the test with an HTML diff table.
    */
   function render() {
-    drupal_add_css(drupal_get_path('module', 'coder') . '/scripts/coder_format/tests/coder-diff.css', 'module', 'all', FALSE);
+    backdrop_add_css(backdrop_get_path('module', 'coder') . '/scripts/coder_format/tests/coder-diff.css', 'module', 'all', FALSE);
 
     foreach ($this->input as $unit => $content) {
       // Do not output passed units.

@@ -13,13 +13,13 @@
  * Checks that else/elseif/catch statements start on a new line.
  *
  * Unfortunately we need this sniff because
- * Drupal_Sniffs_ControlStructures_ControlSignatureSniff does not detect this.
+ * Backdrop_Sniffs_ControlStructures_ControlSignatureSniff does not detect this.
  *
  * @category PHP
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_ControlStructures_ElseCatchNewlineSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_ControlStructures_ElseCatchNewlineSniff implements PHP_CodeSniffer_Sniff
 {
 
 

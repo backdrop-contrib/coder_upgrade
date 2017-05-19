@@ -23,10 +23,10 @@
  * @example
  *   php coder_format.php modules/node/node.module
  *   php coder_format.php index.php modules/node/node.module
- *   php coder_format.php /home/drupal
- *   php coder_format.php /home/drupal/includes /home/drupal/modules
+ *   php coder_format.php /home/backdrop
+ *   php coder_format.php /home/backdrop/includes /home/backdrop/modules
  *   php coder_format.php --undo modules/node/node.module
- *   php coder_format.php --undo /home/drupal
+ *   php coder_format.php --undo /home/backdrop
  *
  * Windows users: Ensure to encapsulate filename arguments with double quotes.
  */
@@ -70,8 +70,8 @@ if (!empty($_SERVER['argv'])) {
 /**
  * @defgroup coder_format_file_functions
  * @{
- * These functions are copied from Drupal's file.inc. Almost all function calls
- * to other Drupal functions have been removed since they would always return
+ * These functions are copied from Backdrop's file.inc. Almost all function calls
+ * to other Backdrop functions have been removed since they would always return
  * FALSE.
  */
 
@@ -100,7 +100,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   if (!is_dir($directory)) {
     // coder_format does not alter the filesystem. 23/01/2008 sun
     if (!file_exists($directory)) {
-      drupal_set_message(t('The directory %directory does not exist.', array('%directory' => $directory)));
+      backdrop_set_message(t('The directory %directory does not exist.', array('%directory' => $directory)));
       return FALSE;
     }
   }
@@ -108,11 +108,11 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
     // coder_format does not alter the filesystem. 23/01/2008 sun
-    drupal_set_message(t('The directory %directory is not writable', array('%directory' => $directory)));
+    backdrop_set_message(t('The directory %directory is not writable', array('%directory' => $directory)));
     return FALSE;
   }
 
-  // coder_format is applied outside of Drupal in most cases. 23/01/2008 sun
+  // coder_format is applied outside of Backdrop in most cases. 23/01/2008 sun
 
   return TRUE;
 }
@@ -122,7 +122,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
  *
  * @param $path A string containing a file path. This will be set to the
  *   directory's path.
- * @return If the directory is not in a Drupal writable directory, FALSE is
+ * @return If the directory is not in a Backdrop writable directory, FALSE is
  *   returned. Otherwise, the base name of the path is returned.
  */
 function file_check_path(&$path) {
@@ -151,7 +151,7 @@ function file_check_path(&$path) {
  *   This parameter will contain the resulting destination filename in case of
  *   success.
  * @param $dest A string containing the directory $source should be copied to.
- *   If this value is omitted, Drupal's 'files' directory will be used.
+ *   If this value is omitted, Backdrop's 'files' directory will be used.
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
@@ -159,7 +159,7 @@ function file_check_path(&$path) {
  * @return True for success, FALSE for failure.
  */
 function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
-  // $dest is almost always outside of Drupal. 23/01/2008 sun
+  // $dest is almost always outside of Backdrop. 23/01/2008 sun
   // $dest = file_create_path($dest);
 
   $directory = $dest;
@@ -168,7 +168,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // Make sure we at least have a valid directory.
   if ($basename === FALSE) {
     $source = is_object($source) ? $source->filepath : $source;
-    drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => $source, '%directory' => $dest)), 'error');
+    backdrop_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => $source, '%directory' => $dest)), 'error');
     return 0;
   }
 
@@ -176,7 +176,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   $source = realpath($source);
   if (!file_exists($source)) {
-    drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $source)), 'error');
+    backdrop_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $source)), 'error');
     return 0;
   }
 
@@ -189,12 +189,12 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // a 0 byte file. Which is bad. Real bad.
   if ($source != realpath($dest)) {
     if (!$dest = file_destination($dest, $replace)) {
-      drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $source)), 'error');
+      backdrop_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $source)), 'error');
       return FALSE;
     }
 
     if (!@copy($source, $dest)) {
-      drupal_set_message(t('The selected file %file could not be copied.', array('%file' => $source)), 'error');
+      backdrop_set_message(t('The selected file %file could not be copied.', array('%file' => $source)), 'error');
       return 0;
     }
 
@@ -234,7 +234,7 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_ERROR:
-        drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $destination)), 'error');
+        backdrop_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $destination)), 'error');
         return FALSE;
     }
   }
@@ -252,7 +252,7 @@ function file_destination($destination, $replace) {
  *   This parameter will contain the resulting destination filename in case of
  *   success.
  * @param $dest A string containing the directory $source should be copied to.
- *   If this value is omitted, Drupal's 'files' directory will be used.
+ *   If this value is omitted, Backdrop's 'files' directory will be used.
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
@@ -268,7 +268,7 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     if ($path_original == $path_current || file_delete($path_original)) {
       return 1;
     }
-    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => $path_original)), 'error');
+    backdrop_set_message(t('The removal of the original file %file has failed.', array('%file' => $path_original)), 'error');
   }
   return 0;
 }
@@ -392,7 +392,7 @@ function t($string, $args = 0) {
   }
 }
 
-function drupal_set_message($message = NULL, $type = 'status') {
+function backdrop_set_message($message = NULL, $type = 'status') {
   if ($type == 'error') {
     echo str_repeat('-', 80);
     echo "\nERROR: $message\n";

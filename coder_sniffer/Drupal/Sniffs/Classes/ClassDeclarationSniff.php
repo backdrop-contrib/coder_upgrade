@@ -27,7 +27,7 @@
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
 
 

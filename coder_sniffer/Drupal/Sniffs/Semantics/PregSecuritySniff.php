@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semantics_PregSecuritySniff.
+ * Backdrop_Sniffs_Semantics_PregSecuritySniff.
  *
  * PHP version 5
  *
@@ -11,13 +11,13 @@
 
 /**
  * Check the usage of the preg functions to ensure the insecure /e flag isn't
- * used: http://drupal.org/node/750148
+ * used: http://backdrop.org/node/750148
  *
  * @category PHP
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Semantics_PregSecuritySniff extends Drupal_Sniffs_Semantics_FunctionCall
+class Backdrop_Sniffs_Semantics_PregSecuritySniff extends Backdrop_Sniffs_Semantics_FunctionCall
 {
 
 
@@ -52,7 +52,7 @@ class Drupal_Sniffs_Semantics_PregSecuritySniff extends Drupal_Sniffs_Semantics_
      *   The position of the opening parenthesis in the stack.
      * @param int $closeBracket
      *   The position of the closing parenthesis in the stack.
-     * @param Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+     * @param Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
      *   Can be used to retreive the function's arguments with the getArgument()
      *   method.
      *
@@ -63,7 +63,7 @@ class Drupal_Sniffs_Semantics_PregSecuritySniff extends Drupal_Sniffs_Semantics_
         $stackPtr,
         $openBracket,
         $closeBracket,
-        Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+        Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
     ) {
         $tokens   = $phpcsFile->getTokens();
         $argument = $sniff->getArgument(1);
@@ -86,7 +86,7 @@ class Drupal_Sniffs_Semantics_PregSecuritySniff extends Drupal_Sniffs_Semantics_
             $delimiter = preg_quote(substr($pattern, 1, 1), '/');
             // Check if there is the evil e flag.
             if (preg_match('/' . $delimiter . '[\w]{0,}e[\w]{0,}$/', substr($pattern, 0, -1))) {
-                $warn = 'Using the e flag in %s is a possible security risk. For details see http://drupal.org/node/750148';
+                $warn = 'Using the e flag in %s is a possible security risk. For details see http://backdrop.org/node/750148';
                 $phpcsFile->addError(
                     $warn,
                     $argument['start'],

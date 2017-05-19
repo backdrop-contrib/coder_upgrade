@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Classes_InterfaceNameSniff.
+ * Backdrop_Sniffs_Classes_InterfaceNameSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Classes_InterfaceNameSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Classes_InterfaceNameSniff implements PHP_CodeSniffer_Sniff
 {
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semantics_FunctionCall.
+ * Backdrop_Sniffs_Semantics_FunctionCall.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-abstract class Drupal_Sniffs_Semantics_FunctionCall implements PHP_CodeSniffer_Sniff
+abstract class Backdrop_Sniffs_Semantics_FunctionCall implements PHP_CodeSniffer_Sniff
 {
 
 
@@ -28,7 +28,7 @@ abstract class Drupal_Sniffs_Semantics_FunctionCall implements PHP_CodeSniffer_S
     public function register()
     {
         // We do not listen for tokens, but for specific function calls.
-        Drupal_Sniffs_Semantics_FunctionCallSniff::registerListener($this);
+        Backdrop_Sniffs_Semantics_FunctionCallSniff::registerListener($this);
         return array();
 
     }//end register()
@@ -61,7 +61,7 @@ abstract class Drupal_Sniffs_Semantics_FunctionCall implements PHP_CodeSniffer_S
      *   The position of the opening parenthesis in the stack.
      * @param int $closeBracket
      *   The position of the closing parenthesis in the stack.
-     * @param Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+     * @param Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
      *   Can be used to retreive the function's arguments with the getArgument()
      *   method.
      *
@@ -72,7 +72,7 @@ abstract class Drupal_Sniffs_Semantics_FunctionCall implements PHP_CodeSniffer_S
         $stackPtr,
         $openBracket,
         $closeBracket,
-        Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+        Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
     );
 
 

@@ -11,7 +11,7 @@ function foo() {
 --INPUT--
 function file_download() {
   if (in_array(-1, $headers)) {
-    return drupal_access_denied();
+    return backdrop_access_denied();
   }
 }
 

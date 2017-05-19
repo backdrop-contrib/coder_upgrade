@@ -27,7 +27,7 @@
  * @version   Release: 1.3.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Strings_UnnecessaryStringConcatSniff extends Generic_Sniffs_Strings_UnnecessaryStringConcatSniff
+class Backdrop_Sniffs_Strings_UnnecessaryStringConcatSniff extends Generic_Sniffs_Strings_UnnecessaryStringConcatSniff
 {
 
 
@@ -79,7 +79,7 @@ class Drupal_Sniffs_Strings_UnnecessaryStringConcatSniff extends Generic_Sniffs_
 
                 // Before we throw an error check if the string is longer than
                 // the line length limit.
-                $lineLengthLimitSniff = new Drupal_Sniffs_Files_LineLengthSniff;
+                $lineLengthLimitSniff = new Backdrop_Sniffs_Files_LineLengthSniff;
 
                 $lineLenght = $lineLengthLimitSniff->getLineLength($phpcsFile, $tokens[$prev]['line']);
                 $stringLength = ($lineLenght + strlen($tokens[$next]['content']) - 4);

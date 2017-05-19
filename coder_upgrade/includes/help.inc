@@ -3,7 +3,7 @@
  * @file
  * Provides help text.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -16,24 +16,24 @@ function _coder_upgrade_help($path, $arg) {
     case 'admin/config/development/coder/upgrade/settings':
       return tp('This is a list of the variables used by the automated module conversion suite.');
     case 'admin/config/development/coder/upgrade':
-      return tp('The purpose of this module is to automate as much as possible the task of updating a contributed module for Drupal API changes.' .
+      return tp('The purpose of this module is to automate as much as possible the task of updating a contributed module for Backdrop API changes.' .
                 ' This particular module helps update the 6.x version of a contributed module to the 7.x version API.' .
-                ' Relative to the Drupal core APIs, the list of automated conversions to be applied is indicated !list.' .
+                ' Relative to the Backdrop core APIs, the list of automated conversions to be applied is indicated !list.' .
                 ' For more detailed instructions on the module conversion process, visit the !help page.',
-                 array('!list' => l(t('here'), 'http://drupal.org/node/394070'),
+                 array('!list' => l(t('here'), 'http://backdrop.org/node/394070'),
                        '!help' => l(t('help'), 'admin/help/coder_upgrade')));
     case 'admin/help#coder_upgrade':
-      return tp('The purpose of this module is to automate as much as possible the task of updating a contributed module for Drupal API changes.' .
+      return tp('The purpose of this module is to automate as much as possible the task of updating a contributed module for Backdrop API changes.' .
                 ' This particular module helps update the 6.x version of a contributed module to the 7.x version API.' .
-                ' Relative to the Drupal core APIs, the list of automated conversions to be applied is indicated !link.' .
+                ' Relative to the Backdrop core APIs, the list of automated conversions to be applied is indicated !link.' .
                 ' Contributed modules that define an API may add their own list of automated conversions to be applied by utilizing the Upgrade API provided by this module.' .
                 ' The Upgrade API is documented in coder_upgrade.api.php.',
-                 array('!link' => l(t('here'), 'http://drupal.org/node/394070'))) .
+                 array('!link' => l(t('here'), 'http://backdrop.org/node/394070'))) .
              tp('The primary conversion process involves parsing the module files (i.e., those files with extensions of .info, .install, .module, .inc, .profile, .theme, and .php) using the !link, iterating the list of core functions and hooks for those that have been modified, and programmatically upgrading these items based on the 7.x equivalent.' .
                 ' The grammar structure and editing API provided by the grammar parser allow for more precise manipulation of the code than do regular expressions.' .
                 ' To learn more about how to write upgrade routines, read the !link2.',
-                 array('!link' => l(t('Grammar Parser Library'), 'http://drupal.org/project/grammar_parser'),
-                        '!link2' => l(t('automated updates documentation'), 'http://drupal.org/node/712078'))) .
+                 array('!link' => l(t('Grammar Parser Library'), 'http://backdrop.org/project/grammar_parser'),
+                        '!link2' => l(t('automated updates documentation'), 'http://backdrop.org/node/712078'))) .
              tp('The secondary conversion process involves searching the module files for 6.x syntax and replacing the text with the 7.x equivalent.' .
                 ' Because regular expressions may generate false positives, this type of change is only used in limited situations.') .
              tp(' In many cases, the API changes can be made in an automated fashion. ' .
@@ -77,13 +77,13 @@ function _coder_upgrade_help($path, $arg) {
                  array('@input' => $input,
                        '@output' => $output,
                        '!coder' => l(t('Coder Review'), 'admin/config/development/coder/review'),
-                       '!install' => l(t('Drupal interface'), 'admin/modules'))) .
+                       '!install' => l(t('Backdrop interface'), 'admin/modules'))) .
 //              tp('<b>Manual Changes</b>') .
 //              tp('After applying the automated conversions to your module, rerun the !coder to highlight the areas in your module\'s code needing manual review.',
 //                  array('!coder' => l(t('Coder Review'), 'admin/config/development/coder/review'))) .
              tp('<b>Feedback</b>') .
              tp('If any of the automated conversions are not successful with your module and you believe the conversion code could be changed to handle your module\'s code, please submit a project issue to the !issue <b>specifying "Coder Upgrade"</b> as the Component.' .
                 ' If you can also supply a patch for the change, that would be greatly appreciated too.',
-                 array('!issue' => l(t('Coder Module'), 'http://drupal.org/node/add/project-issue/coder')));
+                 array('!issue' => l(t('Coder Module'), 'http://backdrop.org/node/add/project-issue/coder')));
   }
 }

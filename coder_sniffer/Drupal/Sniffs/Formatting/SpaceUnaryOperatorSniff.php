@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Formatting_SpaceUnaryOperatorSniff.
+ * Backdrop_Sniffs_Formatting_SpaceUnaryOperatorSniff.
  *
  * PHP version 5
  *
@@ -10,7 +10,7 @@
  */
 
 /**
- * Drupal_Sniffs_Formatting_SpaceUnaryOperatorSniff.
+ * Backdrop_Sniffs_Formatting_SpaceUnaryOperatorSniff.
  *
  * Ensures there are no spaces on increment / decrement statements or on +/- sign
  * operators or "!" boolean negators.
@@ -19,7 +19,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Formatting_SpaceUnaryOperatorSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Formatting_SpaceUnaryOperatorSniff implements PHP_CodeSniffer_Sniff
 {
 
 

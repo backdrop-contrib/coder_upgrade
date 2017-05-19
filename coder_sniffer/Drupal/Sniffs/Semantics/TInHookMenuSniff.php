@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semanitcs_TInHookMenuSniff.
+ * Backdrop_Sniffs_Semanitcs_TInHookMenuSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Semantics_TInHookMenuSniff extends Drupal_Sniffs_Semantics_FunctionDefinition
+class Backdrop_Sniffs_Semantics_TInHookMenuSniff extends Backdrop_Sniffs_Semantics_FunctionDefinition
 {
 
 

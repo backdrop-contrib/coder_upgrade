@@ -4,11 +4,11 @@
  * Provides tools to assist with conversion routines.
  *
  * These routines use the grammar parser and are version-agnostic with respect
- * to Drupal. An exception may be coder_upgrade_convert_op() which helps
+ * to Backdrop. An exception may be coder_upgrade_convert_op() which helps
  * with hook($op) style functions, many (or all?) of which were eliminated in
- * Drupal 7.x. However, this pattern may remain in contributed modules.
+ * Backdrop 7.x. However, this pattern may remain in contributed modules.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -214,7 +214,7 @@ function coder_upgrade_op_to_hook($node, $case_node, $hook, $parameters) {
    * Example: hook_link() becomes part of hook_node_view()
    * or hook_comment_view() based on $type parameter. Also hook_link_alter()
    * code goes in hook_node_view_alter() or hook_comment_view_alter().
-   * See http://drupal.org/node/224333#node_links.
+   * See http://backdrop.org/node/224333#node_links.
    */
 
   global $_coder_upgrade_module_name;
@@ -299,7 +299,7 @@ function coder_upgrade_op_to_hook($node, $case_node, $hook, $parameters) {
  * off the first layer and get to the second level. There is no guarantee of
  * nice code anyway.
  *
- * This new routine was failing on capturing drupal_get_form() callbacks
+ * This new routine was failing on capturing backdrop_get_form() callbacks
  * on case 5, like example_admin_form3() defined in
  * $items[$admin_path]['page arguments'][] = 'example_admin_form3'. This again
  * relates to a depth parameter and that we are always looking for an array.

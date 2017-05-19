@@ -36,10 +36,10 @@ class CoderReviewUpgrade6xTest extends CoderReviewTestCase {
   function testUpgrade6x() {
     $this->assertCoderReviewFail('  function my_module_forms($args) {');
     $this->assertCoderReviewPass('  function my_module_forms($form_id, $args) {');
-    $this->assertCoderReviewPass('  drupal_retrieve_form(\'testform\', $form_state);');
-    $this->assertCoderReviewFail('  drupal_retrieve_form(\'testform\');');
-    $this->assertCoderReviewPass('  drupal_retrieve_form($form_id, $form_state);');
-    $this->assertCoderReviewFail('  drupal_retrieve_form($form_id);');
+    $this->assertCoderReviewPass('  backdrop_retrieve_form(\'testform\', $form_state);');
+    $this->assertCoderReviewFail('  backdrop_retrieve_form(\'testform\');');
+    $this->assertCoderReviewPass('  backdrop_retrieve_form($form_id, $form_state);');
+    $this->assertCoderReviewFail('  backdrop_retrieve_form($form_id);');
     $this->assertCoderReviewPass('  form_set_value($element, \'value\', $form_state);');
     $this->assertCoderReviewFail('  form_set_value($element, \'value\');');
     $this->assertCoderReviewFail('  function myform_prerender($form_id, $form) {');
@@ -211,12 +211,12 @@ class CoderReviewUpgrade6xTest extends CoderReviewTestCase {
   /**
    * ???
    */
-  function testUpgrade6xDrupalMail() {
-    $this->assertCoderReviewFail('  drupal_mail($action, $to, $subject, $body, $from);');
-    $this->assertCoderReviewFail('  drupal_mail(\'action_email\', $recipient, $subject, $body, $from);');
-    $this->assertCoderReviewFail('  drupal_mail(\'action_email\', $account->mail, $subject, $body, $from);');
-    $this->assertCoderReviewFail('  drupal_mail(\'action_email\', "foo@foo.com", $subject, $body, $from);');
-    $this->assertCoderReviewPass('  drupal_mail(\'system\', "action_email", $recipient, $language, $params);');
+  function testUpgrade6xBackdropMail() {
+    $this->assertCoderReviewFail('  backdrop_mail($action, $to, $subject, $body, $from);');
+    $this->assertCoderReviewFail('  backdrop_mail(\'action_email\', $recipient, $subject, $body, $from);');
+    $this->assertCoderReviewFail('  backdrop_mail(\'action_email\', $account->mail, $subject, $body, $from);');
+    $this->assertCoderReviewFail('  backdrop_mail(\'action_email\', "foo@foo.com", $subject, $body, $from);');
+    $this->assertCoderReviewPass('  backdrop_mail(\'system\', "action_email", $recipient, $language, $params);');
   }
 
   /**

@@ -31,17 +31,17 @@ class CoderReviewSecurityTest extends CoderReviewTestCase {
   }
 
   /**
-   * Tests functionality to detect correct use of Drupal check_plain() function.
+   * Tests functionality to detect correct use of Backdrop check_plain() function.
    */
   function testSecurityCheckPlain() {
-    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/drupal");');
-    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/drupal", array("html" => FALSE);');
-    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/drupal", array("html" => $value);');
-    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/drupal", array("html" => 0);');
-    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/drupal", array("html" => TRUE);');
-    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/drupal", array(\'html\' => TRUE);');
-    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/drupal", array("html" => 1);');
-    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/drupal", array(\'html\' => 1);');
+    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/backdrop");');
+    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/backdrop", array("html" => FALSE);');
+    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/backdrop", array("html" => $value);');
+    $this->assertCoderReviewFail('$var = l(check_plain($input), "path/to/backdrop", array("html" => 0);');
+    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/backdrop", array("html" => TRUE);');
+    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/backdrop", array(\'html\' => TRUE);');
+    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/backdrop", array("html" => 1);');
+    $this->assertCoderReviewPass('$var = l(check_plain($input), "path/to/backdrop", array(\'html\' => 1);');
   }
 
   /**
@@ -80,23 +80,23 @@ class CoderReviewSecurityTest extends CoderReviewTestCase {
   }
 
   /**
-   * Tests functionality to detect correct use of drupal_set_message().
+   * Tests functionality to detect correct use of backdrop_set_message().
    */
-  function testSecurityDrupalSetMessage() {
-    $this->assertCoderReviewPass('  drupal_set_message(t("Here is some safe_data"));');
-    $this->assertCoderReviewPass('  drupal_set_message(t("Here is some @safe_data", array("@safe_data" => $tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_message(t("Here is some %safe_data", array("%safe_data" => $tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_message(check_plain($tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_message(filter_xss_admin($tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_message(format_plural($tainted_count, "1 item", "@count items"));');
-    $this->assertCoderReviewPass('  drupal_set_message(check_markup($tainted_data));');
-    $this->assertCoderReviewPass("  function abc() {\n \$tainted_data = check_plain('mystring');\n  drupal_set_message(\$tainted_data);\n}");
-    $this->assertCoderReviewFail("  function abc() {\n drupal_set_message(\$tainted_data);\n}");
-    $this->assertCoderReviewFail('  drupal_set_message(t($tainted_data));');
-    $this->assertCoderReviewFail('  drupal_set_message("Here is some ". $tainted_data);');
-    $this->assertCoderReviewFail('  drupal_set_message("Here is some $tainted_data");');
-    $this->assertCoderReviewFail('  drupal_set_message(t("Here is some ". $tainted_data));');
-    $this->assertCoderReviewFail('  drupal_set_message(t("Here is some !tainted_data", array("!tainted_data" => $tainted_data)));');
+  function testSecurityBackdropSetMessage() {
+    $this->assertCoderReviewPass('  backdrop_set_message(t("Here is some safe_data"));');
+    $this->assertCoderReviewPass('  backdrop_set_message(t("Here is some @safe_data", array("@safe_data" => $tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_message(t("Here is some %safe_data", array("%safe_data" => $tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_message(check_plain($tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_message(filter_xss_admin($tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_message(format_plural($tainted_count, "1 item", "@count items"));');
+    $this->assertCoderReviewPass('  backdrop_set_message(check_markup($tainted_data));');
+    $this->assertCoderReviewPass("  function abc() {\n \$tainted_data = check_plain('mystring');\n  backdrop_set_message(\$tainted_data);\n}");
+    $this->assertCoderReviewFail("  function abc() {\n backdrop_set_message(\$tainted_data);\n}");
+    $this->assertCoderReviewFail('  backdrop_set_message(t($tainted_data));');
+    $this->assertCoderReviewFail('  backdrop_set_message("Here is some ". $tainted_data);');
+    $this->assertCoderReviewFail('  backdrop_set_message("Here is some $tainted_data");');
+    $this->assertCoderReviewFail('  backdrop_set_message(t("Here is some ". $tainted_data));');
+    $this->assertCoderReviewFail('  backdrop_set_message(t("Here is some !tainted_data", array("!tainted_data" => $tainted_data)));');
   }
 
   /**
@@ -121,30 +121,30 @@ class CoderReviewSecurityTest extends CoderReviewTestCase {
   }
 
   /**
-   * Tests functionality to detect the correct use of drupal_set_title().
+   * Tests functionality to detect the correct use of backdrop_set_title().
    */
 /*
-  function testSecurityDrupalSetTitle() {
-    $this->assertCoderReviewPass('  drupal_set_title(t("Here is some safe_data"));');
-    $this->assertCoderReviewPass('  drupal_set_title(t("Here is some @safe_data", array("@safe_data" => $tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_title(t("Here is some %safe_data", array("%safe_data" => $tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_title(t("Here is some @safe_data", $safe_data_array));');
-    $this->assertCoderReviewPass('  drupal_set_title(check_plain($tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_title(filter_xss_admin($tainted_data));');
-    $this->assertCoderReviewPass('  drupal_set_title(format_plural($tainted_count, "1 item", "@count items"));');
-    $this->assertCoderReviewPass('  drupal_set_title(check_markup($tainted_data));');
-    $this->assertCoderReviewPass("  function abc() {\n \$tainted_data = check_plain('mystring');\n  drupal_set_title(\$tainted_data);\n}");
-    $this->assertCoderReviewFail("  function abc() {\n drupal_set_title(\$tainted_data);\n}");
-    $this->assertCoderReviewFail('  drupal_set_title(t($tainted_data));');
-    $this->assertCoderReviewFail('  drupal_set_title("Here is some ". $tainted_data);');
-    $this->assertCoderReviewFail('  drupal_set_title("Here is some $tainted_data");');
-    $this->assertCoderReviewFail('  drupal_set_title(t("Here is some ". $tainted_data));');
-    $this->assertCoderReviewFail('  drupal_set_title(t("Here is some !tainted_data", array("!tainted_data" => $tainted_data));');
+  function testSecurityBackdropSetTitle() {
+    $this->assertCoderReviewPass('  backdrop_set_title(t("Here is some safe_data"));');
+    $this->assertCoderReviewPass('  backdrop_set_title(t("Here is some @safe_data", array("@safe_data" => $tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_title(t("Here is some %safe_data", array("%safe_data" => $tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_title(t("Here is some @safe_data", $safe_data_array));');
+    $this->assertCoderReviewPass('  backdrop_set_title(check_plain($tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_title(filter_xss_admin($tainted_data));');
+    $this->assertCoderReviewPass('  backdrop_set_title(format_plural($tainted_count, "1 item", "@count items"));');
+    $this->assertCoderReviewPass('  backdrop_set_title(check_markup($tainted_data));');
+    $this->assertCoderReviewPass("  function abc() {\n \$tainted_data = check_plain('mystring');\n  backdrop_set_title(\$tainted_data);\n}");
+    $this->assertCoderReviewFail("  function abc() {\n backdrop_set_title(\$tainted_data);\n}");
+    $this->assertCoderReviewFail('  backdrop_set_title(t($tainted_data));');
+    $this->assertCoderReviewFail('  backdrop_set_title("Here is some ". $tainted_data);');
+    $this->assertCoderReviewFail('  backdrop_set_title("Here is some $tainted_data");');
+    $this->assertCoderReviewFail('  backdrop_set_title(t("Here is some ". $tainted_data));');
+    $this->assertCoderReviewFail('  backdrop_set_title(t("Here is some !tainted_data", array("!tainted_data" => $tainted_data));');
   }
 */
 
   /**
-   * Tests the functionality to detect the correct use of Drupal form_error().
+   * Tests the functionality to detect the correct use of Backdrop form_error().
    */
   function testSecurityFormError() {
     $this->assertCoderReviewPass('  form_error("name", t("Here is some safe_data"));');
@@ -166,7 +166,7 @@ class CoderReviewSecurityTest extends CoderReviewTestCase {
   }
 
   /**
-   * Tests the functionality to detect correct use of Drupal form_set_error().
+   * Tests the functionality to detect correct use of Backdrop form_set_error().
    */
   function testSecurityFormSetError() {
     $this->assertCoderReviewPass('  form_set_error("name", t("Here is some safe_data"));');
@@ -291,7 +291,7 @@ class CoderReviewSecurityTest extends CoderReviewTestCase {
    * Tests the functionality to detect the correct use eval() function.
    */
   function testSecurityEval() {
-    $this->assertCoderReviewFail('  return drupal_eval($code);');
+    $this->assertCoderReviewFail('  return backdrop_eval($code);');
     $this->assertCoderReviewFail('  print eval($code);');
   }
 

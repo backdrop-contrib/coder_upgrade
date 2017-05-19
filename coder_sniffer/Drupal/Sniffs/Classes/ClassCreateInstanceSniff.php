@@ -20,7 +20,7 @@
  * @author    Peter Philipp <peter.philipp@cando-image.com>
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Classes_ClassCreateInstanceSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Classes_ClassCreateInstanceSniff implements PHP_CodeSniffer_Sniff
 {
 
 

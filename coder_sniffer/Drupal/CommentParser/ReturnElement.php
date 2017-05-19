@@ -22,7 +22,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_CommentParser_ReturnElement
+class Backdrop_CommentParser_ReturnElement
   extends PHP_CodeSniffer_CommentParser_PairElement
 {
 

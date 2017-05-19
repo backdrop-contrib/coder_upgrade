@@ -3,7 +3,7 @@
  * @file
  * Provides menu items.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -14,7 +14,7 @@ function _coder_upgrade_menu() {
   $items['admin/config/development/coder/upgrade'] = array(
     'title' => 'Upgrade',
     'description' => 'Convert module code from version 6.x to 7.x.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('coder_upgrade_conversions_form'),
     'access arguments' => array('administer code conversions'),
     'type' => MENU_LOCAL_TASK,
@@ -31,7 +31,7 @@ function _coder_upgrade_menu() {
   $items['admin/config/development/coder/upgrade/settings'] = array(
     'title' => 'Settings',
     'description' => 'Configure the module conversion suite.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('coder_upgrade_settings_form'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,

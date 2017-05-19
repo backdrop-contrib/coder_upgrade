@@ -3,7 +3,7 @@
  * @file
  * Provides module conversion form.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 module_load_include('inc', 'coder_upgrade', 'conversions/list');
@@ -220,7 +220,7 @@ function coder_upgrade_modules_build(&$modules) {
   $module_fs = array(
     '#type' => 'fieldset',
     '#title' => t('Modules'),
-    '#description' => t('... residing in the selected modules (beneath the drupal directory).'),
+    '#description' => t('... residing in the selected modules (beneath the backdrop directory).'),
     '#tree' => TRUE,
   );
   $module_fs['list'] = array(
@@ -275,12 +275,12 @@ function coder_upgrade_conversions_form_submit($form, &$form_state) {
   // Apply conversion routines.
   $success = coder_upgrade_conversions_apply($form_state);
   if ($success) {
-    drupal_set_message(t('Module conversion routines were applied.'));
-    drupal_set_message(t('Click to view the !log.', array('!log' => l(t('conversion log file'), coder_upgrade_path('log'), array('attributes' => array('target' => '_blank'))))));
-    drupal_set_message(t('To view a <strong>patch file</strong>, click on a <strong>Name link</strong> in the Directories and Modules tabs below.'));
+    backdrop_set_message(t('Module conversion routines were applied.'));
+    backdrop_set_message(t('Click to view the !log.', array('!log' => l(t('conversion log file'), coder_upgrade_path('log'), array('attributes' => array('target' => '_blank'))))));
+    backdrop_set_message(t('To view a <strong>patch file</strong>, click on a <strong>Name link</strong> in the Directories and Modules tabs below.'));
   }
   else {
-    drupal_set_message(t('Module conversion routines failed to complete.'), 'error');
+    backdrop_set_message(t('Module conversion routines failed to complete.'), 'error');
   }
 }
 
@@ -301,22 +301,22 @@ function coder_upgrade_conversions_apply($form_state) {
 //   module_load_include('inc', 'coder_upgrade', 'includes/main');
   if (variable_get('coder_upgrade_use_separate_process', FALSE)) {
     // Conversion routines will be run in a separate process.
-    drupal_set_message(t('Module conversion routines will run in a separate process.'));
+    backdrop_set_message(t('Module conversion routines will run in a separate process.'));
     $path = coder_upgrade_parameters_save($upgrades, $extensions, $items);
-    $script = drupal_get_path('module', 'coder_upgrade') . '/scripts/coder_upgrade.run.php';
+    $script = backdrop_get_path('module', 'coder_upgrade') . '/scripts/coder_upgrade.run.php';
     $output = coder_upgrade_directory_path('base') . 'coder_upgrade.run.txt';
     $command = "php $script -- file=$path > $output"; // " 2>&1";
     // Execute the command and capture the output.
     exec($command, $errors, $success);
     $success = $success === 0;
     if ($success && !empty($errors)) {
-      drupal_set_message(trim(implode("\n", $errors)), 'error');
+      backdrop_set_message(trim(implode("\n", $errors)), 'error');
     }
   }
   else {
     // Conversion routines will be run in the same process.
     module_load_include('inc', 'coder_upgrade', 'includes/main');
-    drupal_set_message(t('Module conversion routines will run in the same process.'));
+    backdrop_set_message(t('Module conversion routines will run in the same process.'));
     $success = coder_upgrade_start($upgrades, $extensions, $items);
   }
 
@@ -339,8 +339,8 @@ function coder_upgrade_conversions_prepare($form_state) {
     );
   }
 
-  $old_dir = DRUPAL_ROOT . '/' . coder_upgrade_directory_path('old');
-  $new_dir = DRUPAL_ROOT . '/' . coder_upgrade_directory_path('new');
+  $old_dir = BACKDROP_ROOT . '/' . coder_upgrade_directory_path('old');
+  $new_dir = BACKDROP_ROOT . '/' . coder_upgrade_directory_path('new');
 
   // Combine directory and module items into a single list.
   // Omit name from key so as to allow for duplicate names.
@@ -384,13 +384,13 @@ function coder_upgrade_conversions_prepare($form_state) {
 function coder_upgrade_parameters_save($upgrades, $extensions, $items) {
   // Add path to upgrades array for use by script.
   foreach ($upgrades as $name => &$upgrade) {
-    $upgrade['path'] = drupal_get_path('module', $upgrade['module']);
+    $upgrade['path'] = backdrop_get_path('module', $upgrade['module']);
   }
   // Create paths array.
   $paths = array(
     'files_base' => coder_upgrade_directory_path('', FALSE),
     'libraries_base' => str_replace('/grammar_parser', '', libraries_get_path('grammar_parser')),
-    'modules_base' => str_replace('/coder', '', drupal_get_path('module', 'coder')),
+    'modules_base' => str_replace('/coder', '', backdrop_get_path('module', 'coder')),
   );
   // Create variables array.
   $variables = array(
@@ -526,20 +526,20 @@ function coder_upgrade_directory_list() {
     // 'admin/config/media/file-system'. Add a submit handler on that form,
     // system_file_system_settings, to create directories or move existing ones.
     // Is there an action for this? No hook_path_changed?
-    drupal_set_message(t('Module input directory does not exist at @path.', array('@path' => $path)), 'error');
+    backdrop_set_message(t('Module input directory does not exist at @path.', array('@path' => $path)), 'error');
     return $dirs;
   }
 
   $path = realpath($path);
   if (!$path) {
     // @todo Is this check redundant to above check?
-    drupal_set_message(t('Module input directory does not exist at @path.', array('@path' => $path)), 'error');
+    backdrop_set_message(t('Module input directory does not exist at @path.', array('@path' => $path)), 'error');
     return $dirs;
   }
 
   $dirs = coder_upgrade_scan_directory($path);
   if (!$dirs) {
-    drupal_set_message(t('Please place modules to be converted in @path.', array('@path' => $path)), 'error');
+    backdrop_set_message(t('Please place modules to be converted in @path.', array('@path' => $path)), 'error');
   }
 
   return $dirs;

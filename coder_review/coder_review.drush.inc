@@ -48,7 +48,7 @@ function coder_review_drush_command() {
     'arguments' => array(
       'name' => 'Review specified module or theme name, i.e. taxonomy.',
       'patch-url' => 'URL to patch file.',
-      'file-path' => 'Path to file or multiple files, relative to Drupal installation.',
+      'file-path' => 'Path to file or multiple files, relative to Backdrop installation.',
     ),
   );
   $items['install-php-code-sniffer'] = array(
@@ -64,7 +64,7 @@ function coder_review_drush_command() {
 function coder_review_drush_help($section) {
   switch ($section) {
     case 'drush:coder-review':
-      $help = dt('This comand will execute Coder reviews on a given path, using Drupal Coding Standard definitions.');
+      $help = dt('This comand will execute Coder reviews on a given path, using Backdrop Coding Standard definitions.');
       // @todo What else should be added to the help message?  Popular options?
       return $help;
   }
@@ -95,7 +95,7 @@ function _coder_review_set_form_modules(array &$settings) {
 function _drush_coder_review_git($uninstall = FALSE) {
   $gitpath = _drush_coder_git_path();
 
-  $realroot = realpath(DRUPAL_ROOT) . '/';
+  $realroot = realpath(BACKDROP_ROOT) . '/';
   $realgit = realpath($gitpath . '/../');
   $gitrelative = substr($realgit, strlen($realroot));
   // @ignore sniffer_strings_unnecessarystringconcat_found
@@ -173,7 +173,7 @@ exec('git rev-parse --verify HEAD 2> /dev/null 2>&1', \$dummy, \$ret);
 \$against = (\$ret == 0) ? 'HEAD' : '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 exec("git diff --cached --name-only \$against", \$files);
 
-// Convert .git relative path to DRUPAL_ROOT relative.
+// Convert .git relative path to BACKDROP_ROOT relative.
 foreach (\$files as &\$file) {
   \$file = "\$GITRELATIVE/\$file";
 }
@@ -248,7 +248,7 @@ function _drush_coder_git_path() {
         $gitpath = "$path/.git";
         break;
       }
-      if ($path == DRUPAL_ROOT) {
+      if ($path == BACKDROP_ROOT) {
         break;
       }
       $path = realpath("$path/..");
@@ -261,9 +261,9 @@ function _drush_coder_git_path() {
  * Performs the actual review for drush.
  */
 function drush_coder_review() {
-  // Bootstrap Drupal if it is available.
-  if (drush_conf_path(_drush_bootstrap_selected_uri()) && !function_exists('drupal_goto')) {
-    drush_bootstrap_to_phase(DRUSH_BOOTSTRAP_DRUPAL_LOGIN);
+  // Bootstrap Backdrop if it is available.
+  if (drush_conf_path(_drush_bootstrap_selected_uri()) && !function_exists('backdrop_goto')) {
+    drush_bootstrap_to_phase(DRUSH_BOOTSTRAP_BACKDROP_LOGIN);
   }
 
   // Bootstrap enough of coder review to run.
@@ -302,7 +302,7 @@ function drush_coder_review() {
   $reviews_option = drush_get_option('reviews');
   if ($reviews_option) {
     if ($reviews_option == 'all') {
-      // @note: Don't use drupal_map_assoc because of bootstrap level.
+      // @note: Don't use backdrop_map_assoc because of bootstrap level.
       $avail_review_keys = array_keys($avail_reviews);
       $reviews += array_combine($avail_review_keys, $avail_review_keys);
     }
@@ -501,9 +501,9 @@ function drush_coder_review_install_php_code_sniffer() {
       drush_print(dt('Please add @dir to include_path in php.ini', array('@dir' => $php_dir)));
     }
 
-    // Symlink the Drupal Coder sniffs.
+    // Symlink the Backdrop Coder sniffs.
     $link = "$php_dir/PHP/CodeSniffer/Standards";
-    $target = __DIR__ . "/../coder_sniffer/Drupal";
+    $target = __DIR__ . "/../coder_sniffer/Backdrop";
     if (!is_link($link) || readlink($link) != $target) {
       drush_shell_exec("ln -s $target $link");
     }
@@ -646,7 +646,7 @@ function theme_drush_coder_review_warning(array $variables) {
       );
       $attr['severity'] = $checkstyle_levels[$variables['severity_name']];
     }
-    return '<error ' . _coder_review_drupal_attributes($attr) . ' />';
+    return '<error ' . _coder_review_backdrop_attributes($attr) . ' />';
   }
 
   // Return warning as text output, formatted for the drush screen.
@@ -718,11 +718,11 @@ function _coder_review_drush_output($output) {
 }
 
 /**
- * Replaces default drupal drupal_attributes() for not bootstrapped usage.
+ * Replaces default backdrop backdrop_attributes() for not bootstrapped usage.
  */
-function _coder_review_drupal_attributes(array $attributes = array()) {
-  if (function_exists('drupal_attributes')) {
-    return drupal_attributes($attributes);
+function _coder_review_backdrop_attributes(array $attributes = array()) {
+  if (function_exists('backdrop_attributes')) {
+    return backdrop_attributes($attributes);
   }
 
   foreach ($attributes as $attribute => &$data) {

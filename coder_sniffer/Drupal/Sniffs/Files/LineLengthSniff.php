@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Files_LineLengthSniff.
+ * Backdrop_Sniffs_Files_LineLengthSniff.
  *
  * PHP version 5
  *
@@ -17,7 +17,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Files_LineLengthSniff extends Generic_Sniffs_Files_LineLengthSniff
+class Backdrop_Sniffs_Files_LineLengthSniff extends Generic_Sniffs_Files_LineLengthSniff
 {
 
     /**

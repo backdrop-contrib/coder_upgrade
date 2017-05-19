@@ -9,7 +9,7 @@ module_load_include('inc', 'coder_upgrade', 'coder_upgrade');
 /**
  * Unit tests for the upgrade routines.
  */
-class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
+class CoderUpgradeUnitTestCase extends BackdropUnitTestCase {
   protected $test_directory, $site_directory;
 
   public static function getInfo1($subdir) {
@@ -55,7 +55,7 @@ class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
     $this->captureThemeInfo();
     file_put_contents('output.html', "after captureThemeInfo\n", FILE_APPEND);
     // Save the live site files directory path.
-    $this->site_directory = DRUPAL_ROOT . '/' . coder_upgrade_directory_path('new');
+    $this->site_directory = BACKDROP_ROOT . '/' . coder_upgrade_directory_path('new');
     file_put_contents('output.html', $this->site_directory . "\n", FILE_APPEND);
 
     parent::setUp('grammar_parser', 'coder_upgrade');
@@ -78,12 +78,12 @@ class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
     }
 
     // Include necessary files.
-    $module_dirname = DRUPAL_ROOT . '/' . drupal_get_path('module', 'grammar_parser');
+    $module_dirname = BACKDROP_ROOT . '/' . backdrop_get_path('module', 'grammar_parser');
     require_once $module_dirname . '/engine/grammar_parser.parser.inc';
     require_once $module_dirname . '/engine/grammar_parser.reader.inc';
 
     // TODO Move the debug_print method to .inc file??? Then avoid this load at this time.
-    $module_dirname = DRUPAL_ROOT . '/' . drupal_get_path('module', 'coder_upgrade');
+    $module_dirname = BACKDROP_ROOT . '/' . backdrop_get_path('module', 'coder_upgrade');
     require_once $module_dirname . '/includes/main.inc';
     require_once $module_dirname . '/conversions/begin.inc';
     require_once $module_dirname . '/conversions/function.inc';
@@ -93,7 +93,7 @@ class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
     coder_upgrade_memory_print('load code');
 
     $in_dirname = $module_dirname . '/tests/old/';
-    $out_dirname = DRUPAL_ROOT . '/' . coder_upgrade_directory_path('new');
+    $out_dirname = BACKDROP_ROOT . '/' . coder_upgrade_directory_path('new');
 
     $directories = array($this->test_directory => 1);
     foreach ($directories as $key => $directory) {
@@ -122,10 +122,10 @@ class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
     }
     file_put_contents('output.html', __METHOD__ . "\n", FILE_APPEND);
 
-    $module_dirname = DRUPAL_ROOT . '/' . drupal_get_path('module', 'coder_upgrade');
+    $module_dirname = BACKDROP_ROOT . '/' . backdrop_get_path('module', 'coder_upgrade');
     $in_dirname = $module_dirname . '/tests/old/';
     $expected_dirname = $module_dirname . '/tests/new/';
-    $out_dirname = DRUPAL_ROOT . '/' . coder_upgrade_directory_path('new');
+    $out_dirname = BACKDROP_ROOT . '/' . coder_upgrade_directory_path('new');
     file_put_contents('output.html', "$out_dirname\n", FILE_APPEND);
 
     $upgrades = coder_upgrade_upgrade_info();
@@ -150,7 +150,7 @@ class CoderUpgradeUnitTestCase extends DrupalUnitTestCase {
       );
     }
 
-    // If Drupal won't commit patch to DrupalUnitTestCase.php, then use a global.
+    // If Backdrop won't commit patch to BackdropUnitTestCase.php, then use a global.
     global $_coder_upgrade_is_test;
     $_coder_upgrade_is_test = TRUE;
 
@@ -235,7 +235,7 @@ class CoderUpgradeUnitTestCase2 extends CoderUpgradeUnitTestCase {
 /**
  * Functional tests for the admin interface (settings and execution).
  */
-class CoderUpgradeWebTestCase extends DrupalWebTestCase {
+class CoderUpgradeWebTestCase extends BackdropWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -247,8 +247,8 @@ class CoderUpgradeWebTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('coder_upgrade');
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'administer code conversions'));
-    $this->drupalLogin($this->admin_user);
+    $this->admin_user = $this->backdropCreateUser(array('access administration pages', 'administer site configuration', 'administer code conversions'));
+    $this->backdropLogin($this->admin_user);
   }
 
   /**
@@ -267,14 +267,14 @@ class CoderUpgradeWebTestCase extends DrupalWebTestCase {
    */
   function checkSettingsInterface() {
     // Visit the advanced menu settings page.
-    $this->drupalGet('admin/config/development/coder_upgrade/settings');
+    $this->backdropGet('admin/config/development/coder_upgrade/settings');
 
     // Update the settings.
     $edit = array();
     $edit['coder_upgrade_dir_old'] = $this->randomName();
     $edit['coder_upgrade_dir_new'] = $this->randomName();
     $edit['coder_upgrade_dir_patch'] = $this->randomName();
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->backdropPost(NULL, $edit, t('Save configuration'));
     $this->assertRaw(t('The configuration options have been saved.'), t('Settings updated successfully'));
 
     // Verify the settings.
@@ -291,7 +291,7 @@ class CoderUpgradeWebTestCase extends DrupalWebTestCase {
     $edit['coder_upgrade_dir_old'] = DEADWOOD_OLD;
     $edit['coder_upgrade_dir_new'] = DEADWOOD_NEW;
     $edit['coder_upgrade_dir_patch'] = DEADWOOD_PATCH;
-    $this->drupalPost(NULL, $edit, t('Save configuration')); // $this->drupalPost(NULL, $edit, t('Reset to defaults'));
+    $this->backdropPost(NULL, $edit, t('Save configuration')); // $this->backdropPost(NULL, $edit, t('Reset to defaults'));
     $this->assertRaw(t('The configuration options have been saved.'), t('Settings updated successfully'));
 
     // Verify the settings.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_WhiteSpace_CloseBracketSpacingSniff.
+ * Backdrop_Sniffs_WhiteSpace_CloseBracketSpacingSniff.
  *
  * PHP version 5
  *
@@ -17,7 +17,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**

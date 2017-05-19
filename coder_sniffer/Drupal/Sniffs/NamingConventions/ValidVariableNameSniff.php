@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_NamingConventions_ValidVariableNameSniff.
+ * Backdrop_Sniffs_NamingConventions_ValidVariableNameSniff.
  *
  * PHP version 5
  *
@@ -10,7 +10,7 @@
  */
 
 /**
- * Drupal_Sniffs_NamingConventions_ValidVariableNameSniff.
+ * Backdrop_Sniffs_NamingConventions_ValidVariableNameSniff.
  *
  * Checks the naming of member variables.
  *
@@ -18,7 +18,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_NamingConventions_ValidVariableNameSniff
+class Backdrop_Sniffs_NamingConventions_ValidVariableNameSniff
 
     extends PHP_CodeSniffer_Standards_AbstractVariableSniff
 {

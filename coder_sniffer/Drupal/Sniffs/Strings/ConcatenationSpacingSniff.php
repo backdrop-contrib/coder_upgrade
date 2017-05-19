@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Strings_ConcatenationSpacingSniff.
+ * Backdrop_Sniffs_Strings_ConcatenationSpacingSniff.
  *
  * PHP version 5
  *
@@ -11,7 +11,7 @@
  */
 
 /**
- * Drupal_Sniffs_Strings_ConcatenationSpacingSniff.
+ * Backdrop_Sniffs_Strings_ConcatenationSpacingSniff.
  *
  * Makes sure there are the needed spaces between the concatenation operator (.) and
  * the strings being concatenated.
@@ -21,7 +21,7 @@
  * @author    Peter Philipp <peter.philipp@cando-image.com>
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Strings_ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Strings_ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
 {
 
 

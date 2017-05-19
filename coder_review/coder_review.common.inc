@@ -32,7 +32,7 @@ function _coder_review_reviews() {
     // Always get the coder review.
     $cache = coder_review_reviews();
 
-    // When Drupal is bootstrapped, also get all reviews.
+    // When Backdrop is bootstrapped, also get all reviews.
     if (function_exists('module_invoke_all')) {
       $cache = array_merge($cache, module_invoke_all('reviews'));
     }
@@ -84,7 +84,7 @@ function coder_review_reviews() {
  * @see _coder_review_get_default_settings()
  */
 function _coder_review_default_reviews() {
-  // Do not use drupal_map_assoc() so that this will run without Drupal being
+  // Do not use backdrop_map_assoc() so that this will run without Backdrop being
   // bootstraped.
   return array(
     'style' => 'style',
@@ -272,7 +272,7 @@ function do_coder_reviews(array $coder_args) {
  * @ingroup themeable
  */
 function theme_coder_review_warning($variables) {
-  // Theme the output for the Drupal shell.
+  // Theme the output for the Backdrop shell.
   if (_drush()) {
     return theme_drush_coder_review_warning($variables);
   }
@@ -295,7 +295,7 @@ function theme_coder_review_warning($variables) {
       $warning_msg = _t($warning['#text'], $warning['#args']);
     }
     if (isset($warning['#link'])) {
-      $warning_msg .= ' (' . l(_t('Drupal Docs'), $warning['#link']) . ')';
+      $warning_msg .= ' (' . l(_t('Backdrop Docs'), $warning['#link']) . ')';
     }
     $warning = $warning_msg;
   }
@@ -577,8 +577,8 @@ function _coder_review_read_and_parse_file(array &$coder_args) {
         }
 
         elseif ($in_heredoc) {
-          // @note: drupal_substr does not properly handle multi-byte characters in this string.
-          // @todo: check other places where the drupal_ string functions fail.
+          // @note: backdrop_substr does not properly handle multi-byte characters in this string.
+          // @todo: check other places where the backdrop_ string functions fail.
           if ($beginning_of_line && $char == $in_heredoc[0] && substr($content, $pos, $in_heredoc_length) == $in_heredoc) {
             $this_all_lines .= _substr($content, $pos + 1, $in_heredoc_length - 1);
             $in_heredoc = 0;
@@ -1364,17 +1364,17 @@ function _coder_review_get_default_settings($arg = 'default') {
 }
 
 /**
- * Determines if a module is part of Drupal's core group.
+ * Determines if a module is part of Backdrop's core group.
  *
  * @param object $system
  *   ???
  *
  * @return bool
- *   TRUE if a module is part of Drupal's core group; otherwise, FALSE.
+ *   TRUE if a module is part of Backdrop's core group; otherwise, FALSE.
  */
-function _coder_review_is_drupal_core($system) {
+function _coder_review_is_backdrop_core($system) {
   $info_file = dirname(realpath($system->filename)) . '/' . $system->name . '.info';
-  $info = drupal_parse_info_file($info_file);
+  $info = backdrop_parse_info_file($info_file);
   return !empty($info['package']) && strtolower($info['package']) == 'core';
 }
 
@@ -1486,19 +1486,19 @@ function _drush() {
 }
 
 /**
- * Creates a link to the Drupal node.
+ * Creates a link to the Backdrop node.
  *
  * @param int $nid
- *   The Drupal Node ID to link to.
+ *   The Backdrop Node ID to link to.
  * @param string $anchor
  *   (optional) An anchor tag. Defaults to an empty string.
  *
  * @return string
- *   An HTML link to the drupal.org node.
+ *   An HTML link to the backdrop.org node.
  *   Except when called from Drush, then it is a plain text link.
  */
-function _drupalnode($nid, $anchor = '') {
-  $link = "http://drupal.org/node/$nid";
+function _backdropnode($nid, $anchor = '') {
+  $link = "http://backdrop.org/node/$nid";
   if ($anchor) {
     $link .= "#$anchor";
   }
@@ -1506,19 +1506,19 @@ function _drupalnode($nid, $anchor = '') {
 }
 
 /**
- * Creates a link to the Drupal API docs.
+ * Creates a link to the Backdrop API docs.
  *
  * @param string $function
  *   The name of a function to link to.
  * @param string $version
- *   (optional) The Drupal version to link to.
+ *   (optional) The Backdrop version to link to.
  *
  * @return string
- *   An HTML link to the Drupal API documents for the function and version.
+ *   An HTML link to the Backdrop API documents for the function and version.
  *   Except when called from Drush, then it is a plain text link.
  */
-function _drupalapi($function, $version = '') {
-  return _l($function, "http://api.drupal.org/api/function/$function/$version");
+function _backdropapi($function, $version = '') {
+  return _l($function, "http://api.backdrop.org/api/function/$function/$version");
 }
 
 /**
@@ -1552,7 +1552,7 @@ function _coder_review_file_path() {
  *   The URL path to the coder_review module.
  */
 function _coder_review_path() {
-  return drupal_get_path('module', 'coder_review');
+  return backdrop_get_path('module', 'coder_review');
 }
 
 /**
@@ -1604,11 +1604,11 @@ function _cache_set($cid, $data, $bin = 'default') {
  * @return ???
  *   ???
  *
- * @see drupal_substr()
+ * @see backdrop_substr()
  */
 function _substr($text, $start, $length = NULL) {
-  if (function_exists('drupal_substr')) {
-    return drupal_substr($text, $start, $length);
+  if (function_exists('backdrop_substr')) {
+    return backdrop_substr($text, $start, $length);
   }
   if ($length === NULL) {
     $length = strlen($text) - $start;
@@ -1625,10 +1625,10 @@ function _substr($text, $start, $length = NULL) {
  * @return int
  *   ???
  *
- * @see drupal_strlen()
+ * @see backdrop_strlen()
  */
 function _strlen($text) {
-  return function_exists('drupal_strlen') ? drupal_strlen($text) : strlen($text);
+  return function_exists('backdrop_strlen') ? backdrop_strlen($text) : strlen($text);
 }
 
 /**
@@ -1640,10 +1640,10 @@ function _strlen($text) {
  * @return string
  *   ???
  *
- * @see drupal_strtoupper()
+ * @see backdrop_strtoupper()
  */
 function _strtoupper($text) {
-  return function_exists('drupal_strtoupper') ? drupal_strtoupper($text) : strtoupper($text);
+  return function_exists('backdrop_strtoupper') ? backdrop_strtoupper($text) : strtoupper($text);
 }
 
 /**
@@ -1655,10 +1655,10 @@ function _strtoupper($text) {
  * @return string
  *   ???
  *
- * @see drupal_strtolower()
+ * @see backdrop_strtolower()
  */
 function _strtolower($text) {
-  return function_exists('drupal_strtolower') ? drupal_strtolower($text) : strtolower($text);
+  return function_exists('backdrop_strtolower') ? backdrop_strtolower($text) : strtolower($text);
 }
 
 /**
@@ -1701,9 +1701,9 @@ function _file_list($path, $regex, $recurse = TRUE) {
  *   ???
  */
 function _message($message = NULL, $type = 'status') {
-  if (function_exists('drupal_set_message')) {
+  if (function_exists('backdrop_set_message')) {
     // @ignore security_dsm
-    drupal_set_message($message);
+    backdrop_set_message($message);
   }
 
   static $messages = array();

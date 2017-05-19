@@ -3,11 +3,11 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 ---------------------------------
 - Changes (2011-01-31):
   * various
-  * - #859314: minor cleanup to conform to Drupal coding standards
+  * - #859314: minor cleanup to conform to Backdrop coding standards
 
 - Changes (2011-01-29):
   * various
-  * - #859314: rename global variables according to Drupal coding standards
+  * - #859314: rename global variables according to Backdrop coding standards
   * coder_upgrade.end.inc
   * - ignore all hidden directories and exclude template files
 
@@ -45,7 +45,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-10-29):
   * coder_upgrade.inc, coder_upgrade.install, coder_upgrade.module, coder_upgrade.main.inc
-  * - refactor code to allow execution from a separate process outside of Drupal
+  * - refactor code to allow execution from a separate process outside of Backdrop
   * coder_upgrade.begin.inc
   * - cache the core theme information in the persistent cache (includes disabled modules)
   * coder_upgrade.main.inc
@@ -117,7 +117,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-08-11):
   * coder_upgrade.call.inc
-  * - #878470: enhance #drupal_set_header_renamed to handle no parameters
+  * - #878470: enhance #backdrop_set_header_renamed to handle no parameters
   * coder_upgrade.function.inc
   * - enhance #hook_load_signature to clean the parameter variable
   * coder_upgrade.list.inc
@@ -152,7 +152,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 - Changes (2010-07-08):
   * coder_upgrade.call.inc
   * - #update_sql
-  * - #847914: drupal_get_form() upgrade routine fails when form callback has no parameters
+  * - #847914: backdrop_get_form() upgrade routine fails when form callback has no parameters
   * coder_upgrade.function.inc
   * - #837258: add T_ELSE_IF to condition check in coder_upgrade_convert_op()
   * - #update_sql: changes to hook_update_N()
@@ -161,10 +161,10 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
   * coder_upgrade.db.inc
   * - improve sql parsing and conversion to DBTNG syntax (by duellj and adrian)
   * coder_upgrade.call.inc
-  * - improve #drupal_set_title to only find calls to check_plain()
+  * - improve #backdrop_set_title to only find calls to check_plain()
   * - improve #user_load_multiple to handle inline comments in parameters
   * coder_upgrade.function.inc
-  * - #833972: conform doc_comment to Drupal standards for inserted hook_op functions
+  * - #833972: conform doc_comment to Backdrop standards for inserted hook_op functions
   * - add a doc_comment to each function missing one
   * coder_upgrade.test
   * - include function.inc needed by begin.inc
@@ -173,14 +173,14 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-06-29):
   * coder_upgrade.call.inc
-  * - #db_is_active, #remove-drupal-urlencode
+  * - #db_is_active, #remove-backdrop-urlencode
   * - improve #user_load_multiple to not always change call to user_load_multiple()
 
 - Changes (2010-06-28): (part 2)
   * coder_upgrade.call.inc
   * - #taxonomy_form_all
   * coder_upgrade.function.inc
-  * - #node_form, #drupal_render_children
+  * - #node_form, #backdrop_render_children
   * coder_upgrade.regex.inc
   * - #block_tables_renamed, #fapi_changes
 
@@ -192,7 +192,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
   * tests/samples directory
   * - update the input and expected test file: example.module
   * - #db_result, #db_column_exists, #custom_block, #comment_wildcard, #no-synonyms-taxonomy,
-  * - #drupal_add_js_external, #drupal_add_js_weight, #jquery_ui, #theme_changes, #hook_forms_signature,
+  * - #backdrop_add_js_external, #backdrop_add_js_weight, #jquery_ui, #theme_changes, #hook_forms_signature,
   * - #remove_FILE_STATUS_TEMPORARY, #hook-user-changes, #node_load_multiple, #watchdog_emerg
 
 - Changes (2010-06-18):
@@ -212,7 +212,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
   * - #db_column_exists (not documented), improve #file_set_status
   * coder_upgrade.regex.inc
   * - #clean_urls_search_paths, #logout_path (both were done with #admin_path_changes on 03-20)
-  * - the latter had its anchor replaced with http://drupal.org/node/719612
+  * - the latter had its anchor replaced with http://backdrop.org/node/719612
   * - #watchdog_emerg
 
 - Changes (2010-04-21):
@@ -240,7 +240,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-03-31):
   * coder_upgrade.call.inc, coder_upgrade.regex.inc (by duellj with modifications)
-  * - implement #drupal_add_js_external, #jquery_ui, and #custom_block
+  * - implement #backdrop_add_js_external, #jquery_ui, and #custom_block
 
 - Changes (2010-03-30):
   * coder_upgrade.call.inc
@@ -267,7 +267,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-03-20):
   * coder_upgrade.call.inc
-  * - implement #drupal_goto_params, #drupal_add_css_inline, and #admin_path_changes
+  * - implement #backdrop_goto_params, #backdrop_add_css_inline, and #admin_path_changes
   * - revise #url_query_parameter
   * coder_upgrade.function.inc
   * - implement #implementation_hook_comment and #hook_element_info
@@ -332,7 +332,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-02-27):
   * coder_upgrade.call.inc
-  * - implement #drupal_set_header_renamed
+  * - implement #backdrop_set_header_renamed
 
 - Changes (2010-02-22):
   * coder_upgrade.call.inc
@@ -360,7 +360,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
    * coder_upgrade.list.inc, coder_upgrade.main.inc, coder_upgrade.module
    * - refactor the routine names out of the upgrade sets
    * - refactor hook_upgrades to hook_upgrade_info
-   * - refactor the API to be totally hook based using drupal_alter
+   * - refactor the API to be totally hook based using backdrop_alter
    * coder_upgrade.end.inc, coder_upgrade.install.inc, coder_upgrade.regex.inc
    * - refactor the main upgrade routines to hooks
    * coder_upgrade.call.inc, coder_upgrade.function.inc
@@ -390,20 +390,20 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-02-15):
    * coder_upgrade.list.inc
-   * - correct parameters in call to drupal_system_listing (filepath is now uri)
+   * - correct parameters in call to backdrop_system_listing (filepath is now uri)
    * - add 'file' parameter to upgrade routine array
    * - include files from 'file' parameter
    * coder_upgrade.main.inc
    * - eliminate hard-coded include of conversion routine files
    * - refactor convert_functions and convert_function_calls routines to this file from other.inc
    * coder_upgrade.other.inc
-   * - refactor function and function call routines to use drupal_alter
+   * - refactor function and function call routines to use backdrop_alter
    * - refactor each case block in these two functions to a separate alter hook routine
    * - use this module to make the above change
    * - refactor function and function call routines to separate include files
    * coder_upgrade.call.inc
    * - add this file for function call changes
-   * - drupal_add_css, drupal_add_js, drupal_set_html_head, filter_formats: revised
+   * - backdrop_add_css, backdrop_add_js, backdrop_set_html_head, filter_formats: revised
    * coder_upgrade.function.inc
    * - add this file for function (or hook) changes
    * coder_upgrade.regex.inc
@@ -423,13 +423,13 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 
 - Changes (2010-01-18):
    * coder_upgrade.main.inc
-   * - replace require_once statements with call to module_load_include (that includes DRUPAL_ROOT)
+   * - replace require_once statements with call to module_load_include (that includes BACKDROP_ROOT)
 
 - Changes (2010-01-10):
    * coder_upgrade.other.inc
    * - function calls
-   *   - drupal_add_css_weight: included in drupal_add_js_options change
-   *   - drupal_valid_path: menu_valid_path becomes drupal_valid_path with a parameter change
+   *   - backdrop_add_css_weight: included in backdrop_add_js_options change
+   *   - backdrop_valid_path: menu_valid_path becomes backdrop_valid_path with a parameter change
 
 - Changes (2010-01-01):
    * coder_upgrade.other.inc
@@ -450,7 +450,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
    * coder_upgrade.other.inc:
    * - add $reader as a parameter to coder_upgrade_callback_functions
    * - function calls
-   *   - drupal_set_html_head: insert new required parameter when first parameter is set
+   *   - backdrop_set_html_head: insert new required parameter when first parameter is set
    *   - node_type_base
    * - functions
    *   - action_info, filter, hook_info, link, theme (NOT DONE)

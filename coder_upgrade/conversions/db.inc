@@ -6,18 +6,18 @@
  * These routines use the grammar parser.
  *
  * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://drupal.org/node/394070 that are marked with a
+ * category roadmap at http://backdrop.org/node/394070 that are marked with a
  * green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
  * The upgrades to these functions are documented at the following urls.
  *
  * Database
- * http://drupal.org/node/224333#dbtng (NOT FINISHED)
- * http://drupal.org/node/224333#db_rewrite_sql (NOT FINISHED)
+ * http://backdrop.org/node/224333#dbtng (NOT FINISHED)
+ * http://backdrop.org/node/224333#db_rewrite_sql (NOT FINISHED)
  */
 
 /**
@@ -73,7 +73,7 @@ function coder_upgrade_upgrade_call_db_query_range_alter(&$node, &$reader) { // 
   }
 
   // Add finishing touches to new query syntax for a range query.
-  // See http://drupal.org/node/310075.
+  // See http://backdrop.org/node/310075.
   // ->range($from, $count)
 }
 
@@ -81,7 +81,7 @@ function coder_upgrade_upgrade_call_db_query_range_alter(&$node, &$reader) { // 
  * Implements hook_upgrade_call_db_rewrite_sql_alter().
  *
  * @todo db_rewrite_sql() replaced with hook_query_alter()
- * @see http://drupal.org/node/224333#db_rewrite_sql
+ * @see http://backdrop.org/node/224333#db_rewrite_sql
  */
 function coder_upgrade_upgrade_call_db_rewrite_sql_alter(&$node, &$reader) {
   // TODO This is not ready as the call to arrayitize() on a SELECT will
@@ -211,7 +211,7 @@ function coder_upgrade_parse_query_string(&$node, /*&$operand*/ $sql, $from = 0,
   // TODO The parameter could be an array variable or expression like array_merge($a, $b)
   // With the latter, add an assignment variable equal to the expression. Then
   // set replacement variables equal to variable[$index].
-  // See http://drupalcode.org/viewvc/drupal/drupal/modules/simpletest/tests/database_test.test?revision=1.80&view=markup
+  // See http://backdropcode.org/viewvc/backdrop/backdrop/modules/simpletest/tests/database_test.test?revision=1.80&view=markup
   $values = array();
   for ($i = 1; $i < $item->parameterCount(); $i++) {
     $item->setParameter($i, $item->getParameter($i)->stripComments());
@@ -411,7 +411,7 @@ function coder_upgrade_parse_update_query_string($sql, $values) {
   // Regex needs to handle multi-line strings. The parsing and exploding of
   // fields and conditions fails on this.
   // Also, if there are multiple values to be replaced and only a single value
-  // as parameter to drupal_query, then assume it is an array and apply it in
+  // as parameter to backdrop_query, then assume it is an array and apply it in
   // order by index to the substitutions.
   // db_update('quotes_blocks')->fields(array('name' => $vals[0], 'block_type' => $vals[1], ...)
 

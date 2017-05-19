@@ -17,7 +17,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**
@@ -44,7 +44,7 @@ class Drupal_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_S
     /**
      * The function comment parser for the current method.
      *
-     * @var Drupal_CommentParser_FunctionCommentParser
+     * @var Backdrop_CommentParser_FunctionCommentParser
      */
     protected $commentParser = null;
 
@@ -180,7 +180,7 @@ class Drupal_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_S
         $this->_methodName = $phpcsFile->getDeclarationName($stackPtr);
 
         try {
-            $this->commentParser = new Drupal_CommentParser_FunctionCommentParser($commentString, $phpcsFile);
+            $this->commentParser = new Backdrop_CommentParser_FunctionCommentParser($commentString, $phpcsFile);
             $this->commentParser->parse();
         } catch (PHP_CodeSniffer_CommentParser_ParserException $e) {
             $line = ($e->getLineWithinComment() + $commentStart);

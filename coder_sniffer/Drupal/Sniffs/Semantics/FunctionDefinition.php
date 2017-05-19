@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semantics_FunctionDefinition.
+ * Backdrop_Sniffs_Semantics_FunctionDefinition.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-abstract class Drupal_Sniffs_Semantics_FunctionDefinition implements PHP_CodeSniffer_Sniff
+abstract class Backdrop_Sniffs_Semantics_FunctionDefinition implements PHP_CodeSniffer_Sniff
 {
 
 

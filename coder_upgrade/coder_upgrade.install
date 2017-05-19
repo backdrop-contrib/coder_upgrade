@@ -3,7 +3,7 @@
  * @file
  * Install, uninstall, and update functions for the Coder Upgrade module.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 module_load_include('inc', 'coder_upgrade', 'coder_upgrade');
@@ -20,21 +20,21 @@ function coder_upgrade_install() {
     // Create the old module directory.
     $dir = coder_upgrade_directory_path('old', FALSE);
     if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-      drupal_set_message(st('The files directory at %directory can not be written to. This is the default directory searched by Coder Upgrade for modules to be converted.', array('%directory' => $dir)), 'error');
+      backdrop_set_message(st('The files directory at %directory can not be written to. This is the default directory searched by Coder Upgrade for modules to be converted.', array('%directory' => $dir)), 'error');
     }
     // Create the new module directory.
     $dir = coder_upgrade_directory_path('new', FALSE);
     if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-      drupal_set_message(st('The files directory at %directory can not be written to. This is the default directory to which Coder Upgrade writes converted module code.', array('%directory' => $dir)), 'error');
+      backdrop_set_message(st('The files directory at %directory can not be written to. This is the default directory to which Coder Upgrade writes converted module code.', array('%directory' => $dir)), 'error');
     }
     // Create the patch directory.
     $dir = coder_upgrade_directory_path('patch', FALSE);
     if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-      drupal_set_message(st('The files directory at %directory can not be written to. This is the default directory to which Coder Upgrade writes patch files.', array('%directory' => $dir)), 'error');
+      backdrop_set_message(st('The files directory at %directory can not be written to. This is the default directory to which Coder Upgrade writes patch files.', array('%directory' => $dir)), 'error');
     }
   }
   else {
-    drupal_set_message(st('Your files directory at %directory can not be written to. Coder Upgrade places converted module code in subdirectories of this directory.', array('%directory' => $dir)), 'error');
+    backdrop_set_message(st('Your files directory at %directory can not be written to. Coder Upgrade places converted module code in subdirectories of this directory.', array('%directory' => $dir)), 'error');
   }
 
   // Create a core theme information cache.

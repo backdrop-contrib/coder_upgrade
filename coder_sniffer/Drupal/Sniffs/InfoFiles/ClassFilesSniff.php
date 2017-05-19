@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_InfoFiles_ClassFilesSniff.
+ * Backdrop_Sniffs_InfoFiles_ClassFilesSniff.
  *
  * PHP version 5
  *
@@ -17,7 +17,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_InfoFiles_ClassFilesSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_InfoFiles_ClassFilesSniff implements PHP_CodeSniffer_Sniff
 {
 
 
@@ -56,7 +56,7 @@ class Drupal_Sniffs_InfoFiles_ClassFilesSniff implements PHP_CodeSniffer_Sniff
         }
 
         $contents = file_get_contents($phpcsFile->getFilename());
-        $info     = self::drupalParseInfoFormat($contents);
+        $info     = self::backdropParseInfoFormat($contents);
         if (isset($info['files']) === true && is_array($info['files']) === true) {
             foreach ($info['files'] as $file) {
                 $fileName = dirname($phpcsFile->getFilename()).'/'.$file;
@@ -110,13 +110,13 @@ class Drupal_Sniffs_InfoFiles_ClassFilesSniff implements PHP_CodeSniffer_Sniff
 
 
     /**
-     * Parses a Drupal info file. Copied from Drupal core drupal_parse_info_format().
+     * Parses a Backdrop info file. Copied from Backdrop core backdrop_parse_info_format().
      *
      * @param string $data The contents of the info file to parse
      *
      * @return array The info array.
      */
-    public static function drupalParseInfoFormat($data)
+    public static function backdropParseInfoFormat($data)
     {
         $info = array();
         $constants = get_defined_constants();
@@ -173,7 +173,7 @@ class Drupal_Sniffs_InfoFiles_ClassFilesSniff implements PHP_CodeSniffer_Sniff
 
         return $info;
 
-    }//end drupalParseInfoFormat()
+    }//end backdropParseInfoFormat()
 
 
 }//end class

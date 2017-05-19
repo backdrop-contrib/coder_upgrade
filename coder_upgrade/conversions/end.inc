@@ -6,10 +6,10 @@
  * These routines use the grammar parser.
  *
  * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://drupal.org/node/394070 that are marked with a
+ * category roadmap at http://backdrop.org/node/394070 that are marked with a
  * green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -76,7 +76,7 @@ function coder_upgrade_scan_directory_2($dirname, $retrieve = 'dirs') {
  * Adds file entries to .info files.
  *
  * Module .info files must now specify all loadable code files explicitly.
- * http://drupal.org/node/224333#registry
+ * http://backdrop.org/node/224333#registry
  *
  * @param string $dirname
  *   Module directory path.

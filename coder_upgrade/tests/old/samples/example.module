@@ -39,7 +39,7 @@ function example_absolute_includes() {
   // require './' . $path
   // include() -- Change the next line but leave this alone
   // include -- Change the next line but leave this alone
-  define('EVENT_PATH', drupal_get_path('module', 'event'));
+  define('EVENT_PATH', backdrop_get_path('module', 'event'));
 
   include(EVENT_PATH .'/event.theme');
   require(EVENT_PATH .'/ical.inc');
@@ -59,25 +59,25 @@ function example_absolute_includes() {
   }
 
   // A different format to the include.
-  include_once './'. drupal_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
-  include_once drupal_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
-  echo './'. drupal_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
+  include_once './'. backdrop_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
+  include_once backdrop_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
+  echo './'. backdrop_get_path('module', 'og_panels') .'/includes/groupcontext.inc';
 
   // Ensure we are not serving a cached page.
-  if (function_exists('drupal_set_content')) {
+  if (function_exists('backdrop_set_content')) {
     if (module_exists('content')) {
-      include_once(drupal_get_path('module', 'fivestar') .'/fivestar_field.inc');
+      include_once(backdrop_get_path('module', 'fivestar') .'/fivestar_field.inc');
     }
   }
   if (module_exists('comment')) {
-    include_once(drupal_get_path('module', 'fivestar') .'/fivestar_comment.inc');
+    include_once(backdrop_get_path('module', 'fivestar') .'/fivestar_comment.inc');
   }
 
-  include_once(drupal_get_path('module', 'fivestar') .'/fivestar_color.inc');
-  require_once(drupal_get_path('module', 'transactions').'/transactions.inc');
+  include_once(backdrop_get_path('module', 'fivestar') .'/fivestar_color.inc');
+  require_once(backdrop_get_path('module', 'transactions').'/transactions.inc');
 }
 
-// Related to http://drupal.org/node/224333#registry
+// Related to http://backdrop.org/node/224333#registry
 function example_function_exists() {
   // function_exists() -- Change the next line but leave this alone
   if (function_exists('xx')) {
@@ -87,7 +87,7 @@ function example_function_exists() {
 }
 
 // TODO This was reverted!!!
-// http://drupal.org/files/issues/sessions_1.patch
+// http://backdrop.org/files/issues/sessions_1.patch
 function example_set_session() {
   // $_SESSION['site_offline'] = variable_get('site_offline', FALSE) -- Change the next line but leave this alone
   $_SESSION['site_offline'] = variable_get('site_offline', FALSE);
@@ -107,12 +107,12 @@ function example_set_session() {
   }
   $_SESSION['book_update_6000_orphans']['from'] = 0;
   $_SESSION['book_update_6000'] = array();
-  // drupal_set_session('book_update_6000_orphans', array('from' => 0));
-  // drupal_set_session('book_update_6000', array());
+  // backdrop_set_session('book_update_6000_orphans', array('from' => 0));
+  // backdrop_set_session('book_update_6000', array());
   $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
   // Unchanged?
   $_SESSION['dblog_overview_filter'] = array();
-  // drupal_set_session('dblog_overview_filter', array());
+  // backdrop_set_session('dblog_overview_filter', array());
   $session = &$_SESSION['node_overview_filter'];
   $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
   // Unchanged?
@@ -127,15 +127,15 @@ function example_request_time() {
 }
 
 function example_rebuild_functions() {
-  // drupal_rebuild_theme_registry() -- Change the next line but leave this alone
-  drupal_rebuild_theme_registry();
-  // drupal_rebuild_code_registry() -- Change the next line but leave this alone
-  drupal_rebuild_code_registry();
+  // backdrop_rebuild_theme_registry() -- Change the next line but leave this alone
+  backdrop_rebuild_theme_registry();
+  // backdrop_rebuild_code_registry() -- Change the next line but leave this alone
+  backdrop_rebuild_code_registry();
 }
 
 function example_uninstall_module() {
-  // drupal_uninstall_module() -- Change the next line but leave this alone
-  drupal_uninstall_module($module);
+  // backdrop_uninstall_module() -- Change the next line but leave this alone
+  backdrop_uninstall_module($module);
 }
 
 // use module_implements not module_list when calling hook implementations
@@ -145,23 +145,23 @@ function example_module_list() {
   }
 }
 
-// Parameters for drupal_http_request() have changed
+// Parameters for backdrop_http_request() have changed
 function example_http_request() {
-  // drupal_http_request() -- Change the next line but leave this alone
-  drupal_http_request('http://example.com/', array('Header-Title' => 'value'), 'GET', NULL, 0);
+  // backdrop_http_request() -- Change the next line but leave this alone
+  backdrop_http_request('http://example.com/', array('Header-Title' => 'value'), 'GET', NULL, 0);
   /*
    * Trying to produce this:
-   * drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
+   * backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
    */
-  drupal_http_request('http://example.com/', array('Header-Title' => 'value'), 'GET', 'Some data', 0);
-  drupal_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST', 'Some data', 3);
-  drupal_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST', 'Some data');
-  drupal_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST');
-  drupal_http_request('http://example.com/');
+  backdrop_http_request('http://example.com/', array('Header-Title' => 'value'), 'GET', 'Some data', 0);
+  backdrop_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST', 'Some data', 3);
+  backdrop_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST', 'Some data');
+  backdrop_http_request('http://example.com/', array('Header-Title' => 'value'), 'POST');
+  backdrop_http_request('http://example.com/');
 }
 
 function example_moved_statistics_settings() {
-  drupal_goto($path = 'admin/reports/settings');
+  backdrop_goto($path = 'admin/reports/settings');
 }
 
 function example_system_theme_data() {
@@ -179,50 +179,50 @@ function example_static_variable() {
 }
 
 function example_html_head() {
-  // drupal_set_html_head() -- Change the next line but leave this alone
+  // backdrop_set_html_head() -- Change the next line but leave this alone
   $data = 'my header';
-  drupal_set_html_head($data);
-  if (drupal_set_html_head($data)) {
+  backdrop_set_html_head($data);
+  if (backdrop_set_html_head($data)) {
     //
   }
 }
 
-function example_drupal_eval() {
-  // drupal_eval() -- Change the next line but leave this alone
-  drupal_eval('<?php print "Hello World"; ? >');
-  $text = drupal_eval('<?php print "Hello World"; ? >');
-  if ($text = drupal_eval('<?php print "Hello World"; ? >')) {
+function example_backdrop_eval() {
+  // backdrop_eval() -- Change the next line but leave this alone
+  backdrop_eval('<?php print "Hello World"; ? >');
+  $text = backdrop_eval('<?php print "Hello World"; ? >');
+  if ($text = backdrop_eval('<?php print "Hello World"; ? >')) {
     //
   }
-  print_r(drupal_eval('<?php print "Hello World"; ? >'));
-  // drupal_eval() -- try this for nesting complexity
-  echo print_r(drupal_eval('<?php print "Hello World"; ? >'), 1);
+  print_r(backdrop_eval('<?php print "Hello World"; ? >'));
+  // backdrop_eval() -- try this for nesting complexity
+  echo print_r(backdrop_eval('<?php print "Hello World"; ? >'), 1);
 }
 
 function example_http_header_functions() {
-  // drupal_set_header() -- Change the next line but leave this alone
-  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal server error');
-  drupal_set_header('HTTP/1.1 503 Service unavailable');
-  drupal_set_header('HTTP/1.1 403 Forbidden');
-  drupal_set_header('Content-Type: text/plain');
-  drupal_set_header('Content-Type: text/javascript; charset=utf-8');
-  drupal_set_header('Content-Type: octet/stream');
-  drupal_set_header('Content-Disposition: attachment; filename="'. $filename .'"');
-  drupal_set_header('Content-Length: '.filesize(file_directory_path().'/'.$filename));
+  // backdrop_set_header() -- Change the next line but leave this alone
+  backdrop_set_header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal server error');
+  backdrop_set_header('HTTP/1.1 503 Service unavailable');
+  backdrop_set_header('HTTP/1.1 403 Forbidden');
+  backdrop_set_header('Content-Type: text/plain');
+  backdrop_set_header('Content-Type: text/javascript; charset=utf-8');
+  backdrop_set_header('Content-Type: octet/stream');
+  backdrop_set_header('Content-Disposition: attachment; filename="'. $filename .'"');
+  backdrop_set_header('Content-Length: '.filesize(file_directory_path().'/'.$filename));
 
   // Double quotes.
-  drupal_set_header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal server error");
-  drupal_set_header("HTTP/1.1 503 Service unavailable");
-  drupal_set_header("HTTP/1.1 403 Forbidden");
-  drupal_set_header("Content-Type: text/plain");
-  drupal_set_header("Content-Type: text/javascript; charset=utf-8");
-  drupal_set_header("Content-Type: octet/stream");
-  drupal_set_header("Content-Disposition: attachment; filename='". $filename ."'");
-  drupal_set_header("Content-Length: ".filesize(file_directory_path()."/".$filename));
+  backdrop_set_header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal server error");
+  backdrop_set_header("HTTP/1.1 503 Service unavailable");
+  backdrop_set_header("HTTP/1.1 403 Forbidden");
+  backdrop_set_header("Content-Type: text/plain");
+  backdrop_set_header("Content-Type: text/javascript; charset=utf-8");
+  backdrop_set_header("Content-Type: octet/stream");
+  backdrop_set_header("Content-Disposition: attachment; filename='". $filename ."'");
+  backdrop_set_header("Content-Length: ".filesize(file_directory_path()."/".$filename));
 
-  // drupal_get_headers() -- Change the next line but leave this alone
-  $headers = drupal_get_headers();
-  foreach (drupal_get_headers() as $name => $value) {
+  // backdrop_get_headers() -- Change the next line but leave this alone
+  $headers = backdrop_get_headers();
+  foreach (backdrop_get_headers() as $name => $value) {
     //
   }
 }
@@ -236,13 +236,13 @@ function example_file_download() {
 }
 
 function example_set_content() {
-  // drupal_set_content() -- Change the next line but leave this alone
+  // backdrop_set_content() -- Change the next line but leave this alone
   // Add our own text to the footer.
-  drupal_set_content('footer', 'Adding custom text to footer');
+  backdrop_set_content('footer', 'Adding custom text to footer');
   // Get the complete footer contents.
-  // drupal_get_content() -- Change the next line but leave this alone
-  $full_footer = drupal_get_content();
-  if ($full_footer = drupal_get_content()) {
+  // backdrop_get_content() -- Change the next line but leave this alone
+  $full_footer = backdrop_get_content();
+  if ($full_footer = backdrop_get_content()) {
     //
   }
 }
@@ -256,10 +256,10 @@ function example_time_limit() {
   }
 }
 
-// http://drupal.org/node/224333#remove-drupal-urlencode
-function example_remove_drupal_urlencode() {
-  // drupal_urlencode() -- Change the next line but leave this alone
-  $string = drupal_urlencode('test');
+// http://backdrop.org/node/224333#remove-backdrop-urlencode
+function example_remove_backdrop_urlencode() {
+  // backdrop_urlencode() -- Change the next line but leave this alone
+  $string = backdrop_urlencode('test');
 }
 
 /*
@@ -282,8 +282,8 @@ function example_() {
  *
  * Use case 1: returns array directly.
  *
- * http://drupal.org/node/224333#hook_permission
- * http://drupal.org/node/224333#descriptions_permissions
+ * http://backdrop.org/node/224333#hook_permission
+ * http://backdrop.org/node/224333#descriptions_permissions
  */
 function example_perm() {
   return array('administer my module', $perm_1['one'], 'permission two', $perm_2[1]['2']);
@@ -320,7 +320,7 @@ function example_perm() {
 }
 
 /**
- * Other permission items in http://drupal.org/files/issues/506976_0.patch.
+ * Other permission items in http://backdrop.org/files/issues/506976_0.patch.
  */
 function example_perm_items() {
   $options = array();
@@ -355,7 +355,7 @@ function example_php_permissions() {
 /**
  * Implement hook_access.
  *
- * http://drupal.org/node/224333#hook_node_access
+ * http://backdrop.org/node/224333#hook_node_access
  */
 function example_access($op, $node, $account) {
   if ($op == 'create') {
@@ -488,8 +488,8 @@ function example_schema() {
 
 // Database schema (un)installed automatically
 function example_install() {
-//   drupal_install_schema('example');
-  if ($results = drupal_install_schema('example')) {
+//   backdrop_install_schema('example');
+  if ($results = backdrop_install_schema('example')) {
     // Do something.
   }
 }
@@ -499,7 +499,7 @@ function example_uninstall() {
   while ($data = db_fetch_object($result)) {
     db_query("DELETE FROM {variable} WHERE name = '%s'", 'example_'. $data->nid);
   }
-  drupal_uninstall_schema('example');
+  backdrop_uninstall_schema('example');
 }
 
 function example_schema_ret() {
@@ -518,9 +518,9 @@ function example_schema_ret() {
   db_add_unique_key($ret, $table, $new_name);
   // includes/database.pgsql.inc Change a field definition.
   db_change_field($ret, $table, $new_name);
-  // includes/database.inc Create a new table from a Drupal table definition.
+  // includes/database.inc Create a new table from a Backdrop table definition.
   db_create_table($ret, $table, $new_name);
-  // includes/database.pgsql.inc Generate SQL to create a new table from a Drupal schema definition.
+  // includes/database.pgsql.inc Generate SQL to create a new table from a Backdrop schema definition.
   db_create_table_sql($ret, $table, $new_name);
   // includes/database.pgsql.inc Drop a field.
   db_drop_field($ret, $table, $new_name);
@@ -570,7 +570,7 @@ function example_db_column_exists() {
   }
 }
 
-// http://drupal.org/node/224333#db_is_active
+// http://backdrop.org/node/224333#db_is_active
 function example_db_is_active() {
   // db_is_active() -- Change the next line but leave this alone
   if (db_is_active()) {
@@ -593,7 +593,7 @@ function example_menu_link_alter(&$item, $menu) {
   }
 }
 
-// http://drupal.org/node/224333#admin_path_changes
+// http://backdrop.org/node/224333#admin_path_changes
 function example_admin_path_changes() {
   $menu['admin/reports/settings'] = array();
   $menu['admin/build/modules/'] = array();
@@ -617,9 +617,9 @@ function example_admin_path_changes() {
   $menu['admin/settings/clean-urls'] = array();
 }
 
-// Where is http://drupal.org/node/224333#menu-link-hooks?
+// Where is http://backdrop.org/node/224333#menu-link-hooks?
 
-// http://drupal.org/node/224333#menu_tree_data
+// http://backdrop.org/node/224333#menu_tree_data
 function example_menu_tree_data() {
   $sql = "menu_tree_data
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
@@ -645,7 +645,7 @@ function example_menu_tree_data() {
 /**
  * Implementation of hook_block().
  *
- * http://drupal.org/node/224333#remove_op
+ * http://backdrop.org/node/224333#remove_op
  */
 function example_block($op, $delta, $edit) {
   if ($op == 'configure') {
@@ -667,12 +667,12 @@ function example_block($op, $delta, $edit) {
       'weight' => 0,
       'status' => 1,
       'region' => 'sidebar_first',
-      // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
+      // BACKDROP_CACHE_PER_ROLE will be assumed for block 0.
     );
 
     $blocks['amazing'] = array(
       'info' => t('An amazing block provided by Mymodule.'),
-      'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
+      'cache' => BACKDROP_CACHE_PER_ROLE | BACKDROP_CACHE_PER_PAGE,
     );
 
     return $blocks;
@@ -723,12 +723,12 @@ function example_block($op, $delta, $edit) {
         'weight' => 0,
         'status' => 1,
         'region' => 'sidebar_first',
-        // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
+        // BACKDROP_CACHE_PER_ROLE will be assumed for block 0.
       );
 
       $blocks['amazing'] = array(
         'info' => t('An amazing block provided by Mymodule.'),
-        'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
+        'cache' => BACKDROP_CACHE_PER_ROLE | BACKDROP_CACHE_PER_PAGE,
       );
 
       return $blocks;
@@ -768,7 +768,7 @@ function example_block($op, $delta, $edit) {
 /**
  * Implementation of hook_block().
  *
- * http://drupal.org/node/224333#block_deltas_renamed
+ * http://backdrop.org/node/224333#block_deltas_renamed
  */
 function example_block($op, $delta = 0, $edit = array()) {
   switch ($op) {
@@ -814,14 +814,14 @@ function example_block($op, $delta = 0, $edit = array()) {
   }
 }
 
-// http://drupal.org/node/224333#block_tables_renamed
+// http://backdrop.org/node/224333#block_tables_renamed
 function example_block_db_tables() {
   $result = db_query("SELECT * FROM {blocks}");
   $result = db_query("SELECT * FROM {blocks_roles}");
   $result = db_query("SELECT * FROM {boxes}");
 }
 
-// http://drupal.org/node/224333#custom_block
+// http://backdrop.org/node/224333#custom_block
 function example_custom_block() {
   block_box_delete($form);
   block_box_delete_submit();
@@ -861,7 +861,7 @@ function example_menu() {
   $items['node/%_comment/signup'] = array(
     'title' => user_access('access administration pages') ? t('Signup') : t('Signup settings'),
     'description' => 'Add a signup node.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('signup_settings_page'),
     'access callback' => $access,
     'type' => MENU_LOCAL_TASK,
@@ -948,7 +948,7 @@ function example_comment(&$a1, $op) {
       break;
   }
 
-  cache_clear_all_like(drupal_url(array('id' => $nid)));
+  cache_clear_all_like(backdrop_url(array('id' => $nid)));
 }
 
 /*
@@ -962,17 +962,17 @@ function example_check_markup() {
   $content = check_markup($block->body, $block->format, FALSE);
 }
 
-function example_drupal_set_title() {
-  // drupal_set_title() -- Change the next line but leave this alone
-  drupal_set_title($node->title);
-  drupal_set_title(check_plain($node->title));
-  drupal_set_title(t("@name's blog", array('@name' => $account->name)));
-  drupal_set_title(t("@name's blog is %status", array('@name' => $account->name, '%status' => 'very popular')));
-  drupal_set_title(t("@name's blog is %status in !country", array('@name' => $account->name, '%status' => 'very popular', '!country' => 'my country')));
-  if (drupal_set_title(t("@name's blog", array('@name' => $account->name)))) {
+function example_backdrop_set_title() {
+  // backdrop_set_title() -- Change the next line but leave this alone
+  backdrop_set_title($node->title);
+  backdrop_set_title(check_plain($node->title));
+  backdrop_set_title(t("@name's blog", array('@name' => $account->name)));
+  backdrop_set_title(t("@name's blog is %status", array('@name' => $account->name, '%status' => 'very popular')));
+  backdrop_set_title(t("@name's blog is %status in !country", array('@name' => $account->name, '%status' => 'very popular', '!country' => 'my country')));
+  if (backdrop_set_title(t("@name's blog", array('@name' => $account->name)))) {
   }
-  drupal_set_title('check_plain' . ($node->title));
-  drupal_set_title(/* smoke screen */ 'check_plain' . check_plain($node->title/* smoke screen1 */ . 'xxx') . 'yyy' . check_plain($node->title2/* smoke screen2 */));
+  backdrop_set_title('check_plain' . ($node->title));
+  backdrop_set_title(/* smoke screen */ 'check_plain' . check_plain($node->title/* smoke screen1 */ . 'xxx') . 'yyy' . check_plain($node->title2/* smoke screen2 */));
 }
 
 /**
@@ -1087,7 +1087,7 @@ function example_hook_filter_formats_parameters() {
  * Taxonomy
  */
 
-// http://drupal.org/files/issues/taxonomy_get_tree-depth.patch
+// http://backdrop.org/files/issues/taxonomy_get_tree-depth.patch
 function example_taxonomy_get_tree() {
   // Do we need to change module_invoke???
   if ($vocabularies) {
@@ -1203,7 +1203,7 @@ function example_taxonomy_crud() {
   taxonomy_del_vocabulary($vid);      // taxonomy_vocabulary_delete($vid)
 }
 
-// http://drupal.org/node/224333#taxonomy_form_all
+// http://backdrop.org/node/224333#taxonomy_form_all
 function example_taxonomy_form_all() {
   $form = array();
 
@@ -1228,7 +1228,7 @@ function example_taxonomy_form_all() {
   return $form;
 }
 
-// http://drupal.org/node/224333#no-synonyms-taxonomy
+// http://backdrop.org/node/224333#no-synonyms-taxonomy
 function example_no_synonyms_taxonomy() {
   $synonyms = taxonomy_get_synonyms($tid);
   $synonyms = taxonomy_get_synonyms(0);
@@ -1242,46 +1242,46 @@ function example_no_synonyms_taxonomy() {
  * Javascript
  */
 
-// http://drupal.org/node/224333#drupal_add_js_external
-function example_drupal_add_js_external() {
+// http://backdrop.org/node/224333#backdrop_add_js_external
+function example_backdrop_add_js_external() {
   // Single quotes.
-  drupal_set_html_head('<script type="text/javascript" src="http://example.com/example.js" />');
-  drupal_set_html_head('<script src="http://example.com/example.js" type="text/javascript" />');
-  drupal_set_html_head('<SCRIPT SRC="http://example.com/example.js" TYPE="text/javascript" />');
+  backdrop_set_html_head('<script type="text/javascript" src="http://example.com/example.js" />');
+  backdrop_set_html_head('<script src="http://example.com/example.js" type="text/javascript" />');
+  backdrop_set_html_head('<SCRIPT SRC="http://example.com/example.js" TYPE="text/javascript" />');
 
   // Double quotes.
-  drupal_set_html_head("<script type='text/javascript' src='http://example.com/example.js' />");
-  drupal_set_html_head("<script src='http://example.com/example.js' type='text/javascript' />");
-  drupal_set_html_head("<SCRIPT SRC='http://example.com/example.js' TYPE='text/javascript' />");
+  backdrop_set_html_head("<script type='text/javascript' src='http://example.com/example.js' />");
+  backdrop_set_html_head("<script src='http://example.com/example.js' type='text/javascript' />");
+  backdrop_set_html_head("<SCRIPT SRC='http://example.com/example.js' TYPE='text/javascript' />");
 }
 
-// http://drupal.org/node/224333#drupal_add_js_options
-// http://drupal.org/node/224333#drupal_add_js_weight
-// http://drupal.org/node/224333#drupal_add_css_weight
-function example_drupal_add_js_options() {
-  drupal_add_js('misc/collapse.js');
-  drupal_add_js('misc/collapse.js', 'module');
-  drupal_add_js('misc/collapse.js', 'module', 'footer');
-  drupal_add_js('misc/collapse.js', 'module', 'header', FALSE, TRUE, TRUE);
-  drupal_add_js('misc/collapse.js', 'module', 'header', FALSE, TRUE, FALSE);
-  drupal_add_js('misc/collapse.js', 'module', 'header', FALSE, FALSE, TRUE);
-  drupal_add_js('misc/collapse.js', 'module', 'header', TRUE, FALSE, TRUE);
+// http://backdrop.org/node/224333#backdrop_add_js_options
+// http://backdrop.org/node/224333#backdrop_add_js_weight
+// http://backdrop.org/node/224333#backdrop_add_css_weight
+function example_backdrop_add_js_options() {
+  backdrop_add_js('misc/collapse.js');
+  backdrop_add_js('misc/collapse.js', 'module');
+  backdrop_add_js('misc/collapse.js', 'module', 'footer');
+  backdrop_add_js('misc/collapse.js', 'module', 'header', FALSE, TRUE, TRUE);
+  backdrop_add_js('misc/collapse.js', 'module', 'header', FALSE, TRUE, FALSE);
+  backdrop_add_js('misc/collapse.js', 'module', 'header', FALSE, FALSE, TRUE);
+  backdrop_add_js('misc/collapse.js', 'module', 'header', TRUE, FALSE, TRUE);
 
-  drupal_add_js('misc/collapse.js', 'core');
-  drupal_add_js('misc/collapse.js', 'core', 'footer');
-  drupal_add_js('misc/collapse.js', 'core', 'footer', TRUE, FALSE, TRUE);
+  backdrop_add_js('misc/collapse.js', 'core');
+  backdrop_add_js('misc/collapse.js', 'core', 'footer');
+  backdrop_add_js('misc/collapse.js', 'core', 'footer', TRUE, FALSE, TRUE);
 
-  drupal_add_css('/modules/devel/devel.css');
-  drupal_add_css('/modules/devel/devel.css', 'module');
-  drupal_add_css('/modules/devel/devel.css', 'module', 'screen');
-  drupal_add_css('/modules/devel/devel.css', 'module', 'all', FALSE);
+  backdrop_add_css('/modules/devel/devel.css');
+  backdrop_add_css('/modules/devel/devel.css', 'module');
+  backdrop_add_css('/modules/devel/devel.css', 'module', 'screen');
+  backdrop_add_css('/modules/devel/devel.css', 'module', 'all', FALSE);
 
-  drupal_add_css('/modules/devel/devel.css', 'theme');
-  drupal_add_css('/modules/devel/devel.css', 'theme', 'screen');
-  drupal_add_css('/modules/devel/devel.css', 'theme', 'all', FALSE);
+  backdrop_add_css('/modules/devel/devel.css', 'theme');
+  backdrop_add_css('/modules/devel/devel.css', 'theme', 'screen');
+  backdrop_add_css('/modules/devel/devel.css', 'theme', 'all', FALSE);
 }
 
-// http://drupal.org/node/224333#jquery_ui
+// http://backdrop.org/node/224333#jquery_ui
 function example_jquery_ui() {
   jquery_ui_add(array('ui.accordion', 'ui.dialog'));
   jquery_ui_add('ui.accordion');
@@ -1295,13 +1295,13 @@ function example_jquery_ui() {
  * CSS
  */
 
-// http://drupal.org/node/224333#drupal_add_css_inline
-function example_drupal_add_css_inline() {
+// http://backdrop.org/node/224333#backdrop_add_css_inline
+function example_backdrop_add_css_inline() {
   $color = variable_get('backgroundcolor', '#FFFFFF');
-  drupal_set_html_head("<style type='text/css'>body {background-color: $color}</style>");
+  backdrop_set_html_head("<style type='text/css'>body {background-color: $color}</style>");
 
-  drupal_set_html_head('<style type="text/css">div {background-url: url("images/test.png");}</style>');
-  drupal_set_html_head('
+  backdrop_set_html_head('<style type="text/css">div {background-url: url("images/test.png");}</style>');
+  backdrop_set_html_head('
     <style type="text/css">
       div {
         background-url: url("images/test.png");
@@ -1310,7 +1310,7 @@ function example_drupal_add_css_inline() {
   ');
 }
 
-// http://drupal.org/node/224333#form_clean_id
+// http://backdrop.org/node/224333#form_clean_id
 function example_form_clean_id() {
   $class = form_clean_id('string');
   $id = form_clean_id($id);
@@ -1323,7 +1323,7 @@ function example_form_clean_id() {
  * Theming
  */
 
-// http://drupal.org/node/224333#theme_changes
+// http://backdrop.org/node/224333#theme_changes
 /**
  * Implementation of hook_theme().
  *
@@ -1487,14 +1487,14 @@ function example_theme_changes() {
   theme('example_user_list');
 }
 
-// http://drupal.org/node/224333#drupal_render_children
-// http://drupal.org/node/224333#theme_changes
+// http://backdrop.org/node/224333#backdrop_render_children
+// http://backdrop.org/node/224333#theme_changes
 function theme_example_node_list($items = NULL, $title = NULL) {
   // Render one specific child of the current element.
-  $output = '<blink>' . drupal_render($element['child1']) . '</blink>';
+  $output = '<blink>' . backdrop_render($element['child1']) . '</blink>';
 
   // Render all the remaining children of the current element.
-  $output .= drupal_render($element);
+  $output .= backdrop_render($element);
   return $output;
 }
 
@@ -1521,7 +1521,7 @@ function theme_example_missing() {}
 function theme_example_undefined($function = NULL) {
 }
 
-// http://drupal.org/node/224333#theme_page
+// http://backdrop.org/node/224333#theme_page
 function example_theme_page() {
   $form = array();
   print theme('page', $form);
@@ -1529,7 +1529,7 @@ function example_theme_page() {
   return theme('page', $output);
 }
 
-// http://drupal.org/node/224333#placeholder
+// http://backdrop.org/node/224333#placeholder
 function example_placeholder() {
   // theme('placeholder') -- Change the next line but leave this alone
   $placeholder = theme('placeholder');
@@ -1538,7 +1538,7 @@ function example_placeholder() {
   $placeholder = theme("placeholder", array("text" => $format->name));
 }
 
-// http://drupal.org/node/224333#theme_pager
+// http://backdrop.org/node/224333#theme_pager
 function example_theme_pager() {
   $pager = theme('pager', $tags, $limit, $element, $parameters, $quantity);
   $pager = theme('pager', $tags, $limit, $element, $parameters);
@@ -1549,7 +1549,7 @@ function example_theme_pager() {
   $pager = theme('pager');
 }
 
-// http://drupal.org/node/224333#theme_username
+// http://backdrop.org/node/224333#theme_username
 function example_theme_username() {
   $user = user_load(1);
   print theme('username', $user);
@@ -1563,7 +1563,7 @@ function example_theme_username() {
 /**
  * Implemenatation of hook_form_alter().
  *
- * http://drupal.org/node/224333#node_form
+ * http://backdrop.org/node/224333#node_form
  */
 function example_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
@@ -1586,8 +1586,8 @@ function example_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
-// http://drupal.org/node/224333#process_functions
-// http://drupal.org/files/issues/unify-process-callbacks_0.patch
+// http://backdrop.org/node/224333#process_functions
+// http://backdrop.org/files/issues/unify-process-callbacks_0.patch
 function example_process_functions() {
   $form['element'] = array(
     '#default_value' => $status,
@@ -1627,11 +1627,11 @@ function example_process_functions() {
   );
 }
 
-// http://drupal.org/node/224333#drupal_execute_drupal_form_submit
-function example_drupal_execute() {
-  // drupal_execute() -- Change the next line but leave this alone
-  drupal_execute('story_node_form', $form_state, (object)$node);
-  if (drupal_execute('story_node_form', $form_state, (object)$node)) {
+// http://backdrop.org/node/224333#backdrop_execute_backdrop_form_submit
+function example_backdrop_execute() {
+  // backdrop_execute() -- Change the next line but leave this alone
+  backdrop_execute('story_node_form', $form_state, (object)$node);
+  if (backdrop_execute('story_node_form', $form_state, (object)$node)) {
   }
 }
 
@@ -1639,20 +1639,20 @@ function example_drupal_execute() {
  * Implementation of hook_menu().
  *
  * Example for hook_forms_signature.
- * http://drupal.org/node/224333#hook_forms_signature
+ * http://backdrop.org/node/224333#hook_forms_signature
  */
 function example_menu() {
-  // Using drupal_get_form.
+  // Using backdrop_get_form.
   $items['admin/config/development/coder/upgrade'] = array(
     'title' => 'Upgrade',
     'description' => 'Convert module code from version 6.x to 7.x.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('example_conversions_form'),
     'access arguments' => array('administer code conversions'),
     'type' => MENU_LOCAL_TASK,
   );
 
-  // Not using drupal_get_form.
+  // Not using backdrop_get_form.
   $items['admin/content/signup'] = array(
     'title' => 'Signup overview',
     'description' => 'View all signup-enabled posts, and open or close signups on them.',
@@ -1674,7 +1674,7 @@ function example_menu() {
           $items['admin/config/development/coder/upgrade2'] = array(
             'title' => 'Upgrade',
             'description' => 'Convert module code from version 6.x to 7.x.',
-            'page callback' => 'drupal_get_form',
+            'page callback' => 'backdrop_get_form',
             'page arguments' => array('example_conversions_form2'),
             'access arguments' => array('administer code conversions'),
             'type' => MENU_LOCAL_TASK,
@@ -1684,16 +1684,16 @@ function example_menu() {
             'page callback' => 'example_user_form2',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
 
           // Set admin items.
           $default_menu_fields = array(
             'title' => $op,
-            'page callback' => 'drupal_get_form',
+            'page callback' => 'backdrop_get_form',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
           $admin_path = 'admin/%/'. $op .'/'. $loop_item['handler'];
           $items[$admin_path] = array_merge($default_menu_fields, $menu_item);
@@ -1706,7 +1706,7 @@ function example_menu() {
             'page callback' => 'example_user_form3',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
           $user_path = 'user/%user/example/%/'. $op .'/'. $loop_item['handler'];
           $default_menu_fields['access arguments'] = array(1, 3, 4);
@@ -1745,9 +1745,9 @@ function example_user_form2(&$form_state, $p0, $p1) {
   return $form;
 }
 
-function example_drupal_get_form() {
-  $form = drupal_get_form('example_my_form', $p0);
-  return drupal_get_form($form_id);
+function example_backdrop_get_form() {
+  $form = backdrop_get_form('example_my_form', $p0);
+  return backdrop_get_form($form_id);
 }
 
 function example_my_form(&$form_state, $p0) {
@@ -1758,14 +1758,14 @@ function example_my_form(&$form_state, $p0) {
 /**
  * Implementation of hook_elements().
  *
- * http://drupal.org/node/224333#hook_element_info
+ * http://backdrop.org/node/224333#hook_element_info
  */
 function example_elements() {
   $type['filter_format'] = array('#input' => TRUE);
   return $type;
 }
 
-// http://drupal.org/node/224333#fapi_changes
+// http://backdrop.org/node/224333#fapi_changes
 function example_fapi_changes() {
   $form['#redirect'] = 'node/1';
   $form["#redirect"] = $node;
@@ -1802,7 +1802,7 @@ function example_file_scan_directory() {
   // file_scan_directory() -- Change the next line but leave this alone
   file_scan_directory($dir, '\.module$', array('.', '..', 'CVS'), 0, TRUE, 'filename', 0, 0);
 
-  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '^[a-z/]*$', array('.', '..', 'CVS'), 0, FALSE) as $file) {
+  foreach (file_scan_directory(BACKDROP_ROOT . '/includes/database', '^[a-z/]*$', array('.', '..', 'CVS'), 0, FALSE) as $file) {
     include_once "{$file->filename}/install.inc";
     include_once "{$file->filename}/database.inc";
     $drivers[$file->basename] = $file->filename;
@@ -1825,7 +1825,7 @@ function example_file_set_status() {
   $file = file_save($file);
 }
 
-// http://drupal.org/node/224333#remove_FILE_STATUS_TEMPORARY
+// http://backdrop.org/node/224333#remove_FILE_STATUS_TEMPORARY
 function example_remove_file_status_temporary() {
   $file->status = FILE_STATUS_TEMPORARY;
   $file = array(
@@ -1834,15 +1834,15 @@ function example_remove_file_status_temporary() {
   function_call(FILE_STATUS_TEMPORARY);
 }
 
-function example_drupal_system_listing() {
-  // drupal_system_listing() -- Change the next line but leave this alone
+function example_backdrop_system_listing() {
+  // backdrop_system_listing() -- Change the next line but leave this alone
   // Get current list of modules
-  $files = drupal_system_listing('\.module$', 'modules', 'name', 0);
+  $files = backdrop_system_listing('\.module$', 'modules', 'name', 0);
   // Respect the quote type (single or double)
-  $files = drupal_system_listing("\.module$", 'modules', 'name', 0);
+  $files = backdrop_system_listing("\.module$", 'modules', 'name', 0);
   // Attempt to change $mask
   $mask = '\.module$';
-  $files = drupal_system_listing($mask, 'modules', 'name', 0);
+  $files = backdrop_system_listing($mask, 'modules', 'name', 0);
 }
 
 function example_file_prepare_directory() {
@@ -1871,7 +1871,7 @@ function example_() {
  * User API
  */
 
-// http://drupal.org/node/224333#user_cancel
+// http://backdrop.org/node/224333#user_cancel
 function example_user_cancel($edit, $uid) {
   // user_delete() -- Change the next line but leave this alone
   user_delete($form_state['values'], $form_state['values']['_account']->uid);
@@ -1969,7 +1969,7 @@ function example_user($op, &$edit, &$user, $category = NULL) {
   }
 }
 
-// http://drupal.org/node/224333#user_load_multiple
+// http://backdrop.org/node/224333#user_load_multiple
 function example_user_load_multiple() {
   // user_load() -- Change the next line but leave this alone
   user_load();
@@ -2035,7 +2035,7 @@ function example_profile_alter(&$account) {
  * Node API
  */
 
-// http://drupal.org/node/224333#node_load_multiple
+// http://backdrop.org/node/224333#node_load_multiple
 function example_node_load() {
   $node = node_load(1);
   $node = node_load($nid);
@@ -2060,7 +2060,7 @@ function example_node_load() {
   }
 }
 
-// http://drupal.org/node/224333#node_type_base
+// http://backdrop.org/node/224333#node_type_base
 /**
  * Implementation of hook_node_info().
  *
@@ -2175,7 +2175,7 @@ function default_profile_tasks(&$task, $url) {
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
-  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+  // documentation at: http://api.backdrop.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
       'type' => 'page',
@@ -2281,7 +2281,7 @@ function example_link($type, $node = NULL, $teaser = FALSE) {
  * The content built for the node (field values, comments, file attachments or
  * other node components) will vary depending on the $build_mode parameter.
  *
- * Drupal core defines the following build modes for nodes, with the following
+ * Backdrop core defines the following build modes for nodes, with the following
  * default use cases:
  *   - full (default): node is being displayed on its own page (node/123)
  *   - teaser: node is being displayed on the default home page listing, on
@@ -2302,9 +2302,9 @@ function example_link($type, $node = NULL, $teaser = FALSE) {
  */
 function node_build_content($node, $build_mode = 'full') {
 }
-// http://drupal.org/node/224333#node_build_rss
+// http://backdrop.org/node/224333#node_build_rss
 // Should there be a $build_mode parameter?
-// See http://api.drupal.org/api/function/hook_node_view/7
+// See http://api.backdrop.org/api/function/hook_node_view/7
 /**
  * An implementation of hook_node_view().
  */
@@ -2400,10 +2400,10 @@ function example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     case 'insert':
     case 'update':
       if ($node->moderate && user_access('access submission queue')) {
-        drupal_set_message(t('The post is queued for approval'));
+        backdrop_set_message(t('The post is queued for approval'));
       }
       elseif ($node->moderate) {
-        drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
+        backdrop_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
       }
       break;
     case 'view':
@@ -2449,7 +2449,7 @@ function example_node_type($op, $info) {
   }
 }
 
-// http://drupal.org/node/224333#node_invoke_nodeapi
+// http://backdrop.org/node/224333#node_invoke_nodeapi
 function example_node_invoke_nodeapi() {
   node_invoke_nodeapi($node, 'alter');
   node_invoke_nodeapi($node, 'delete');
@@ -2474,7 +2474,7 @@ function example_node_invoke_nodeapi() {
   node_invoke_nodeapi($node, $op, $a3, $a4);
 }
 
-// http://drupal.org/node/224333#node_type_get_functions
+// http://backdrop.org/node/224333#node_type_get_functions
 function example_node_type_get_functions() {
   $types = node_get_types();
 
@@ -2537,7 +2537,7 @@ function example_node_type_get_functions() {
   }
 }
 
-// http://drupal.org/node/224333#hook_load_signature
+// http://backdrop.org/node/224333#hook_load_signature
 /**
  * Implementation of hook_load().
  *
@@ -2586,7 +2586,7 @@ function example_locale_context() {
 /**
  * Implement hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -2595,7 +2595,7 @@ function example_example() {
 /**
  * Implementation of hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -2603,7 +2603,7 @@ function example_example() {
 /**
  * Implement hook_example.
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -2612,7 +2612,7 @@ function example_example() {
 /**
  * Implementation of hook_example
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -2638,12 +2638,12 @@ function example_referer_uri() {
   $y = referer_uri(/* $xx['y'] */);
 }
 
-function example_drupal_clone() {
-  // drupal_clone() -- Change the next line but leave this alone
-  if ($x = drupal_clone($xx['y'])) {
+function example_backdrop_clone() {
+  // backdrop_clone() -- Change the next line but leave this alone
+  if ($x = backdrop_clone($xx['y'])) {
   }
-  $y = drupal_clone($xx['y']);
-  $this->object1 = drupal_clone($this->object1);
+  $y = backdrop_clone($xx['y']);
+  $this->object1 = backdrop_clone($this->object1);
 }
 
 function example_actions_synchronize() {
@@ -2654,7 +2654,7 @@ function example_actions_synchronize() {
 function example_url_is_external() {
 }
 
-function example_drupal_valid_path() {
+function example_backdrop_valid_path() {
   // Use case 1 - passes variable directly.
   if (!menu_valid_path(array('link_path' => $form_state['values']['site_frontpage_1']))) { }
 
@@ -2896,29 +2896,29 @@ function example_hook_info() {
   return $info;
 }
 
-// http://drupal.org/node/224333#drupal-goto-params
-function example_drupal_goto_params() {
-  drupal_goto('/node/1');
-  drupal_goto('/node/1', 'a=b&c=d');
-  drupal_goto('/node/1', 'a=b&c=d', $fragment);
-  drupal_goto('/node/1', $query, $fragment);
-  drupal_goto('/node/1', 'a=b&c=d', $fragment, 301);
-  drupal_goto('/node/1', NULL, $fragment);
-  drupal_goto('/node/1', NULL, NULL, 301);
+// http://backdrop.org/node/224333#backdrop-goto-params
+function example_backdrop_goto_params() {
+  backdrop_goto('/node/1');
+  backdrop_goto('/node/1', 'a=b&c=d');
+  backdrop_goto('/node/1', 'a=b&c=d', $fragment);
+  backdrop_goto('/node/1', $query, $fragment);
+  backdrop_goto('/node/1', 'a=b&c=d', $fragment, 301);
+  backdrop_goto('/node/1', NULL, $fragment);
+  backdrop_goto('/node/1', NULL, NULL, 301);
 
-  drupal_goto('/node/1', '');
-  drupal_goto('/node/1', "");
+  backdrop_goto('/node/1', '');
+  backdrop_goto('/node/1', "");
 
   $query = 'a=b&c=d';
-  drupal_goto($path);
-  drupal_goto($path, $query);
-  drupal_goto($path, $query, $fragment);
-  drupal_goto($path, $query, $fragment);
-  drupal_goto($path, $query, $fragment, 301);
-  drupal_goto($path, NULL, $fragment);
-  drupal_goto($path, NULL, NULL, 301);
+  backdrop_goto($path);
+  backdrop_goto($path, $query);
+  backdrop_goto($path, $query, $fragment);
+  backdrop_goto($path, $query, $fragment);
+  backdrop_goto($path, $query, $fragment, 301);
+  backdrop_goto($path, NULL, $fragment);
+  backdrop_goto($path, NULL, NULL, 301);
 
-  drupal_goto($path, QUERY, FRAGMENT);
+  backdrop_goto($path, QUERY, FRAGMENT);
 }
 
 function example_date_format() {
@@ -2952,7 +2952,7 @@ function example_url_query_parameter() {
   );
 }
 
-// http://drupal.org/node/224333#watchdog_emerg
+// http://backdrop.org/node/224333#watchdog_emerg
 function example_watchdog_emerg() {
   watchdog('example', 'This is an example emergency message', WATCHDOG_EMERG);
   $severity = WATCHDOG_EMERG;

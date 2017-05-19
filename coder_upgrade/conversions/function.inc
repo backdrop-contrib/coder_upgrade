@@ -6,10 +6,10 @@
  * These routines use the grammar parser.
  *
  * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://drupal.org/node/394070 that are marked with a
+ * category roadmap at http://backdrop.org/node/394070 that are marked with a
  * green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -17,74 +17,74 @@
  *
  *
  * System
- * http://drupal.org/node/224333#search-api (TODO another hook_$op change)
+ * http://backdrop.org/node/224333#search-api (TODO another hook_$op change)
  *
  *
  * Module Info / Install
- * http://drupal.org/node/224333#update_php
+ * http://backdrop.org/node/224333#update_php
  *
  *
  * Permissions and Access
- * http://drupal.org/node/224333#hook_permission
- * http://drupal.org/node/224333#descriptions_permissions
- * http://drupal.org/node/224333#hook_node_access
+ * http://backdrop.org/node/224333#hook_permission
+ * http://backdrop.org/node/224333#descriptions_permissions
+ * http://backdrop.org/node/224333#hook_node_access
  *
  *
  * Database
- * http://drupal.org/node/224333#schema_translation
- * http://drupal.org/node/224333#schema_html
- * http://drupal.org/node/224333#install-schema
- * http://drupal.org/node/224333#block_deltas_renamed
+ * http://backdrop.org/node/224333#schema_translation
+ * http://backdrop.org/node/224333#schema_html
+ * http://backdrop.org/node/224333#install-schema
+ * http://backdrop.org/node/224333#block_deltas_renamed
  *
  *
  * Menus
- * http://drupal.org/node/224333#hook_menu_link_alter
+ * http://backdrop.org/node/224333#hook_menu_link_alter
  *
  *
  * Blocks
- * http://drupal.org/node/224333#remove_op (DUP Node API)
- * http://drupal.org/node/224333#block_deltas_renamed (DUP Database)
+ * http://backdrop.org/node/224333#remove_op (DUP Node API)
+ * http://backdrop.org/node/224333#block_deltas_renamed (DUP Database)
  *
  *
  * Comments
- * http://drupal.org/node/224333#remove_op (DUP Node API) (THIS IS MISSING FROM THE CHRONO PAGE!!!)
+ * http://backdrop.org/node/224333#remove_op (DUP Node API) (THIS IS MISSING FROM THE CHRONO PAGE!!!)
  *
  *
  * Input Sanitization and Input Formats
- * http://drupal.org/node/224333#hook_filter_info
+ * http://backdrop.org/node/224333#hook_filter_info
  *
  *
  * Theming
- * http://drupal.org/node/224333#drupal_render_children
- * http://drupal.org/node/224333#theme_changes
- * http://drupal.org/node/224333#hook_theme_render_changes
+ * http://backdrop.org/node/224333#backdrop_render_children
+ * http://backdrop.org/node/224333#theme_changes
+ * http://backdrop.org/node/224333#hook_theme_render_changes
  *
  *
  * Form API
- * http://drupal.org/node/224333#node_form
- * http://drupal.org/node/224333#hook_forms_signature
- * http://drupal.org/node/224333#hook_element_info
+ * http://backdrop.org/node/224333#node_form
+ * http://backdrop.org/node/224333#hook_forms_signature
+ * http://backdrop.org/node/224333#hook_element_info
  *
  *
  * User API
- * http://drupal.org/node/224333#user_cancel (DONE with remove_op)
- * http://drupal.org/node/224333#remove_op (DUP Node API)
- * http://drupal.org/node/224333#hook-user-changes (two alter hooks in this file)
+ * http://backdrop.org/node/224333#user_cancel (DONE with remove_op)
+ * http://backdrop.org/node/224333#remove_op (DUP Node API)
+ * http://backdrop.org/node/224333#hook-user-changes (two alter hooks in this file)
  *
  *
  * Node API
- * http://drupal.org/node/224333#node_links (NOT DONE)
- * http://drupal.org/node/224333#node_type_base
- * http://drupal.org/node/224333#remove_op (SPANS MULTIPLE HOOKS)
- * http://drupal.org/node/224333#node_build_rss
- * http://drupal.org/node/224333#build_mode
- * http://drupal.org/node/224333#hook_node_xxx
- * http://drupal.org/node/224333#hook_load_signature
+ * http://backdrop.org/node/224333#node_links (NOT DONE)
+ * http://backdrop.org/node/224333#node_type_base
+ * http://backdrop.org/node/224333#remove_op (SPANS MULTIPLE HOOKS)
+ * http://backdrop.org/node/224333#node_build_rss
+ * http://backdrop.org/node/224333#build_mode
+ * http://backdrop.org/node/224333#hook_node_xxx
+ * http://backdrop.org/node/224333#hook_load_signature
  *
  *
  * Miscellaneous
- * http://drupal.org/node/224333#implementation_hook_comment
- * http://drupal.org/node/224333#trigger_overhaul
+ * http://backdrop.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#trigger_overhaul
  */
 
 /**
@@ -102,20 +102,20 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   }
   else {
     // Add a document comment.
-    $item->comment = $editor->commentToStatement("/**\n * @todo Please document this function.\n * @see http://drupal.org/node/1354\n */");
+    $item->comment = $editor->commentToStatement("/**\n * @todo Please document this function.\n * @see http://backdrop.org/node/1354\n */");
   }
 
   global $_coder_upgrade_menu_registry, $_coder_upgrade_theme_registry;
   cdp($node->data->name);
   if (in_array($node->data->name, $_coder_upgrade_menu_registry)) {
-    // http://drupal.org/node/224333#hook_forms_signature
+    // http://backdrop.org/node/224333#hook_forms_signature
     coder_upgrade_convert_form_callback($node);
   }
   elseif (strpos($node->data->name, 'theme_') === 0) {
     $theme_name = substr($node->data->name, strpos($node->data->name, "theme_") + 6);
     if (isset($_coder_upgrade_theme_registry[$theme_name])) {
-      // http://drupal.org/node/224333#drupal_render_children
-      // http://drupal.org/node/224333#theme_changes
+      // http://backdrop.org/node/224333#backdrop_render_children
+      // http://backdrop.org/node/224333#theme_changes
       coder_upgrade_convert_theme_callback($node);
     }
     else {
@@ -158,7 +158,7 @@ function coder_upgrade_convert_theme_callback(&$node) {
   // Create helper objects.
   $editor = PGPEditor::getInstance();
 
-  // Changes: drupal_render_children, theme_changes
+  // Changes: backdrop_render_children, theme_changes
   $item = &$node->data;
   $body = &$item->body;
 
@@ -246,10 +246,10 @@ function coder_upgrade_convert_theme_callback(&$node) {
     }
   }
 
-  // If theme function calls drupal_render, make sure last call is to drupal_render_children
-  // to avoid endless loops: http://drupal.org/node/224333#drupal_render_children
-  if ($statement = $body->searchBackward('PGPFunctionCall', 'name', 'value', 'drupal_render')) {
-    $statement->name['value'] = 'drupal_render_children';
+  // If theme function calls backdrop_render, make sure last call is to backdrop_render_children
+  // to avoid endless loops: http://backdrop.org/node/224333#backdrop_render_children
+  if ($statement = $body->searchBackward('PGPFunctionCall', 'name', 'value', 'backdrop_render')) {
+    $statement->name['value'] = 'backdrop_render_children';
   }
 }
 
@@ -1028,7 +1028,7 @@ function coder_upgrade_convert_install($node) {
   $editor = PGPEditor::getInstance();
 
   /*
-   * In 6.x, drupal_install_schema() has a return value, but not in 7.x.
+   * In 6.x, backdrop_install_schema() has a return value, but not in 7.x.
    * The code below asssumes the return value is not utilized. Otherwise,
    * set the variable to array.
    *
@@ -1036,12 +1036,12 @@ function coder_upgrade_convert_install($node) {
    * use $body->searchCallback().
    */
 
-  foreach (array('drupal_install_schema', 'drupal_uninstall_schema') as $function) {
+  foreach (array('backdrop_install_schema', 'backdrop_uninstall_schema') as $function) {
     if ($call_node = $body->search('PGPFunctionCall', 'name', 'value', $function, TRUE)) {
       // Get the function call object.
       $call = $call_node->data;
       // Insert a comment before the statement containing the function call.
-      $statement = $editor->commentToStatement("// TODO The drupal_(un)install_schema functions are called automatically in D7.");
+      $statement = $editor->commentToStatement("// TODO The backdrop_(un)install_schema functions are called automatically in D7.");
       $call->insertStatementBefore($statement);
       // Get the expression containing the function call.
       $container = $call_node->container;
@@ -1292,12 +1292,12 @@ function coder_upgrade_convert_update_N(&$node) {
     // Strip inline comment delimiter tokens from the parameter.
     $string = str_replace(array('/*', '*/'), '', $return->getParameter()->toString()); // $string = $return->getParameter()->stripComments()->toString();
     // To use PGPList->insertListBefore() need the node of $return.
-//    $statement = $editor->textToStatements("// hook_update_N() no longer returns a \$ret array.\n//Instead, it should return nothing or a translated string to be displayed to the user indicating that the update ran successfully.\nSee http://drupal.org/node/224333#update_sql.");
+//    $statement = $editor->textToStatements("// hook_update_N() no longer returns a \$ret array.\n//Instead, it should return nothing or a translated string to be displayed to the user indicating that the update ran successfully.\nSee http://backdrop.org/node/224333#update_sql.");
     $statement = $editor->commentToStatement("// hook_update_N() no longer returns a \$ret array. Instead, return ");
     $return->insertStatementBefore($statement);
     $statement = $editor->commentToStatement("// nothing or a translated string indicating the update ran successfully.");
     $return->insertStatementBefore($statement);
-    $statement = $editor->commentToStatement("// See http://drupal.org/node/224333#update_sql.");
+    $statement = $editor->commentToStatement("// See http://backdrop.org/node/224333#update_sql.");
     $return->insertStatementBefore($statement);
     // Replace the return() operand with t().
     $editor->setParameter($return, 0, "t('TODO Add a descriptive string here to show in the UI.') /* $string */");
@@ -1364,7 +1364,7 @@ function coder_upgrade_callback_block($node, $case_node, $operation = '') {
       return;
   }
 
-  // http://drupal.org/node/224333#block_deltas_renamed
+  // http://backdrop.org/node/224333#block_deltas_renamed
   // Change numeric block keys to strings
   $editor = PGPEditor::getInstance();
   $body = &$case_node->data->body;
@@ -1583,8 +1583,8 @@ function coder_upgrade_callback_node_type($node, $case_node, $operation = '') {
 function coder_upgrade_callback_user($node, $case_node, $operation = '') {
   cdp("inside " . __FUNCTION__);
 
-  // http://drupal.org/node/224333#remove_op
-  // http://drupal.org/node/224333#hook-user-changes
+  // http://backdrop.org/node/224333#remove_op
+  // http://backdrop.org/node/224333#hook-user-changes
 
   if (!$operation) {
     $case = &$case_node->data;
@@ -2067,7 +2067,7 @@ function coder_upgrade_callback_perm($node, &$array2, &$current2, $hook, $type, 
 /**
  * Updates hook_theme() arrays.
  *
- * Each theme function must register how it integrates with drupal_render().
+ * Each theme function must register how it integrates with backdrop_render().
  *
  * @param PGPNode $node
  *   The node of the statement containing the array object.

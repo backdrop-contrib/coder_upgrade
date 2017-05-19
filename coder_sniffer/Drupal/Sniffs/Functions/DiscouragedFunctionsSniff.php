@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Functions_DiscouragedFunctionsSniff.
+ * Backdrop_Sniffs_Functions_DiscouragedFunctionsSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Functions_DiscouragedFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
+class Backdrop_Sniffs_Functions_DiscouragedFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
 {
 
     /**
@@ -38,7 +38,7 @@ class Drupal_Sniffs_Functions_DiscouragedFunctionsSniff extends Generic_Sniffs_P
                                      'dpq'                 => null,
                                      'dpr'                 => null,
                                      'dprint_r'            => null,
-                                     'drupal_debug'        => null,
+                                     'backdrop_debug'        => null,
                                      'dsm'                 => null,
                                      'dvm'                 => null,
                                      'dvr'                 => null,

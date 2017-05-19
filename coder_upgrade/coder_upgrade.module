@@ -1,24 +1,24 @@
 <?php
 /**
  * @file
- * Provides primary Drupal hook implementations.
+ * Provides primary Backdrop hook implementations.
  *
  * Developer module that assists a contributed module with version upgrade from
- * the Drupal 6.x to 7.x core API. The module creates new code files by
+ * the Backdrop 6.x to 7.x core API. The module creates new code files by
  * modifying existing code files in accordance with the core API changes. The
  * module goal is to enable 6.x module developers to release a 7.x version in
- * conjunction with the release of Drupal 7. The initial 7.x version would be
+ * conjunction with the release of Backdrop 7. The initial 7.x version would be
  * a straight port of features from the 6.x version. Feature changes and
  * other enhancements would then occur subsequent to the initial 7.x release.
  *
  * For a list of core API changes that are handled by this module, see:
- * - http://drupal.org/node/394070
+ * - http://backdrop.org/node/394070
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 if (function_exists('t')) {
-  // This code is being executed inside a process running Drupal.
+  // This code is being executed inside a process running Backdrop.
   module_load_include('inc', 'coder_upgrade', 'coder_upgrade');
 }
 

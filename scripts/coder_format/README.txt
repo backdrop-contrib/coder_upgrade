@@ -1,7 +1,7 @@
 
 -- SUMMARY --
 
-This is a standalone script developed by sun (http://drupal.org/user/54136) that
+This is a standalone script developed by sun (http://backdrop.org/user/54136) that
 only concentrates on re-formatting code and style review.
 
 Coder Format alters source code files directly. Although this script is
@@ -14,13 +14,13 @@ modules with different approaches is in some ways an advantage, since each
 becomes - in effect - a unit test upon the other. This is a great way for them
 to both improve, and maintain accuracy in what is a very detail oriented area!
 
-See http://drupal.org/node/126938.
+See http://backdrop.org/node/126938.
 
 
 -- REQUIREMENTS --
 
 * PHP command line interpreter.
-* Path to includes/file.inc of a Drupal core codebase.
+* Path to includes/file.inc of a Backdrop core codebase.
 
 
 -- USAGE --
@@ -57,11 +57,11 @@ WARNING: Do not proceed unless you know what you are doing!
 
   set fileInc=c:\program files\coder_format\file.inc
 
-  according to your local Drupal installation, i.e.
+  according to your local Backdrop installation, i.e.
 
-  set fileInc=c:\inetpub\www\path\to\drupal\includes\file.inc
+  set fileInc=c:\inetpub\www\path\to\backdrop\includes\file.inc
 
-  It is also possible to copy file.inc from a Drupal 5 installation to the
+  It is also possible to copy file.inc from a Backdrop 5 installation to the
   central location and adjust the path accordingly.
 
 - Done. Context menus of PHP files and directories should include the following
@@ -78,7 +78,7 @@ Current maintainers:
 
 This project has been sponsored by:
 * UNLEASHED MIND
-  Specialized in consulting and planning of Drupal powered sites, UNLEASHED
+  Specialized in consulting and planning of Backdrop powered sites, UNLEASHED
   MIND offers installation, development, theming, customization, and hosting
   to get you started. Visit http://www.unleashedmind.com for more information.
 

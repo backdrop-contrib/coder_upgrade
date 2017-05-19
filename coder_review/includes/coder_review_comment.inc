@@ -16,7 +16,7 @@ function coder_review_comment_reviews() {
     '#case-sensitive' => TRUE,
     '#warning' => array(
       '#text' => 'Commits to the Git repository do not require the CVS $Id' . '$ keyword in each file.',
-      '#link' => _drupalnode(318),
+      '#link' => _backdropnode(318),
     ),
     '#severity' => 'minor',
   );
@@ -33,7 +33,7 @@ function coder_review_comment_reviews() {
     '#value' => '^\s*#',
     '#warning' => array(
       '#text' => 'Use of Perl/shell style comments (#) is discouraged.',
-      '#link' => _drupalnode(1354, 'inline'),
+      '#link' => _backdropnode(1354, 'inline'),
     ),
     '#severity' => 'minor',
   );
@@ -52,11 +52,11 @@ function coder_review_comment_reviews() {
     '#not' => '^(\s*\*|\/\/)\s*\@see.*$',
     '#warning' => array(
       '#text' => '@see should always be at the beginning of a line, never inline in other comments.',
-      '#link' => _drupalnode(1354),
+      '#link' => _backdropnode(1354),
     ),
     '#severity' => 'minor',
   );
-  // @todo: make this handle: see http://drupal.org/node/224333#block_optional
+  // @todo: make this handle: see http://backdrop.org/node/224333#block_optional
   $rules['comment_see'] = array(
     '#type' => 'regex',
     '#source' => 'comment',
@@ -64,7 +64,7 @@ function coder_review_comment_reviews() {
     '#not' => '^\@see\s+((\w+\(\)|[\w\.\-\?\/:\#\&=]+\.[\w\.\->\?\/:\#\&=]+)[,\s]+)*(\w+\(\)|[\w\.\->\?\/:\#\&=]+\.[\w\.\->\?\/:\#\&=]+)\W*$',
     '#warning' => array(
       '#text' => '@see should always be followed by a filename, a URL, class/interface name (optionally including method), or a function name including ().',
-      '#link' => _drupalnode(1354),
+      '#link' => _backdropnode(1354),
     ),
     '#severity' => 'minor',
   );
@@ -75,7 +75,7 @@ function coder_review_comment_reviews() {
     '#not' => '^\@see\s+([\w\.\-\(\)\?\/:\#\&=]+,\s)*[\w\.\-\(\)\?\/:\#\&=]+?[\w\(\)\/]$',
     '#warning' => array(
       '#text' => '@see references should be separated by "," followed by a single space and with no trailing punctuation',
-      '#link' => _drupalnode(1354),
+      '#link' => _backdropnode(1354),
     ),
     '#severity' => 'minor',
   );
@@ -86,7 +86,7 @@ function coder_review_comment_reviews() {
     '#not' => '^\@see [^\s]',
     '#warning' => array(
       '#text' => '@see should be separated from the references by one space only',
-      '#link' => _drupalnode(1354),
+      '#link' => _backdropnode(1354),
     ),
     '#severity' => 'minor',
   );
@@ -96,7 +96,7 @@ function coder_review_comment_reviews() {
     '#value' => '@' . 'file',
     '#warning' => array(
       '#text' => '@' . 'file block missing',
-      '#link' => _drupalnode(1354, 'files'),
+      '#link' => _backdropnode(1354, 'files'),
     ),
     '#filename-not' => array('patch'),
   );
@@ -110,7 +110,7 @@ function coder_review_comment_reviews() {
     '#value' => '@' . 'file\s+.+$',
     '#warning' => array(
       '#text' => '@' . 'file description should be on the following line',
-      '#link' => _drupalnode(1354, 'files'),
+      '#link' => _backdropnode(1354, 'files'),
     ),
     '#severity' => 'minor',
   );
@@ -200,10 +200,10 @@ function coder_review_comment_reviews() {
   );
 
   $review = array(
-    '#title' => 'Drupal Commenting Standards',
-    '#link' => _drupalnode(318, 'comment'),
+    '#title' => 'Backdrop Commenting Standards',
+    '#link' => _backdropnode(318, 'comment'),
     '#rules' => $rules,
-    '#description' => 'Checks for the Drupal commenting standards; every developer should use this.',
+    '#description' => 'Checks for the Backdrop commenting standards; every developer should use this.',
     '#version' => 2,
     '#image' => 'images/comment.png',
     '#js' => TRUE,
@@ -240,7 +240,7 @@ function _coder_review_comment_install_file_block_callback(array &$coder_args, a
       $tmprule = $rule;
       $tmprule['#warning'] = array(
         '#text' => 'For .install files, the @file description should be of the format "Install, update and uninstall functions for the foo module.".',
-        '#link' => _drupalnode(318),
+        '#link' => _backdropnode(318),
       );
       _coder_review_error($results, $tmprule, $severity_name, $lineno, $line, $coder_args['#ignores']);
     }
@@ -278,7 +278,7 @@ function _coder_review_comment_missing_docblock(array &$coder_args, array $revie
         '#args' => array(
           '@ref' => implode('::', array_filter($current_stack)),
         ),
-        '#link' => _drupalnode(1354, $anchor),
+        '#link' => _backdropnode(1354, $anchor),
       );
       _coder_review_error($results, $tmprule, $severity_name, $lineno, $alllines[$lineno][0], $coder_args['#ignores']);
     }

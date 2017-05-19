@@ -3,7 +3,7 @@
  * @file
  * Provides module conversion settings form.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -31,7 +31,7 @@ function coder_upgrade_settings_form($form, &$form_state) {
  *   Form item.
  */
 function coder_upgrade_general_build() {
-  require_once DRUPAL_ROOT . '/' . libraries_get_path('grammar_parser') . '/engine/parser.inc';
+  require_once BACKDROP_ROOT . '/' . libraries_get_path('grammar_parser') . '/engine/parser.inc';
   $parser = new PGPParser();
 
   $form = array(
@@ -55,9 +55,9 @@ function coder_upgrade_general_build() {
 
   $form['coder_upgrade_upgrade_core'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Update Drupal core modules'),
+    '#title' => t('Update Backdrop core modules'),
     '#default_value' => variable_get('coder_upgrade_upgrade_core', FALSE),
-    '#description' => t('If checked, then the list of modules to select for upgrade will be the Drupal core modules. Otherwise, the list will be created from contributed modules.'),
+    '#description' => t('If checked, then the list of modules to select for upgrade will be the Backdrop core modules. Otherwise, the list will be created from contributed modules.'),
   );
 
   $form['coder_upgrade_replace_files'] = array(
@@ -71,7 +71,7 @@ function coder_upgrade_general_build() {
     '#type' => 'checkbox',
     '#title' => t('Preserve array formatting'),
     '#default_value' => variable_get('coder_upgrade_preserve_array_format', FALSE),
-    '#description' => t('If checked, then array expressions will be formatted to match the input. If not checked, then array expressions will be formatted per Drupal coding standards. This means array expressions will be inlined in function calls, function parameters, and when a single value. Otherwise, the expression will will be multiline formatted.'),
+    '#description' => t('If checked, then array expressions will be formatted to match the input. If not checked, then array expressions will be formatted per Backdrop coding standards. This means array expressions will be inlined in function calls, function parameters, and when a single value. Otherwise, the expression will will be multiline formatted.'),
   );
 
   $form['coder_upgrade_enable_debug_output'] = array(
@@ -102,7 +102,7 @@ function coder_upgrade_performance_build() {
   $form = array(
     '#type' => 'fieldset',
     '#title' => t('Performance'),
-    '#description' => t('To minimize the chance of hitting PHP memory and processing time limits, it is recommended to run Coder Upgrade in a separate process without a Drupal bootstrap. However, because this has been reported to fail on certain combinations of operating system, PHP version, and runtime environment, this option was not set when this module was enabled.'),
+    '#description' => t('To minimize the chance of hitting PHP memory and processing time limits, it is recommended to run Coder Upgrade in a separate process without a Backdrop bootstrap. However, because this has been reported to fail on certain combinations of operating system, PHP version, and runtime environment, this option was not set when this module was enabled.'),
     '#tree' => FALSE,
     '#weight' => 1,
   );
@@ -111,13 +111,13 @@ function coder_upgrade_performance_build() {
     '#type' => 'checkbox',
     '#title' => t('Use separate process'),
     '#default_value' => variable_get('coder_upgrade_use_separate_process', FALSE),
-    '#description' => t('If checked, then Coder Upgrade will be run in a separate process without a Drupal bootstrap.'),
+    '#description' => t('If checked, then Coder Upgrade will be run in a separate process without a Backdrop bootstrap.'),
   );
 
   $form['theme_cache'] = array(
     '#type' => 'submit',
     '#value' => t('Cache core theme information'),
-    '#prefix' => '<div class="label">' . t('If Drupal core has been updated on this site, then click the button below to refresh the core theme information cache file at @file.', array('@file' => $path)) . '</div>',
+    '#prefix' => '<div class="label">' . t('If Backdrop core has been updated on this site, then click the button below to refresh the core theme information cache file at @file.', array('@file' => $path)) . '</div>',
   );
 
   return $form;
@@ -139,12 +139,12 @@ function coder_upgrade_settings_form_submit($form, &$form_state) {
       variable_set('coder_upgrade_dir_old', $new . '/old');
       variable_set('coder_upgrade_dir_new', $new . '/new');
       variable_set('coder_upgrade_dir_patch', $new . '/patch');
-      drupal_set_message(t('Base directory was renamed to ' . $new . '.'));
+      backdrop_set_message(t('Base directory was renamed to ' . $new . '.'));
     }
     else {
       // Reset the directory variable.
       variable_set('coder_upgrade_dir', $cur);
-      drupal_set_message(t('Could not rename base directory'), 'error');
+      backdrop_set_message(t('Could not rename base directory'), 'error');
     }
   }
 }
@@ -164,8 +164,8 @@ function coder_upgrade_create_theme_cache_submit($form, &$form_state) {
   // Write cache to file.
   $path = coder_upgrade_path('theme_cache');
   if (file_put_contents($path, serialize($_coder_upgrade_theme_registry)) === FALSE) {
-    drupal_set_message(t('Could not write to core theme information cache file.'), 'error');
+    backdrop_set_message(t('Could not write to core theme information cache file.'), 'error');
     return;
   }
-  drupal_set_message(t('Core theme information cache created at @file.', array('@file' => $path)));
+  backdrop_set_message(t('Core theme information cache created at @file.', array('@file' => $path)));
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * This include file implements coder_review functionality for Drupal Standards.
+ * This include file implements coder_review functionality for Backdrop Standards.
  */
 
 /**
@@ -93,7 +93,7 @@ function coder_review_style_reviews() {
     '#value' => '(?-i)(function\s+[A-Z]+\s*\()',
     '#warning' => array(
       '#text' => 'do not use UPPERCASE() function names',
-      '#link' => _drupalnode(318, 'naming'),
+      '#link' => _backdropnode(318, 'naming'),
     ),
   );
   $rules['stdclass'] = array(
@@ -134,10 +134,10 @@ function coder_review_style_reviews() {
   );
   // @todo Review if this rule throws too many false positives.
 /*
-  $rules['drupal_strings'] = array(
+  $rules['backdrop_strings'] = array(
     '#type' => 'regex',
     '#value' => '[\s\(](strlen|strtolower|strtoupper|substr|ucfirst)\s*\(',
-    '#warning' => 'in most cases, replace the string function with the drupal_ equivalent string functions',
+    '#warning' => 'in most cases, replace the string function with the backdrop_ equivalent string functions',
     '#severity' => 'minor',
   );
 */
@@ -184,10 +184,10 @@ function coder_review_style_reviews() {
   );
 
   $review = array(
-    '#title' => 'Drupal Coding Standards',
-    '#link' => _drupalnode(318),
+    '#title' => 'Backdrop Coding Standards',
+    '#link' => _backdropnode(318),
     '#rules' => $rules,
-    '#description' => 'Checks for Drupal coding standards. Every developer should use this.',
+    '#description' => 'Checks for Backdrop coding standards. Every developer should use this.',
     '#version' => 2,
     '#image' => 'images/style.png',
   );
@@ -231,8 +231,8 @@ function _coder_review_style_core_global_regex() {
       'databases',
       'db_prefix',
       'db_url',
-      'drupal_hash_salt',
-      'drupal_test_info',
+      'backdrop_hash_salt',
+      'backdrop_test_info',
       'element',
       'forum_topic_list_header',
       'image',

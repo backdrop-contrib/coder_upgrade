@@ -6,7 +6,7 @@
  */
 
 // Load PEAR Text_Diff library.
-set_include_path(get_include_path() . PATH_SEPARATOR . drupal_get_path('module', 'coder') . '/scripts/coder_format/tests');
+set_include_path(get_include_path() . PATH_SEPARATOR . backdrop_get_path('module', 'coder') . '/scripts/coder_format/tests');
 
 // FIXME: Sloppy workaround for avoiding fatal errors; skip the rest of this
 // file if this folder doesn't exist.
@@ -31,7 +31,7 @@ class CoderFormatTest extends CoderReviewTestCase {
   }
 
   function test() {
-    $dir   = drupal_get_path('module', 'coder') . '/scripts/coder_format/tests/tests';
+    $dir   = backdrop_get_path('module', 'coder') . '/scripts/coder_format/tests/tests';
     $files = array_keys(file_scan_directory($dir, '\.phpt$'));
     // Order tests alphabetically, but use a weight > 0 to append them after
     // overall test results.

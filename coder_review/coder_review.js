@@ -8,7 +8,7 @@
     uncheck : function() { return this.each(function() { this.checked = false; }); }
   });
 
-  Drupal.behaviors.coderReviewFormHandler = {
+  Backdrop.behaviors.coderReviewFormHandler = {
     attach: function (context) {
       $("input:checkbox").click(
         function() {

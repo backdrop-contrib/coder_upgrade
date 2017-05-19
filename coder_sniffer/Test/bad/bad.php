@@ -302,7 +302,7 @@ IF (TRUE) {
  * We use doxygen style comments.
  * What's sad because eclipse PDT and
  * PEAR CodeSniffer base on phpDoc comment style.
- * Makes working with drupal not easier :|
+ * Makes working with backdrop not easier :|
  *
  * @param $field1
  *  Doxygen style comments
@@ -795,7 +795,7 @@ class FooBar2 {
   public function test26() {print 'x';}
 }
 
-// Security issue: http://drupal.org/node/750148
+// Security issue: http://backdrop.org/node/750148
 preg_match('/.+/e', 'subject');
 preg_match('/.+/iemesuexADSUeXJ', 'subject');
 preg_filter('/.+/imsuexADSUXJ', 'replacement', 'subject');

@@ -8,7 +8,7 @@
 // This function is missing a Doxygen style comment.
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_update_7000() {
   $ret = array();
@@ -18,7 +18,7 @@ function example_update_7000() {
     $ret = array();
     // hook_update_N() no longer returns a $ret array. Instead, return
     // nothing or a translated string indicating the update ran successfully.
-    // See http://drupal.org/node/224333#update_sql.
+    // See http://backdrop.org/node/224333#update_sql.
     return t('TODO Add a descriptive string here to show in the UI.') /* smoke1 $ret smoke2 */;
   }
 }
@@ -26,13 +26,13 @@ function example_update_7000() {
 /* This function is missing a Doxygen style comment. */
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_update_7001() {
   $ret = array();
   // hook_update_N() no longer returns a $ret array. Instead, return
   // nothing or a translated string indicating the update ran successfully.
-  // See http://drupal.org/node/224333#update_sql.
+  // See http://backdrop.org/node/224333#update_sql.
   return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
 }
 
@@ -43,7 +43,7 @@ function example_update_7002() {
   $ret = array();
   // hook_update_N() no longer returns a $ret array. Instead, return
   // nothing or a translated string indicating the update ran successfully.
-  // See http://drupal.org/node/224333#update_sql.
+  // See http://backdrop.org/node/224333#update_sql.
   return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
 }
 
@@ -53,55 +53,55 @@ function example_update_7002() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_absolute_includes() {
   // Change require, require_once, include, and include_once.
   // require './' . $path
   // include() -- Change the next line but leave this alone
   // include -- Change the next line but leave this alone
-  define('EVENT_PATH', drupal_get_path('module', 'event'));
+  define('EVENT_PATH', backdrop_get_path('module', 'event'));
 
-  include DRUPAL_ROOT . '/' . EVENT_PATH . '/event.theme';
-  require DRUPAL_ROOT . '/' . EVENT_PATH . '/ical.inc';
+  include BACKDROP_ROOT . '/' . EVENT_PATH . '/event.theme';
+  require BACKDROP_ROOT . '/' . EVENT_PATH . '/ical.inc';
 
-  include DRUPAL_ROOT . '/' . EVENT_PATH . '/event.theme';
-  require DRUPAL_ROOT . '/' . EVENT_PATH . '/ical.inc';
+  include BACKDROP_ROOT . '/' . EVENT_PATH . '/event.theme';
+  require BACKDROP_ROOT . '/' . EVENT_PATH . '/ical.inc';
 
-  include DRUPAL_ROOT . '/' . $path;
-  require DRUPAL_ROOT . '/' . $path;
+  include BACKDROP_ROOT . '/' . $path;
+  require BACKDROP_ROOT . '/' . $path;
 
-  include DRUPAL_ROOT . '/' . $path;
-  require DRUPAL_ROOT . '/' . $path;
+  include BACKDROP_ROOT . '/' . $path;
+  require BACKDROP_ROOT . '/' . $path;
 
   if (variable_get('event_nodeapi_' . $form['type']['#value'], 'never') != 'never') {
-    include_once DRUPAL_ROOT . '/' . EVENT_PATH . '/event_timezones.inc';
-    require_once DRUPAL_ROOT . '/' . EVENT_PATH . '/event_timezones.inc';
+    include_once BACKDROP_ROOT . '/' . EVENT_PATH . '/event_timezones.inc';
+    require_once BACKDROP_ROOT . '/' . EVENT_PATH . '/event_timezones.inc';
   }
 
   // A different format to the include.
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
-  echo './' . drupal_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
+  include_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
+  include_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
+  echo './' . backdrop_get_path('module', 'og_panels') . '/includes/groupcontext.inc';
 
   // Ensure we are not serving a cached page.
-  if (function_exists('drupal_set_content')) {
+  if (function_exists('backdrop_set_content')) {
     if (module_exists('content')) {
-      include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'fivestar') . '/fivestar_field.inc';
+      include_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'fivestar') . '/fivestar_field.inc';
     }
   }
   if (module_exists('comment')) {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'fivestar') . '/fivestar_comment.inc';
+    include_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'fivestar') . '/fivestar_comment.inc';
   }
 
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'fivestar') . '/fivestar_color.inc';
-  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'transactions') . '/transactions.inc';
+  include_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'fivestar') . '/fivestar_color.inc';
+  require_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'transactions') . '/transactions.inc';
 }
 
-// Related to http://drupal.org/node/224333#registry
+// Related to http://backdrop.org/node/224333#registry
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_function_exists() {
   // function_exists() -- Change the next line but leave this alone
@@ -112,10 +112,10 @@ function example_function_exists() {
 }
 
 // TODO This was reverted!!!
-// http://drupal.org/files/issues/sessions_1.patch
+// http://backdrop.org/files/issues/sessions_1.patch
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_set_session() {
   // $_SESSION['site_offline'] = variable_get('site_offline', FALSE) -- Change the next line but leave this alone
@@ -136,12 +136,12 @@ function example_set_session() {
   }
   $_SESSION['book_update_6000_orphans']['from'] = 0;
   $_SESSION['book_update_6000'] = array();
-  // drupal_set_session('book_update_6000_orphans', array('from' => 0));
-  // drupal_set_session('book_update_6000', array());
+  // backdrop_set_session('book_update_6000_orphans', array('from' => 0));
+  // backdrop_set_session('book_update_6000', array());
   $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
   // Unchanged?
   $_SESSION['dblog_overview_filter'] = array();
-  // drupal_set_session('dblog_overview_filter', array());
+  // backdrop_set_session('dblog_overview_filter', array());
   $session = &$_SESSION['node_overview_filter'];
   $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
   // Unchanged?
@@ -151,7 +151,7 @@ function example_set_session() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_request_time() {
   // time() -- Change the next line but leave this alone
@@ -161,28 +161,28 @@ function example_request_time() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_rebuild_functions() {
-  // drupal_rebuild_theme_registry() -- Change the next line but leave this alone
-  drupal_theme_rebuild();
-  // drupal_rebuild_code_registry() -- Change the next line but leave this alone
+  // backdrop_rebuild_theme_registry() -- Change the next line but leave this alone
+  backdrop_theme_rebuild();
+  // backdrop_rebuild_code_registry() -- Change the next line but leave this alone
   registry_rebuild();
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_uninstall_module() {
-  // drupal_uninstall_module() -- Change the next line but leave this alone
-  drupal_uninstall_modules(array($module));
+  // backdrop_uninstall_module() -- Change the next line but leave this alone
+  backdrop_uninstall_modules(array($module));
 }
 
 // use module_implements not module_list when calling hook implementations
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_module_list() {
   foreach (module_implements($hook /* TODO Set this variable. */) as $module) {
@@ -190,36 +190,36 @@ function example_module_list() {
   }
 }
 
-// Parameters for drupal_http_request() have changed
+// Parameters for backdrop_http_request() have changed
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_http_request() {
-  // drupal_http_request() -- Change the next line but leave this alone
-  drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
+  // backdrop_http_request() -- Change the next line but leave this alone
+  backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
   /*
    * Trying to produce this:
-   * drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
+   * backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'max_redirects' => 0));
    */
-  drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'data' => 'Some data', 'max_redirects' => 0));
-  drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST', 'data' => 'Some data'));
-  drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST', 'data' => 'Some data'));
-  drupal_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST'));
-  drupal_http_request('http://example.com/');
+  backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'data' => 'Some data', 'max_redirects' => 0));
+  backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST', 'data' => 'Some data'));
+  backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST', 'data' => 'Some data'));
+  backdrop_http_request('http://example.com/', array('headers' => array('Header-Title' => 'value'), 'method' => 'POST'));
+  backdrop_http_request('http://example.com/');
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_moved_statistics_settings() {
-  drupal_goto($path = 'admin/config/system/statistics');
+  backdrop_goto($path = 'admin/config/system/statistics');
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_system_theme_data() {
   // module_rebuild_cache() -- Change the next line but leave this alone
@@ -230,7 +230,7 @@ function example_system_theme_data() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_static_variable() {
   static $menu1;
@@ -241,23 +241,23 @@ function example_static_variable() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_html_head() {
-  // drupal_set_html_head() -- Change the next line but leave this alone
+  // backdrop_set_html_head() -- Change the next line but leave this alone
   $data = 'my header';
-  drupal_add_html_head($data, $key = NULL /* TODO Set this variable. */);
-  if (drupal_add_html_head($data, $key = NULL /* TODO Set this variable. */)) {
+  backdrop_add_html_head($data, $key = NULL /* TODO Set this variable. */);
+  if (backdrop_add_html_head($data, $key = NULL /* TODO Set this variable. */)) {
     //
   }
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_eval() {
-  // drupal_eval() -- Change the next line but leave this alone
+function example_backdrop_eval() {
+  // backdrop_eval() -- Change the next line but leave this alone
   if (module_exists('php')) {
     php_eval('<?php print "Hello World"; ? >');
 
@@ -276,7 +276,7 @@ function example_drupal_eval() {
     print_r(php_eval('<?php print "Hello World"; ? >'));
 
   }
-  // drupal_eval() -- try this for nesting complexity
+  // backdrop_eval() -- try this for nesting complexity
   if (module_exists('php')) {
     echo print_r(php_eval('<?php print "Hello World"; ? >'), 1);
 
@@ -285,39 +285,39 @@ function example_drupal_eval() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_http_header_functions() {
-  // drupal_set_header() -- Change the next line but leave this alone
-  drupal_add_http_header('Status', '500 Internal server error');
-  drupal_add_http_header('Status', '503 Service unavailable');
-  drupal_add_http_header('Status', '403 Forbidden');
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
-  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
-  drupal_add_http_header('Content-Type', 'octet/stream; charset=utf-8');
-  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . $filename . '"');
-  drupal_add_http_header('Content-Length', filesize(file_directory_path() . '/' . $filename));
+  // backdrop_set_header() -- Change the next line but leave this alone
+  backdrop_add_http_header('Status', '500 Internal server error');
+  backdrop_add_http_header('Status', '503 Service unavailable');
+  backdrop_add_http_header('Status', '403 Forbidden');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'octet/stream; charset=utf-8');
+  backdrop_add_http_header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+  backdrop_add_http_header('Content-Length', filesize(file_directory_path() . '/' . $filename));
 
   // Double quotes.
-  drupal_add_http_header('Status', "500 Internal server error");
-  drupal_add_http_header('Status', '503 Service unavailable');
-  drupal_add_http_header('Status', '403 Forbidden');
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
-  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
-  drupal_add_http_header('Content-Type', 'octet/stream; charset=utf-8');
-  drupal_add_http_header('Content-Disposition', "attachment; filename='" . $filename . "'");
-  drupal_add_http_header('Content-Length', filesize(file_directory_path() . "/" . $filename));
+  backdrop_add_http_header('Status', "500 Internal server error");
+  backdrop_add_http_header('Status', '503 Service unavailable');
+  backdrop_add_http_header('Status', '403 Forbidden');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'octet/stream; charset=utf-8');
+  backdrop_add_http_header('Content-Disposition', "attachment; filename='" . $filename . "'");
+  backdrop_add_http_header('Content-Length', filesize(file_directory_path() . "/" . $filename));
 
-  // drupal_get_headers() -- Change the next line but leave this alone
-  $headers = drupal_get_http_header();
-  foreach (drupal_get_http_header() as $name => $value) {
+  // backdrop_get_headers() -- Change the next line but leave this alone
+  $headers = backdrop_get_http_header();
+  foreach (backdrop_get_http_header() as $name => $value) {
     //
   }
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_file_download() {
   if (_mymodule_access($filepath)) {
@@ -329,41 +329,41 @@ function example_file_download() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_set_content() {
-  // drupal_set_content() -- Change the next line but leave this alone
+  // backdrop_set_content() -- Change the next line but leave this alone
   // Add our own text to the footer.
-  drupal_add_region_content('footer', 'Adding custom text to footer');
+  backdrop_add_region_content('footer', 'Adding custom text to footer');
   // Get the complete footer contents.
-  // drupal_get_content() -- Change the next line but leave this alone
-  $full_footer = drupal_get_region_content();
-  if ($full_footer = drupal_get_region_content()) {
+  // backdrop_get_content() -- Change the next line but leave this alone
+  $full_footer = backdrop_get_region_content();
+  if ($full_footer = backdrop_get_region_content()) {
     //
   }
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_time_limit() {
   // set_time_limit() -- Change the next line but leave this alone
   $time_limit = 5;
-  drupal_set_time_limit($time_limit);
-  if (drupal_set_time_limit($time_limit) > 5) {
+  backdrop_set_time_limit($time_limit);
+  if (backdrop_set_time_limit($time_limit) > 5) {
     //
   }
 }
 
-// http://drupal.org/node/224333#remove-drupal-urlencode
+// http://backdrop.org/node/224333#remove-backdrop-urlencode
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_remove_drupal_urlencode() {
-  // drupal_urlencode() -- Change the next line but leave this alone
-  $string = drupal_encode_path('test');
+function example_remove_backdrop_urlencode() {
+  // backdrop_urlencode() -- Change the next line but leave this alone
+  $string = backdrop_encode_path('test');
 }
 
 /*
@@ -386,8 +386,8 @@ function example_remove_drupal_urlencode() {
  *
  * Use case 1: returns array directly.
  *
- * http://drupal.org/node/224333#hook_permission
- * http://drupal.org/node/224333#descriptions_permissions
+ * http://backdrop.org/node/224333#hook_permission
+ * http://backdrop.org/node/224333#descriptions_permissions
  */
 function example_permission() {
   return array(
@@ -453,7 +453,7 @@ function example_permission() {
 }
 
 /**
- * Other permission items in http://drupal.org/files/issues/506976_0.patch.
+ * Other permission items in http://backdrop.org/files/issues/506976_0.patch.
  */
 function example_perm_items() {
   $options = array();
@@ -479,7 +479,7 @@ function example_perm_items() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_php_permissions() {
   // 'use PHP for settings' -- Change the next line but leave this alone
@@ -492,7 +492,7 @@ function example_php_permissions() {
 /**
  * Implements hook_node_access().
  *
- * http://drupal.org/node/224333#hook_node_access
+ * http://backdrop.org/node/224333#hook_node_access
  */
 function example_node_access($node, $op, $account) {
   if ($op == 'create') {
@@ -513,7 +513,7 @@ function example_node_access($node, $op, $account) {
 // Do table renames along with the new dbtng format.
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_dbtng() {
   // db_query() -- Change the next line but leave this alone
@@ -577,7 +577,7 @@ function example_dbtng() {
 // Use case 1: returns array directly.
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_schema() {
   return array(
@@ -611,7 +611,7 @@ function example_schema() {
 // Use case 2: makes one assignment to array variable; returns variable.
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_schema() {
   $schema = array(
@@ -646,7 +646,7 @@ function example_schema() {
 // Use case 3: makes multiple assignments to array variable; returns variable.
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_schema() {
   $schema['forum'] = array(
@@ -679,19 +679,19 @@ function example_schema() {
 // Database schema (un)installed automatically
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_install() {
-//   drupal_install_schema('example');
-  // TODO The drupal_(un)install_schema functions are called automatically in D7.
-  if ($results = array()/*drupal_install_schema('example')*/) {
+//   backdrop_install_schema('example');
+  // TODO The backdrop_(un)install_schema functions are called automatically in D7.
+  if ($results = array()/*backdrop_install_schema('example')*/) {
     // Do something.
   }
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_uninstall() {
   $result = db_query("SELECT * FROM {example}");
@@ -702,13 +702,13 @@ function example_uninstall() {
   ->condition('name', 'example_' . $data->nid)
   ->execute();
   }
-  // TODO The drupal_(un)install_schema functions are called automatically in D7.
-  // drupal_uninstall_schema('example')
+  // TODO The backdrop_(un)install_schema functions are called automatically in D7.
+  // backdrop_uninstall_schema('example')
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_schema_ret() {
   // db_add_field() -- Change the next line but leave this alone
@@ -726,9 +726,9 @@ function example_schema_ret() {
   db_add_unique_key($table, $new_name);
   // includes/database.pgsql.inc Change a field definition.
   db_change_field($table, $new_name);
-  // includes/database.inc Create a new table from a Drupal table definition.
+  // includes/database.inc Create a new table from a Backdrop table definition.
   db_create_table($table, $new_name);
-  // includes/database.pgsql.inc Generate SQL to create a new table from a Drupal schema definition.
+  // includes/database.pgsql.inc Generate SQL to create a new table from a Backdrop schema definition.
   db_create_table_sql($table, $new_name);
   // includes/database.pgsql.inc Drop a field.
   db_drop_field($table, $new_name);
@@ -753,7 +753,7 @@ function example_schema_ret() {
 // #db_result (not documented); see #741998
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_db_result() {
   $val = db_query('SELECT nid FROM {node}')->fetchField();
@@ -773,7 +773,7 @@ function example_db_result() {
 // #db_column_exists (not documented)
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_db_column_exists() {
   $ret = db_field_exists('table', 'field');
@@ -782,10 +782,10 @@ function example_db_column_exists() {
   }
 }
 
-// http://drupal.org/node/224333#db_is_active
+// http://backdrop.org/node/224333#db_is_active
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_db_is_active() {
   // db_is_active() -- Change the next line but leave this alone
@@ -807,7 +807,7 @@ function example_db_is_active() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_menu_link_alter(&$item) {
   // Example 1 - make all new admin links hidden (a.k.a disabled).
@@ -816,10 +816,10 @@ function example_menu_link_alter(&$item) {
   }
 }
 
-// http://drupal.org/node/224333#admin_path_changes
+// http://backdrop.org/node/224333#admin_path_changes
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_admin_path_changes() {
   $menu['admin/config/system/statistics'] = array();
@@ -844,12 +844,12 @@ function example_admin_path_changes() {
   $menu['admin/config/search/clean-urls'] = array();
 }
 
-// Where is http://drupal.org/node/224333#menu-link-hooks?
+// Where is http://backdrop.org/node/224333#menu-link-hooks?
 
-// http://drupal.org/node/224333#menu_tree_data
+// http://backdrop.org/node/224333#menu_tree_data
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_menu_tree_data() {
   $sql = "menu_tree_data
@@ -912,12 +912,12 @@ function example_block_info() {
       'weight' => 0,
       'status' => 1,
       'region' => 'sidebar_first',
-      // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
+      // BACKDROP_CACHE_PER_ROLE will be assumed for block 0.
     );
 
     $blocks['amazing'] = array(
       'info' => t('An amazing block provided by Mymodule.'),
-      'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
+      'cache' => BACKDROP_CACHE_PER_ROLE | BACKDROP_CACHE_PER_PAGE,
     );
 
     return $blocks;
@@ -987,12 +987,12 @@ function example_block_info() {
         'weight' => 0,
         'status' => 1,
         'region' => 'sidebar_first',
-        // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
+        // BACKDROP_CACHE_PER_ROLE will be assumed for block 0.
       );
 
   $blocks['amazing'] = array(
         'info' => t('An amazing block provided by Mymodule.'),
-        'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
+        'cache' => BACKDROP_CACHE_PER_ROLE | BACKDROP_CACHE_PER_PAGE,
       );
 
   return $blocks;
@@ -1034,7 +1034,7 @@ function example_block_view($delta) {
 /**
  * Implements hook_block().
  *
- * http://drupal.org/node/224333#remove_op
+ * http://backdrop.org/node/224333#remove_op
  */
 function example_block_OLD($op, $delta, $edit) {
   // TODO Remaining code in this function needs to be moved to the appropriate new hook function.
@@ -1102,14 +1102,14 @@ function example_block_view($delta) {
 /**
  * Implements hook_block().
  *
- * http://drupal.org/node/224333#block_deltas_renamed
+ * http://backdrop.org/node/224333#block_deltas_renamed
  */
 function example_block_OLD($op, $delta = 0, $edit = array()) { }
 
-// http://drupal.org/node/224333#block_tables_renamed
+// http://backdrop.org/node/224333#block_tables_renamed
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_block_db_tables() {
   $result = db_query("SELECT * FROM {block}");
@@ -1117,10 +1117,10 @@ function example_block_db_tables() {
   $result = db_query("SELECT * FROM {block_custom}");
 }
 
-// http://drupal.org/node/224333#custom_block
+// http://backdrop.org/node/224333#custom_block
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_custom_block() {
   block_custom_block_delete($form);
@@ -1139,7 +1139,7 @@ function example_custom_block() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_comment_load() {
   if ($value) {
@@ -1166,7 +1166,7 @@ function example_menu() {
   $items['node/%_comment/signup'] = array(
     'title' => user_access('access administration pages') ? t('Signup') : t('Signup settings'),
     'description' => 'Add a signup node.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('signup_settings_page'),
     'access callback' => $access,
     'type' => MENU_LOCAL_TASK,
@@ -1183,7 +1183,7 @@ function example_menu() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_comment_validate() {
   // comment_validate() -- Change the next line but leave this alone
@@ -1194,7 +1194,7 @@ function example_comment_validate() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_comment_node_url() {
   // comment_node_url() -- Change the next line but leave this alone
@@ -1345,7 +1345,7 @@ function example_comment_delete($comment) {
 function example_comment_OLD(&$a1, $op) {
   // TODO Remaining code in this function needs to be moved to the appropriate new hook function.
   // TODO This is an example of multiple $op values in one condition.
-  cache_clear_all_like(drupal_url(array('id' => $nid)));
+  cache_clear_all_like(backdrop_url(array('id' => $nid)));
 }
 
 /*
@@ -1354,7 +1354,7 @@ function example_comment_OLD(&$a1, $op) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_check_markup() {
   // check_markup() -- Change the next line but leave this alone
@@ -1365,19 +1365,19 @@ function example_check_markup() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_set_title() {
-  // drupal_set_title() -- Change the next line but leave this alone
-  drupal_set_title($node->title);
-  drupal_set_title($node->title);
-  drupal_set_title(t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
-  drupal_set_title(t("@name's blog is %status", array('@name' => $account->name, '%status' => 'very popular')), PASS_THROUGH);
-  drupal_set_title(t("@name's blog is %status in !country", array('@name' => $account->name, '%status' => 'very popular', '!country' => 'my country')));
-  if (drupal_set_title(t("@name's blog", array('@name' => $account->name)), PASS_THROUGH)) {
+function example_backdrop_set_title() {
+  // backdrop_set_title() -- Change the next line but leave this alone
+  backdrop_set_title($node->title);
+  backdrop_set_title($node->title);
+  backdrop_set_title(t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
+  backdrop_set_title(t("@name's blog is %status", array('@name' => $account->name, '%status' => 'very popular')), PASS_THROUGH);
+  backdrop_set_title(t("@name's blog is %status in !country", array('@name' => $account->name, '%status' => 'very popular', '!country' => 'my country')));
+  if (backdrop_set_title(t("@name's blog", array('@name' => $account->name)), PASS_THROUGH)) {
   }
-  drupal_set_title('check_plain' . ($node->title));
-  drupal_set_title(/* smoke screen */ 'check_plain' . $node->title/* smoke screen1 */ . 'xxx' . 'yyy' . $node->title2/* smoke screen2 */);
+  backdrop_set_title('check_plain' . ($node->title));
+  backdrop_set_title(/* smoke screen */ 'check_plain' . $node->title/* smoke screen1 */ . 'xxx' . 'yyy' . $node->title2/* smoke screen2 */);
 }
 
 /**
@@ -1473,7 +1473,7 @@ function example_filter_tips_XXX($format, $long = FALSE) { }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_hook_filter_urls() {
   $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
@@ -1485,7 +1485,7 @@ function example_hook_filter_urls() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_hook_filter_formats_parameters() {
   // filter_formats() -- Change the next line but leave this alone
@@ -1501,10 +1501,10 @@ function example_hook_filter_formats_parameters() {
  * Taxonomy
  */
 
-// http://drupal.org/files/issues/taxonomy_get_tree-depth.patch
+// http://backdrop.org/files/issues/taxonomy_get_tree-depth.patch
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_taxonomy_get_tree() {
   // Do we need to change module_invoke???
@@ -1544,7 +1544,7 @@ function example_taxonomy_get_tree() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_taxonomy_tables() {
   // vocabulary_node_types() -- Change the next line but leave this alone
@@ -1622,7 +1622,7 @@ function example_taxonomy_tables() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_taxonomy_crud() {
   // taxonomy_get_term() -- Change the next line but leave this alone
@@ -1640,10 +1640,10 @@ function example_taxonomy_crud() {
   taxonomy_vocabulary_delete($vid); // taxonomy_vocabulary_delete($vid)
 }
 
-// http://drupal.org/node/224333#taxonomy_form_all
+// http://backdrop.org/node/224333#taxonomy_form_all
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_taxonomy_form_all() {
   $form = array();
@@ -1671,10 +1671,10 @@ function example_taxonomy_form_all() {
   return $form;
 }
 
-// http://drupal.org/node/224333#no-synonyms-taxonomy
+// http://backdrop.org/node/224333#no-synonyms-taxonomy
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_no_synonyms_taxonomy() {
   // TODO The taxonomy synonym functionality has been removed.
@@ -1699,108 +1699,108 @@ function example_no_synonyms_taxonomy() {
  * Javascript
  */
 
-// http://drupal.org/node/224333#drupal_add_js_external
+// http://backdrop.org/node/224333#backdrop_add_js_external
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_add_js_external() {
+function example_backdrop_add_js_external() {
   // Single quotes.
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
 
   // Double quotes.
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
-  drupal_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
+  backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
 }
 
-// http://drupal.org/node/224333#drupal_add_js_options
-// http://drupal.org/node/224333#drupal_add_js_weight
-// http://drupal.org/node/224333#drupal_add_css_weight
+// http://backdrop.org/node/224333#backdrop_add_js_options
+// http://backdrop.org/node/224333#backdrop_add_js_weight
+// http://backdrop.org/node/224333#backdrop_add_css_weight
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_add_js_options() {
-  drupal_add_js('misc/collapse.js');
-  drupal_add_js('misc/collapse.js');
-  drupal_add_js('misc/collapse.js', array('scope' => 'footer'));
-  drupal_add_js('misc/collapse.js');
-  drupal_add_js('misc/collapse.js', array('preprocess' => FALSE));
-  drupal_add_js('misc/collapse.js', array('cache' => FALSE));
-  drupal_add_js('misc/collapse.js', array('defer' => TRUE, 'cache' => FALSE));
+function example_backdrop_add_js_options() {
+  backdrop_add_js('misc/collapse.js');
+  backdrop_add_js('misc/collapse.js');
+  backdrop_add_js('misc/collapse.js', array('scope' => 'footer'));
+  backdrop_add_js('misc/collapse.js');
+  backdrop_add_js('misc/collapse.js', array('preprocess' => FALSE));
+  backdrop_add_js('misc/collapse.js', array('cache' => FALSE));
+  backdrop_add_js('misc/collapse.js', array('defer' => TRUE, 'cache' => FALSE));
 
-  drupal_add_js('misc/collapse.js', array('type' => 'file', 'weight' => JS_LIBRARY));
-  drupal_add_js('misc/collapse.js', array('type' => 'file', 'scope' => 'footer', 'weight' => JS_LIBRARY));
-  drupal_add_js('misc/collapse.js', array('type' => 'file', 'scope' => 'footer', 'weight' => JS_LIBRARY, 'defer' => TRUE, 'cache' => FALSE));
+  backdrop_add_js('misc/collapse.js', array('type' => 'file', 'weight' => JS_LIBRARY));
+  backdrop_add_js('misc/collapse.js', array('type' => 'file', 'scope' => 'footer', 'weight' => JS_LIBRARY));
+  backdrop_add_js('misc/collapse.js', array('type' => 'file', 'scope' => 'footer', 'weight' => JS_LIBRARY, 'defer' => TRUE, 'cache' => FALSE));
 
-  drupal_add_css('/modules/devel/devel.css');
-  drupal_add_css('/modules/devel/devel.css');
-  drupal_add_css('/modules/devel/devel.css', array('media' => 'screen'));
-  drupal_add_css('/modules/devel/devel.css', array('preprocess' => FALSE));
+  backdrop_add_css('/modules/devel/devel.css');
+  backdrop_add_css('/modules/devel/devel.css');
+  backdrop_add_css('/modules/devel/devel.css', array('media' => 'screen'));
+  backdrop_add_css('/modules/devel/devel.css', array('preprocess' => FALSE));
 
-  drupal_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME));
-  drupal_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME, 'media' => 'screen'));
-  drupal_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME, 'preprocess' => FALSE));
+  backdrop_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME));
+  backdrop_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME, 'media' => 'screen'));
+  backdrop_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME, 'preprocess' => FALSE));
 }
 
-// http://drupal.org/node/224333#jquery_ui
+// http://backdrop.org/node/224333#jquery_ui
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_jquery_ui() {
-  drupal_add_library('system', 'ui.accordion');
-  drupal_add_library('system', 'ui.dialog');
-  drupal_add_library('system', 'ui.accordion');
+  backdrop_add_library('system', 'ui.accordion');
+  backdrop_add_library('system', 'ui.dialog');
+  backdrop_add_library('system', 'ui.accordion');
   $files = array('ui.accordion', 'ui.dialog');
-  drupal_add_library('system', 'ui.accordion');
-  drupal_add_library('system', 'ui.dialog');
+  backdrop_add_library('system', 'ui.accordion');
+  backdrop_add_library('system', 'ui.dialog');
   $file = 'ui.accordion';
-  drupal_add_library('system', 'ui.accordion');
+  backdrop_add_library('system', 'ui.accordion');
 }
 
 /*
  * CSS
  */
 
-// http://drupal.org/node/224333#drupal_add_css_inline
+// http://backdrop.org/node/224333#backdrop_add_css_inline
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_add_css_inline() {
+function example_backdrop_add_css_inline() {
   $color = variable_get('backgroundcolor', '#FFFFFF');
-  drupal_add_css("body {background-color: $color}", array('type' => 'inline'));
+  backdrop_add_css("body {background-color: $color}", array('type' => 'inline'));
 
-  drupal_add_css('div {background-url: url("images/test.png");}', array('type' => 'inline'));
-  drupal_add_css('
+  backdrop_add_css('div {background-url: url("images/test.png");}', array('type' => 'inline'));
+  backdrop_add_css('
       div {
         background-url: url("images/test.png");
       }
     ', array('type' => 'inline'));
 }
 
-// http://drupal.org/node/224333#form_clean_id
+// http://backdrop.org/node/224333#form_clean_id
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_form_clean_id() {
-  $class = drupal_clean_css_identifier('string');
-  $id = drupal_clean_css_identifier($id);
-  $class = drupal_clean_css_identifier(implode('-', $form['element']['#parents']));
+  $class = backdrop_clean_css_identifier('string');
+  $id = backdrop_clean_css_identifier($id);
+  $class = backdrop_clean_css_identifier(implode('-', $form['element']['#parents']));
 
-  $form['element']['#attributes']['class'] = drupal_clean_css_identifier(implode('-', $form['element']['#parents']));
+  $form['element']['#attributes']['class'] = backdrop_clean_css_identifier(implode('-', $form['element']['#parents']));
 }
 
 /*
  * Theming
  */
 
-// http://drupal.org/node/224333#theme_changes
+// http://backdrop.org/node/224333#theme_changes
 /**
  * Implements hook_theme().
  *
@@ -1921,7 +1921,7 @@ function example_theme() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_theme_changes() {
   // Themes in uninstalled core modules.
@@ -1966,26 +1966,26 @@ function example_theme_changes() {
   theme('example_user_list');
 }
 
-// http://drupal.org/node/224333#drupal_render_children
-// http://drupal.org/node/224333#theme_changes
+// http://backdrop.org/node/224333#backdrop_render_children
+// http://backdrop.org/node/224333#theme_changes
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_node_list($variables) {
   $items = $variables['items'];
   $title = $variables['title'];
   // Render one specific child of the current element.
-  $output = '<blink>' . drupal_render($element['child1']) . '</blink>';
+  $output = '<blink>' . backdrop_render($element['child1']) . '</blink>';
 
   // Render all the remaining children of the current element.
-  $output .= drupal_render_children($element);
+  $output .= backdrop_render_children($element);
   return $output;
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_node_search_admin($variables) {
   $form = $variables['form'];
@@ -1993,7 +1993,7 @@ function theme_example_node_search_admin($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_user_list($variables) {
   $users = $variables['users'];
@@ -2002,7 +2002,7 @@ function theme_example_user_list($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_user_list_2($variables) {
   $users1 = $variables['users1'];
@@ -2013,7 +2013,7 @@ function theme_example_user_list_2($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_coder_review_warning_msg($variables) {
   $error = $variables['error'];
@@ -2021,7 +2021,7 @@ function theme_example_coder_review_warning_msg($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_coder_review_table_cols($variables) {
   $form = $variables['form'];
@@ -2029,7 +2029,7 @@ function theme_example_coder_review_table_cols($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_phpapi($variables) {
   $function = $variables['function'];
@@ -2037,50 +2037,50 @@ function theme_example_phpapi($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_missing() { }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function theme_example_undefined($function = NULL) {
   // TODO: Should this theme example_undefined be declared in hook_theme()?
 }
 
-// http://drupal.org/node/224333#theme_page
+// http://backdrop.org/node/224333#theme_page
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_theme_page() {
   $form = array();
-  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
   // print theme('page', $form);
-  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
   // print theme("page", $form);
-  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
   // return theme('page', $output);
 }
 
-// http://drupal.org/node/224333#placeholder
+// http://backdrop.org/node/224333#placeholder
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_placeholder() {
   // theme('placeholder') -- Change the next line but leave this alone
-  $placeholder = drupal_placeholder();
-  $placeholder = drupal_placeholder();
-  $placeholder = drupal_placeholder(array('text' => $format->name));
-  $placeholder = drupal_placeholder(array("text" => $format->name));
+  $placeholder = backdrop_placeholder();
+  $placeholder = backdrop_placeholder();
+  $placeholder = backdrop_placeholder(array('text' => $format->name));
+  $placeholder = backdrop_placeholder(array("text" => $format->name));
 }
 
-// http://drupal.org/node/224333#theme_pager
+// http://backdrop.org/node/224333#theme_pager
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_theme_pager() {
   $pager = theme('pager', array('tags' => $tags, 'element' => $element, 'parameters' => $parameters, 'quantity' => $quantity));
@@ -2093,10 +2093,10 @@ function example_theme_pager() {
   $pager = theme('pager');
 }
 
-// http://drupal.org/node/224333#theme_username
+// http://backdrop.org/node/224333#theme_username
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_theme_username() {
   $user = user_load(1);
@@ -2111,7 +2111,7 @@ function example_theme_username() {
 /**
  * Implemenatation of hook_form_alter().
  *
- * http://drupal.org/node/224333#node_form
+ * http://backdrop.org/node/224333#node_form
  */
 function example_form_alter(&$form, &$form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -2132,11 +2132,11 @@ function example_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
-// http://drupal.org/node/224333#process_functions
-// http://drupal.org/files/issues/unify-process-callbacks_0.patch
+// http://backdrop.org/node/224333#process_functions
+// http://backdrop.org/files/issues/unify-process-callbacks_0.patch
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_process_functions() {
   $form['element'] = array(
@@ -2177,15 +2177,15 @@ function example_process_functions() {
   );
 }
 
-// http://drupal.org/node/224333#drupal_execute_drupal_form_submit
+// http://backdrop.org/node/224333#backdrop_execute_backdrop_form_submit
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_execute() {
-  // drupal_execute() -- Change the next line but leave this alone
-  drupal_form_submit('story_node_form', $form_state, (object) $node);
-  if (drupal_form_submit('story_node_form', $form_state, (object) $node)) {
+function example_backdrop_execute() {
+  // backdrop_execute() -- Change the next line but leave this alone
+  backdrop_form_submit('story_node_form', $form_state, (object) $node);
+  if (backdrop_form_submit('story_node_form', $form_state, (object) $node)) {
   }
 }
 
@@ -2193,20 +2193,20 @@ function example_drupal_execute() {
  * Implements hook_menu().
  *
  * Example for hook_forms_signature.
- * http://drupal.org/node/224333#hook_forms_signature
+ * http://backdrop.org/node/224333#hook_forms_signature
  */
 function example_menu() {
-  // Using drupal_get_form.
+  // Using backdrop_get_form.
   $items['admin/config/development/coder/upgrade'] = array(
     'title' => 'Upgrade',
     'description' => 'Convert module code from version 6.x to 7.x.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('example_conversions_form'),
     'access arguments' => array('administer code conversions'),
     'type' => MENU_LOCAL_TASK,
   );
 
-  // Not using drupal_get_form.
+  // Not using backdrop_get_form.
   $items['admin/content/signup'] = array(
     'title' => 'Signup overview',
     'description' => 'View all signup-enabled posts, and open or close signups on them.',
@@ -2228,7 +2228,7 @@ function example_menu() {
           $items['admin/config/development/coder/upgrade2'] = array(
             'title' => 'Upgrade',
             'description' => 'Convert module code from version 6.x to 7.x.',
-            'page callback' => 'drupal_get_form',
+            'page callback' => 'backdrop_get_form',
             'page arguments' => array('example_conversions_form2'),
             'access arguments' => array('administer code conversions'),
             'type' => MENU_LOCAL_TASK,
@@ -2238,16 +2238,16 @@ function example_menu() {
             'page callback' => 'example_user_form2',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
 
           // Set admin items.
           $default_menu_fields = array(
             'title' => $op,
-            'page callback' => 'drupal_get_form',
+            'page callback' => 'backdrop_get_form',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
           $admin_path = 'admin/%/' . $op . '/' . $loop_item['handler'];
           $items[$admin_path] = array_merge($default_menu_fields, $menu_item);
@@ -2260,7 +2260,7 @@ function example_menu() {
             'page callback' => 'example_user_form3',
             'access callback' => 'example_user_access',
             'type' => MENU_CALLBACK,
-            'file path' => drupal_get_path('module', $loop_item['module']),
+            'file path' => backdrop_get_path('module', $loop_item['module']),
           );
           $user_path = 'user/%user/example/%/' . $op . '/' . $loop_item['handler'];
           $default_menu_fields['access arguments'] = array(1, 3, 4);
@@ -2276,7 +2276,7 @@ function example_menu() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_conversions_form($form, &$form_state) {
   $form = array();
@@ -2285,7 +2285,7 @@ function example_conversions_form($form, &$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_signup_admin_form(&$form_state) {
   $form = array();
@@ -2294,7 +2294,7 @@ function example_signup_admin_form(&$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_conversions_form2($form, &$form_state) {
   $form = array();
@@ -2303,7 +2303,7 @@ function example_conversions_form2($form, &$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_admin_form3($form, &$form_state, $p0) {
   $form = array();
@@ -2312,7 +2312,7 @@ function example_admin_form3($form, &$form_state, $p0) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_user_form2(&$form_state, $p0, $p1) {
   $form = array();
@@ -2321,17 +2321,17 @@ function example_user_form2(&$form_state, $p0, $p1) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_get_form() {
-  $form = drupal_get_form('example_my_form', $p0);
+function example_backdrop_get_form() {
+  $form = backdrop_get_form('example_my_form', $p0);
   // TODO  needs to have $form as its first parameter.
-  return drupal_get_form($form_id);
+  return backdrop_get_form($form_id);
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_my_form($form, &$form_state, $p0) {
   $form = array();
@@ -2341,17 +2341,17 @@ function example_my_form($form, &$form_state, $p0) {
 /**
  * Implements hook_element_info().
  *
- * http://drupal.org/node/224333#hook_element_info
+ * http://backdrop.org/node/224333#hook_element_info
  */
 function example_element_info() {
   $type['filter_format'] = array('#input' => TRUE);
   return $type;
 }
 
-// http://drupal.org/node/224333#fapi_changes
+// http://backdrop.org/node/224333#fapi_changes
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_fapi_changes() {
   $form_state['#redirect'] = 'node/1';
@@ -2369,7 +2369,7 @@ function example_fapi_changes() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_file_scan_directory() {
   // Start with l() since we can use this code to get arguments. Easier with parser.
@@ -2393,9 +2393,9 @@ function example_file_scan_directory() {
   // file_scan_directory() -- Change the next line but leave this alone
   file_scan_directory($dir, '/\.module$/', array(), 0);
 
-  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '@^[a-z/]*$@', array('recurse' => FALSE)) as $file) {
-    include_once DRUPAL_ROOT . '/' . "{$file->filename}/install.inc";
-    include_once DRUPAL_ROOT . '/' . "{$file->filename}/database.inc";
+  foreach (file_scan_directory(BACKDROP_ROOT . '/includes/database', '@^[a-z/]*$@', array('recurse' => FALSE)) as $file) {
+    include_once BACKDROP_ROOT . '/' . "{$file->filename}/install.inc";
+    include_once BACKDROP_ROOT . '/' . "{$file->filename}/database.inc";
     $drivers[$file->basename] = $file->filename;
     /*
      This is the expected code.
@@ -2408,7 +2408,7 @@ function example_file_scan_directory() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_file_set_status() {
   // file_set_status() -- Change the next line but leave this alone
@@ -2422,10 +2422,10 @@ function example_file_set_status() {
   $file = file_save($file);
 }
 
-// http://drupal.org/node/224333#remove_~FILE_STATUS_PERMANENT
+// http://backdrop.org/node/224333#remove_~FILE_STATUS_PERMANENT
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_remove_file_status_temporary() {
   $file->status = ~FILE_STATUS_PERMANENT;
@@ -2437,22 +2437,22 @@ function example_remove_file_status_temporary() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_system_listing() {
-  // drupal_system_listing() -- Change the next line but leave this alone
+function example_backdrop_system_listing() {
+  // backdrop_system_listing() -- Change the next line but leave this alone
   // Get current list of modules
-  $files = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
+  $files = backdrop_system_listing('/\.module$/', 'modules', 'name', 0);
   // Respect the quote type (single or double)
-  $files = drupal_system_listing("/\.module$/", 'modules', 'name', 0);
+  $files = backdrop_system_listing("/\.module$/", 'modules', 'name', 0);
   // Attempt to change $mask
   $mask = '\.module$';
-  $files = drupal_system_listing($mask, 'modules', 'name', 0);
+  $files = backdrop_system_listing($mask, 'modules', 'name', 0);
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_file_prepare_directory() {
   file_prepare_directory($full_path, FILE_CREATE_DIRECTORY);
@@ -2480,10 +2480,10 @@ function example_file_prepare_directory() {
  * User API
  */
 
-// http://drupal.org/node/224333#user_cancel
+// http://backdrop.org/node/224333#user_cancel
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_user_cancel($edit, $uid) {
   // user_delete() -- Change the next line but leave this alone
@@ -2672,10 +2672,10 @@ function example_user_OLD($op, &$edit, &$user, $category = NULL) {
   }
 }
 
-// http://drupal.org/node/224333#user_load_multiple
+// http://backdrop.org/node/224333#user_load_multiple
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_user_load_multiple() {
   // user_load() -- Change the next line but leave this alone
@@ -2716,7 +2716,7 @@ function example_user_load_multiple() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_2_user_load_multiple($parameter) {
   // Add comment as we can not easily determine the nature of $parameter.
@@ -2728,7 +2728,7 @@ function example_2_user_load_multiple($parameter) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_user_authenticate() {
   // () -- Change the next line but leave this alone
@@ -2755,10 +2755,10 @@ function example_user_view($account, $view_mode) {
  * Node API
  */
 
-// http://drupal.org/node/224333#node_load_multiple
+// http://backdrop.org/node/224333#node_load_multiple
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_node_load() {
   $node = node_load(1);
@@ -2789,7 +2789,7 @@ function example_node_load() {
   }
 }
 
-// http://drupal.org/node/224333#node_type_base
+// http://backdrop.org/node/224333#node_type_base
 /**
  * Implements hook_node_info().
  *
@@ -2904,7 +2904,7 @@ function default_profile_tasks(&$task, $url) {
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
-  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+  // documentation at: http://api.backdrop.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
       'type' => 'page',
@@ -3010,7 +3010,7 @@ function example_link($type, $node = NULL, $teaser = FALSE) {
  * The content built for the node (field values, comments, file attachments or
  * other node components) will vary depending on the $build_mode parameter.
  *
- * Drupal core defines the following build modes for nodes, with the following
+ * Backdrop core defines the following build modes for nodes, with the following
  * default use cases:
  *   - full (default): node is being displayed on its own page (node/123)
  *   - teaser: node is being displayed on the default home page listing, on
@@ -3030,9 +3030,9 @@ function example_link($type, $node = NULL, $teaser = FALSE) {
  *   Build mode, e.g. 'full', 'teaser'...
  */
 function node_build_content($node, $build_mode = 'full') { }
-// http://drupal.org/node/224333#node_build_rss
+// http://backdrop.org/node/224333#node_build_rss
 // Should there be a $build_mode parameter?
-// See http://api.drupal.org/api/function/hook_node_view/7
+// See http://api.backdrop.org/api/function/hook_node_view/7
 /**
  * An implementation of hook_node_view().
  */
@@ -3190,10 +3190,10 @@ function example_node_presave($node) {
  */
 function example_node_insert($node) {
   if ($node->moderate && user_access('access submission queue')) {
-    drupal_set_message(t('The post is queued for approval'));
+    backdrop_set_message(t('The post is queued for approval'));
   }
   elseif ($node->moderate) {
-    drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
+    backdrop_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
   }
 }
 
@@ -3202,10 +3202,10 @@ function example_node_insert($node) {
  */
 function example_node_update($node) {
   if ($node->moderate && user_access('access submission queue')) {
-    drupal_set_message(t('The post is queued for approval'));
+    backdrop_set_message(t('The post is queued for approval'));
   }
   elseif ($node->moderate) {
-    drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
+    backdrop_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
   }
 }
 
@@ -3293,10 +3293,10 @@ function example_node_type_update($info) {
  */
 function example_node_type_OLD($op, $info) { }
 
-// http://drupal.org/node/224333#node_invoke_nodeapi
+// http://backdrop.org/node/224333#node_invoke_nodeapi
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_node_invoke_nodeapi() {
   module_invoke_all('node_build_alter', $node);
@@ -3322,10 +3322,10 @@ function example_node_invoke_nodeapi() {
   module_invoke_all('node_' . $op, $node, $a3);
 }
 
-// http://drupal.org/node/224333#node_type_get_functions
+// http://backdrop.org/node/224333#node_type_get_functions
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_node_type_get_functions() {
   $types = node_type_get_types();
@@ -3399,7 +3399,7 @@ function example_node_type_get_functions() {
   }
 }
 
-// http://drupal.org/node/224333#hook_load_signature
+// http://backdrop.org/node/224333#hook_load_signature
 /**
  * Implements hook_load().
  *
@@ -3434,7 +3434,7 @@ function example_load($nodes) {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_locale_context() {
   // () -- Change the next line but leave this alone
@@ -3461,7 +3461,7 @@ function example_locale_context() {
 /**
  * Implements hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3470,7 +3470,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3478,7 +3478,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3487,7 +3487,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://drupal.org/node/224333#implementation_hook_comment
+ * http://backdrop.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3495,7 +3495,7 @@ function example_example() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_book_toc() {
   $toc = book_toc($bid, 9);
@@ -3512,7 +3512,7 @@ function example_book_toc() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_referer_uri() {
   // referer_uri() -- Change the next line but leave this alone
@@ -3523,10 +3523,10 @@ function example_referer_uri() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_clone() {
-  // drupal_clone() -- Change the next line but leave this alone
+function example_backdrop_clone() {
+  // backdrop_clone() -- Change the next line but leave this alone
   if ($x = clone $xx['y']) {
   }
   $y = clone $xx['y'];
@@ -3535,7 +3535,7 @@ function example_drupal_clone() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_actions_synchronize() {
   actions_synchronize($delete_orphans = FALSE);
@@ -3544,23 +3544,23 @@ function example_actions_synchronize() {
 // TODO Add example for menu_path_is_external().
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_url_is_external() { }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_valid_path() {
+function example_backdrop_valid_path() {
   // Use case 1 - passes variable directly.
-  if (!drupal_valid_path($form_state['values']['site_frontpage_1'])) {
+  if (!backdrop_valid_path($form_state['values']['site_frontpage_1'])) {
   }
 
   // Use case 2: makes one assignment to array variable; passes variable.
   // menu_valid_path() -- Change the next line but leave this alone
   $item = array('link_path' => $form_state['values']['site_frontpage_2A']);
-  if (!drupal_valid_path($form_state['values']['site_frontpage_2A'])) {
+  if (!backdrop_valid_path($form_state['values']['site_frontpage_2A'])) {
     // Throw an error.
   }
   // Use case 2: makes one assignment to array variable; passes variable.
@@ -3568,22 +3568,22 @@ function example_drupal_valid_path() {
     'link_path' => $form_state['values']['site_frontpage_2B'],
     'link_title' => $var,
   );
-  if (!drupal_valid_path($form_state['values']['site_frontpage_2B'])) {
+  if (!backdrop_valid_path($form_state['values']['site_frontpage_2B'])) {
     // Throw an error.
   }
 
   // Use case 3: makes multiple assignments to array variable; passes variable.
   $item['link_path'] = $form_state['values']['site_frontpage_3']; // A comment to mess up things.
   $item['link_title'] = $var;
-  if (!drupal_valid_path($form_state['values']['site_frontpage_3'])) {
+  if (!backdrop_valid_path($form_state['values']['site_frontpage_3'])) {
     // Throw an error.
   }
 
   // Use case 4 - passes more complex variable directly. (NOT HANDLED)
-  if (!drupal_valid_path($item->xx /* TODO Please pass a menu path directly */)) {
+  if (!backdrop_valid_path($item->xx /* TODO Please pass a menu path directly */)) {
     // Throw an error.
   }
-  if (!drupal_valid_path($item['xx'] /* TODO Please pass a menu path directly */)) {
+  if (!backdrop_valid_path($item['xx'] /* TODO Please pass a menu path directly */)) {
     // Throw an error.
   }
 }
@@ -3798,43 +3798,43 @@ function example_trigger_info() {
   return $info;
 }
 
-// http://drupal.org/node/224333#drupal-goto-params
+// http://backdrop.org/node/224333#backdrop-goto-params
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
-function example_drupal_goto_params() {
-  drupal_goto('/node/1');
-  drupal_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd')));
-  drupal_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd'), 'fragment' => $fragment));
+function example_backdrop_goto_params() {
+  backdrop_goto('/node/1');
+  backdrop_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd')));
+  backdrop_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd'), 'fragment' => $fragment));
   // TODO $query needs to be an array of keys and values instead of a string.
-  drupal_goto('/node/1', array('query' => $query, 'fragment' => $fragment));
-  drupal_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd'), 'fragment' => $fragment), 301);
-  drupal_goto('/node/1', array('fragment' => $fragment));
-  drupal_goto('/node/1', array(), 301);
+  backdrop_goto('/node/1', array('query' => $query, 'fragment' => $fragment));
+  backdrop_goto('/node/1', array('query' => array('a' => 'b', 'c' => 'd'), 'fragment' => $fragment), 301);
+  backdrop_goto('/node/1', array('fragment' => $fragment));
+  backdrop_goto('/node/1', array(), 301);
 
-  drupal_goto('/node/1');
-  drupal_goto('/node/1');
+  backdrop_goto('/node/1');
+  backdrop_goto('/node/1');
 
   $query = array('a' => 'b', 'c' => 'd');
-  drupal_goto($path);
-  drupal_goto($path, array('query' => $query));
+  backdrop_goto($path);
+  backdrop_goto($path, array('query' => $query));
   // TODO $query needs to be an array of keys and values instead of a string.
-  drupal_goto($path, array('query' => $query, 'fragment' => $fragment));
+  backdrop_goto($path, array('query' => $query, 'fragment' => $fragment));
   // TODO $query needs to be an array of keys and values instead of a string.
-  drupal_goto($path, array('query' => $query, 'fragment' => $fragment));
+  backdrop_goto($path, array('query' => $query, 'fragment' => $fragment));
   // TODO $query needs to be an array of keys and values instead of a string.
-  drupal_goto($path, array('query' => $query, 'fragment' => $fragment), 301);
-  drupal_goto($path, array('fragment' => $fragment));
-  drupal_goto($path, array(), 301);
+  backdrop_goto($path, array('query' => $query, 'fragment' => $fragment), 301);
+  backdrop_goto($path, array('fragment' => $fragment));
+  backdrop_goto($path, array(), 301);
 
   // TODO QUERY needs to be an array of keys and values instead of a string.
-  drupal_goto($path, array('query' => QUERY, 'fragment' => FRAGMENT));
+  backdrop_goto($path, array('query' => QUERY, 'fragment' => FRAGMENT));
 }
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_date_format() {
   $shortdate = format_date($log->timestamp, 'short');
@@ -3844,7 +3844,7 @@ function example_date_format() {
 
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_url_query_parameter() {
   // Nothing to change.
@@ -3874,10 +3874,10 @@ function example_url_query_parameter() {
   );
 }
 
-// http://drupal.org/node/224333#watchdog_emerg
+// http://backdrop.org/node/224333#watchdog_emerg
 /**
  * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * @see http://backdrop.org/node/1354
  */
 function example_watchdog_emerg() {
   watchdog('example', 'This is an example emergency message', WATCHDOG_EMERGENCY);

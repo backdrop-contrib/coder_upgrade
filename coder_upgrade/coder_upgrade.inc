@@ -3,7 +3,7 @@
  * @file
  * Provides constants and utility functions.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -147,7 +147,7 @@ function coder_upgrade_path($type = '') {
  * Returns the local public directory path.
  *
  * Adapted from function removed from core on 2010-09-01
- * (see http://drupal.org/cvs?commit=415020).
+ * (see http://backdrop.org/cvs?commit=415020).
  *
  * @return string
  *   A string containing the directory path of a stream. FALSE is returned if
@@ -157,7 +157,7 @@ function file_stream_path($scheme = 'public') {
   global $_coder_upgrade_files_base;
 
   if (isset($_coder_upgrade_files_base)) {
-    // This is being run as a separate process outside of Drupal.
+    // This is being run as a separate process outside of Backdrop.
     return $_coder_upgrade_files_base;
   }
   elseif ($wrapper = file_stream_wrapper_get_instance_by_scheme($scheme)) {
@@ -197,7 +197,7 @@ function coder_upgrade_library_checks() {
     $messages[] = 'Grammar Parser should be installed as a library using a 2.x release of Libraries API module.';
   }
   foreach ($messages as $message) {
-    drupal_set_message(t($message), 'error');
+    backdrop_set_message(t($message), 'error');
   }
   return empty($messages);
 }

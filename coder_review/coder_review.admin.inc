@@ -56,11 +56,11 @@ function theme_coder_review_modules_fieldset($variables) {
   $rows = array();
   // Iterate through all of the modules to Determine the available operations.
   $children = element_children($form);
-  $operations = drupal_map_assoc(array('help', 'permissions', 'configure'));
+  $operations = backdrop_map_assoc(array('help', 'permissions', 'configure'));
   foreach ($children as $key) {
     $links = array_filter(array_keys($form[$key]['links']), '_coder_review_link_check');
     if ($links) {
-      $operations += drupal_map_assoc($links);
+      $operations += backdrop_map_assoc($links);
     }
   }
   // Iterate through all the modules.
@@ -69,15 +69,15 @@ function theme_coder_review_modules_fieldset($variables) {
     $module = $form[$key];
     $row = array();
     unset($module['enable']['#title']);
-    $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
+    $row[] = array('class' => array('checkbox'), 'data' => backdrop_render($module['enable']));
     $label = '<label';
     if (isset($module['enable']['#id'])) {
       $label .= ' for="' . $module['enable']['#id'] . '"';
     }
-    $row[] = $label . '><strong>' . drupal_render($module['name']) . '</strong></label>';
-    $row[] = drupal_render($module['version']);
+    $row[] = $label . '><strong>' . backdrop_render($module['name']) . '</strong></label>';
+    $row[] = backdrop_render($module['version']);
     // Add the description, along with any modules it requires.
-    $description = drupal_render($module['description']);
+    $description = backdrop_render($module['description']);
     if ($module['#requires']) {
       $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
     }
@@ -87,7 +87,7 @@ function theme_coder_review_modules_fieldset($variables) {
     $row[] = array('data' => $description, 'class' => array('description'));
     // Display links (such as help or permissions) in their own columns.
     foreach ($operations as $key) {
-      $row[] = array('data' => drupal_render($module['links'][$key]), 'class' => array($key));
+      $row[] = array('data' => backdrop_render($module['links'][$key]), 'class' => array($key));
     }
     $form['#header'][4]['colspan'] = count($operations);
     $rows[] = $row;

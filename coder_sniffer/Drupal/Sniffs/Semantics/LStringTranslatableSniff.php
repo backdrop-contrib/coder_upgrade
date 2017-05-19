@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Semanitcs_LStringTranslatableSniff.
+ * Backdrop_Sniffs_Semanitcs_LStringTranslatableSniff.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Semantics_LStringTranslatableSniff extends Drupal_Sniffs_Semantics_FunctionCall
+class Backdrop_Sniffs_Semantics_LStringTranslatableSniff extends Backdrop_Sniffs_Semantics_FunctionCall
 {
 
 
@@ -43,7 +43,7 @@ class Drupal_Sniffs_Semantics_LStringTranslatableSniff extends Drupal_Sniffs_Sem
      *   The position of the opening parenthesis in the stack.
      * @param int $closeBracket
      *   The position of the closing parenthesis in the stack.
-     * @param Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+     * @param Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
      *   Can be used to retreive the function's arguments with the getArgument()
      *   method.
      *
@@ -54,7 +54,7 @@ class Drupal_Sniffs_Semantics_LStringTranslatableSniff extends Drupal_Sniffs_Sem
         $stackPtr,
         $openBracket,
         $closeBracket,
-        Drupal_Sniffs_Semantics_FunctionCallSniff $sniff
+        Backdrop_Sniffs_Semantics_FunctionCallSniff $sniff
     ) {
         $tokens = $phpcsFile->getTokens();
         // Get the first argument passed to l().

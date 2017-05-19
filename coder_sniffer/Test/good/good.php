@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains all the valid notations for the drupal coding standard.
+ * This file contains all the valid notations for the backdrop coding standard.
  *
  * The goal is to create a style checker that validates all of this
  * constructs.
@@ -236,7 +236,7 @@ do {
  * We use doxygen style comments.
  * What's sad because eclipse PDT and
  * PEAR CodeSniffer base on phpDoc comment style.
- * Makes working with drupal not easier :|
+ * Makes working with backdrop not easier :|
  *
  * @param string $field1
  *   Doxygen style comments.
@@ -252,7 +252,7 @@ do {
  *
  * @see example_reference()
  * @see Example::exampleMethod()
- * @see http://drupal.org
+ * @see http://backdrop.org
  * @see http://example.com/see/documentation/is/allowed/to/exceed/eighty/characters
  */
 function foo_bar($field1, $field2, $field3 = NULL, &$field4 = NULL) {
@@ -407,7 +407,7 @@ function test3() {
 t('special character: \"');
 t("special character: \'");
 // Escaping is allowed here because we make use of the other quote type, too.
-t('Link to Drupal\'s <a href="@url">admin pages</a>.', array('@url' => url('admin')));
+t('Link to Backdrop\'s <a href="@url">admin pages</a>.', array('@url' => url('admin')));
 
 // Test inline comment style.
 // Comment one.
@@ -462,7 +462,7 @@ t('x');
  *
  * Some description and here comes the code:
  * @code
- *   $options = drupal_parse_url($_GET['destination']);
+ *   $options = backdrop_parse_url($_GET['destination']);
  *   $my_url = url($options['path'], $options);
  *   $my_link = l('Example link', $options['path'], $options);
  * @endcode
@@ -574,7 +574,7 @@ watchdog('mymodule', 'Log message here.');
 // "=" oeprator.
 $batch =& batch_get();
 
-// Security issue: http://drupal.org/node/750148
+// Security issue: http://backdrop.org/node/750148
 preg_match('/.+/i', 'subject');
 preg_match('/.+/imsuxADSUXJ', 'subject');
 preg_filter('/.+/i', 'replacement', 'subject');

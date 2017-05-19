@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_WhiteSpace_ObjectOperatorIndentSniff.
+ * Backdrop_Sniffs_WhiteSpace_ObjectOperatorIndentSniff.
  *
  * PHP version 5
  *
@@ -13,7 +13,7 @@
  */
 
 /**
- * Drupal_Sniffs_WhiteSpace_ObjectOperatorIndentSniff.
+ * Backdrop_Sniffs_WhiteSpace_ObjectOperatorIndentSniff.
  *
  * Checks that object operators are indented 2 spaces if they are the first
  * thing on a line.
@@ -26,7 +26,7 @@
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_ObjectOperatorIndentSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_WhiteSpace_ObjectOperatorIndentSniff implements PHP_CodeSniffer_Sniff
 {
 
 

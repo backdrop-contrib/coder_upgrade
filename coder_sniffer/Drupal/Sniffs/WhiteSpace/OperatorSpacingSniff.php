@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_WhiteSpace_OperatorSpacingSniff.
+ * Backdrop_Sniffs_WhiteSpace_OperatorSpacingSniff.
  *
  * PHP version 5
  *
@@ -12,13 +12,13 @@
 /**
  * Overrides Squiz_Sniffs_WhiteSpace_OperatorSpacingSniff to not check inline if/then
  * statements because those are handled by
- * Drupal_Sniffs_Formatting_SpaceInlineIfSniff.
+ * Backdrop_Sniffs_Formatting_SpaceInlineIfSniff.
  *
  * @category PHP
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_OperatorSpacingSniff extends Squiz_Sniffs_WhiteSpace_OperatorSpacingSniff
+class Backdrop_Sniffs_WhiteSpace_OperatorSpacingSniff extends Squiz_Sniffs_WhiteSpace_OperatorSpacingSniff
 {
 
 

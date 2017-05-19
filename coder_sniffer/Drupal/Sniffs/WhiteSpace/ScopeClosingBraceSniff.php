@@ -1,12 +1,12 @@
 <?php
 /**
- * Drupal_Sniffs_Whitespace_ScopeClosingBraceSniff.
+ * Backdrop_Sniffs_Whitespace_ScopeClosingBraceSniff.
  *
  * PHP version 5
  *
  * @category PHP
  * @package  PHP_CodeSniffer
- * @link     http://Drupal.php.net/package/PHP_CodeSniffer
+ * @link     http://Backdrop.php.net/package/PHP_CodeSniffer
  */
 
 /**
@@ -19,7 +19,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**

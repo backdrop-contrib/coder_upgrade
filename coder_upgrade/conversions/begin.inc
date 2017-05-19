@@ -6,10 +6,10 @@
  * These routines use the grammar parser.
  *
  * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://drupal.org/node/394070 that are marked with a
+ * category roadmap at http://backdrop.org/node/394070 that are marked with a
  * green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
  */
 
 /**
@@ -48,7 +48,7 @@ function coder_upgrade_cache_theme_registry() {
       // Cache the theme registry (includes only enabled modules).
       $_coder_upgrade_theme_registry = theme_get_registry();
       if (!$_coder_upgrade_theme_registry) {
-        drupal_theme_initialize();
+        backdrop_theme_initialize();
         $_coder_upgrade_theme_registry = theme_get_registry();
       }
       // Build and cache the theme registry for disabled modules.
@@ -77,7 +77,7 @@ function coder_upgrade_theme_build_registry() {
   foreach ($list as $module => $stuff) { // foreach (module_implements('theme') as $module) {
     module_load_include('module', $module);
     if (module_hook($module, $hook)) { // || (isset($hook_info[$hook]['group']) && $include_file = module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']) && module_hook($module, $hook))) {
-      _theme_process_registry($cache, $module, 'module', $module, $path = drupal_get_path('module', $module));
+      _theme_process_registry($cache, $module, 'module', $module, $path = backdrop_get_path('module', $module));
     }
   }
   return $cache;
@@ -165,7 +165,7 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
 /**
  * Caches hook_menu() arrays.
  *
- * Save a list of form callback routines (including arguments to drupal_get_form()).
+ * Save a list of form callback routines (including arguments to backdrop_get_form()).
  *
  * @param PGPNode $node
  *   The node of the statement containing the array object.
@@ -194,7 +194,7 @@ function coder_upgrade_callback_menu($node, &$array2, &$current2, $hook, $type, 
 
   /*
    * With a nice array that includes all the menu items, we can check for a
-   * page callback of 'drupal_get_form'. However, this is a default and could
+   * page callback of 'backdrop_get_form'. However, this is a default and could
    * be omitted. But because there could be 'funny' code such as inside the
    * foreach loop in our example function, we do not have an easy way to
    * determine if the menu item is a callback to be changed.
@@ -206,7 +206,7 @@ function coder_upgrade_callback_menu($node, &$array2, &$current2, $hook, $type, 
 
   $callback = $array2->findValue('page callback');
   $arguments = $array2->findValue('page arguments');
-  if ($callback && trim($callback->toString(), "'\"") == 'drupal_get_form') {
+  if ($callback && trim($callback->toString(), "'\"") == 'backdrop_get_form') {
     if ($arguments) {
       $operand = $arguments->getElement();
       if ($arguments->isType(T_ARRAY)) {

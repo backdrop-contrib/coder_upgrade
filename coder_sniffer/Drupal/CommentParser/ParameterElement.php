@@ -16,13 +16,13 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_CommentParser_ParameterElement
+class Backdrop_CommentParser_ParameterElement
     extends PHP_CodeSniffer_CommentParser_ParameterElement
 {
 
 
     /**
-     * Constructs a Drupal_CommentParser_ParameterElement.
+     * Constructs a Backdrop_CommentParser_ParameterElement.
      *
      * @param PHP_CodeSniffer_CommentParser_DocElement $previousElement The element
      *                                                                  previous to

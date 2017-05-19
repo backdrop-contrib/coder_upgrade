@@ -19,7 +19,7 @@ function coder_format_recursive($directory, $undo = FALSE) {
 
   // Check if directory exists.
   if (!is_dir($directory)) {
-    drupal_set_message(t('%directory not found.', array('%directory' => $directory)), 'error');
+    backdrop_set_message(t('%directory not found.', array('%directory' => $directory)), 'error');
     return FALSE;
   }
 
@@ -75,11 +75,11 @@ function coder_format_file($filename, $undo = FALSE) {
     $latest = array_pop($backups);
     // Restore latest backup.
     if (unlink($original) && rename($latest->filename, $original)) {
-      drupal_set_message(t('%file restored.', array('%file' => $original)));
+      backdrop_set_message(t('%file restored.', array('%file' => $original)));
       return TRUE;
     }
     else {
-      drupal_set_message(t('%file could not be restored.', array('%file' => $original)), 'error');
+      backdrop_set_message(t('%file could not be restored.', array('%file' => $original)), 'error');
       return FALSE;
     }
   }
@@ -92,7 +92,7 @@ function coder_format_file($filename, $undo = FALSE) {
   $status = $status && copy($filename, $targetfile);
   $status = $status && file_exists($targetfile);
   if (!$status) {
-    drupal_set_message(t('%file could not be backup.', array('%file' => $filename)), 'error');
+    backdrop_set_message(t('%file could not be backup.', array('%file' => $filename)), 'error');
     return FALSE;
   }
 
@@ -110,22 +110,22 @@ function coder_format_file($filename, $undo = FALSE) {
       $status = fwrite($fd, $code);
       fclose($fd);
 
-      drupal_set_message(t('%file processed.', array('%file' => $sourcefile)));
+      backdrop_set_message(t('%file processed.', array('%file' => $sourcefile)));
       return $status;
     }
     else {
-      drupal_set_message(t('An error occurred while processing %file.', array('%file' => $sourcefile)), 'error');
+      backdrop_set_message(t('An error occurred while processing %file.', array('%file' => $sourcefile)), 'error');
       return FALSE;
     }
   }
   else {
-    drupal_set_message(t('%file could not be opened.', array('%file' => $sourcefile)), 'error');
+    backdrop_set_message(t('%file could not be opened.', array('%file' => $sourcefile)), 'error');
     return FALSE;
   }
 }
 
 /**
- * Formats source code according to Drupal conventions, also using
+ * Formats source code according to Backdrop conventions, also using
  * post and pre-processors.
  *
  * @param
@@ -148,7 +148,7 @@ function coder_format_string_all($code) {
 }
 
 /**
- * Format the source code according to Drupal coding style guidelines.
+ * Format the source code according to Backdrop coding style guidelines.
  *
  * This function uses PHP's tokenizer functions.
  * @see http://www.php.net/manual/en/ref.tokenizer.php
@@ -1072,7 +1072,7 @@ function coder_trim_php($code) {
 /**
  * Execute special tasks on source code.
  *
- * This function works similar to the Drupal hook and forms system. It searches
+ * This function works similar to the Backdrop hook and forms system. It searches
  * for all defined functions with the given prefix and performs a preg_replace
  * on the source code for each of these functions.
  *

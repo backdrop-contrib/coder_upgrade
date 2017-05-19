@@ -1,6 +1,6 @@
 <?php
 
-class Drupal_Sniffs_Commenting_FileCommentUnitTest extends CoderSniffUnitTest
+class Backdrop_Sniffs_Commenting_FileCommentUnitTest extends CoderSniffUnitTest
 {
 
     /**

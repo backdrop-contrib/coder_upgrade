@@ -16,21 +16,21 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_CommentParser_FunctionCommentParser
+class Backdrop_CommentParser_FunctionCommentParser
     extends PHP_CodeSniffer_CommentParser_FunctionCommentParser
 {
 
     /**
      * The parameter elements within this function comment.
      *
-     * @var array(Drupal_CommentParser_ParameterElement)
+     * @var array(Backdrop_CommentParser_ParameterElement)
      */
     protected $params = array();
 
     /**
      * The return element in this function comment.
      *
-     * @var Drupal_CommentParser_ReturnElement
+     * @var Backdrop_CommentParser_ReturnElement
      */
     protected $return = null;
 
@@ -40,11 +40,11 @@ class Drupal_CommentParser_FunctionCommentParser
      *
      * @param array(string) $tokens The tokens that conmpise this sub element.
      *
-     * @return Drupal_CommentParser_ParameterElement
+     * @return Backdrop_CommentParser_ParameterElement
      */
     protected function parseParam($tokens)
     {
-        $param = new Drupal_CommentParser_ParameterElement(
+        $param = new Backdrop_CommentParser_ParameterElement(
             $this->previousElement,
             $tokens,
             $this->phpcsFile
@@ -61,11 +61,11 @@ class Drupal_CommentParser_FunctionCommentParser
      *
      * @param array(string) $tokens The tokens that comprise this sub element.
      *
-     * @return Drupal_CommentParser_ReturnElement
+     * @return Backdrop_CommentParser_ReturnElement
      */
     protected function parseReturn($tokens)
     {
-        $return = new Drupal_CommentParser_ReturnElement(
+        $return = new Backdrop_CommentParser_ReturnElement(
             $this->previousElement,
             $tokens,
             'return',
@@ -84,7 +84,7 @@ class Drupal_CommentParser_FunctionCommentParser
      * Returns an empty array if no parameter elements are contained within
      * this function comment.
      *
-     * @return array(Drupal_CommentParser_ParameterElement)
+     * @return array(Backdrop_CommentParser_ParameterElement)
      */
     public function getParams()
     {
@@ -98,7 +98,7 @@ class Drupal_CommentParser_FunctionCommentParser
      *
      * Returns null if no return element exists in the comment.
      *
-     * @return Drupal_CommentParser_ReturnElement
+     * @return Backdrop_CommentParser_ReturnElement
      */
     public function getReturn()
     {

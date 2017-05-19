@@ -25,9 +25,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!update_sql() is now deprecated',
       '#args' => array(
-        '!update_sql' => _drupalapi('update_sql', 6),
+        '!update_sql' => _backdropapi('update_sql', 6),
       ),
-      '#link' => _drupalnode(224333, 'update_sql'),
+      '#link' => _backdropnode(224333, 'update_sql'),
     ),
   );
   $rules[] = array(
@@ -36,7 +36,7 @@ function coder_review_7x_reviews() {
     '#value' => 'return\s+(array|\$ret)',
     '#warning' => array(
       '#text' => 'Update hooks now return translated strings or throw exceptions',
-      '#link' => _drupalnode(224333, 'update_sql'),
+      '#link' => _backdropnode(224333, 'update_sql'),
     ),
     '#function' => '_update_[0-9]+$',
     '#filename' => array('install'),
@@ -50,8 +50,8 @@ function coder_review_7x_reviews() {
     '#source' => 'allphp',
     '#value' => '((require|include)(_once)?).+[\'"]\.\/',
     '#warning' => array(
-      '#text' => 'Use absolute path, constructed from DRUPAL_ROOT, when including a file.',
-      '#link' => _drupalnode(224333, 'absolute_includes'),
+      '#text' => 'Use absolute path, constructed from BACKDROP_ROOT, when including a file.',
+      '#link' => _backdropnode(224333, 'absolute_includes'),
     ),
   );
   $rules[] = array(
@@ -62,42 +62,42 @@ function coder_review_7x_reviews() {
       '#args' => array(
         '!time' => _phpapi('time'),
       ),
-      '#link' => _drupalnode(224333, 'time'),
+      '#link' => _backdropnode(224333, 'time'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_rebuild_code_registry\s*\(',
+    '#value' => '[\s\(]backdrop_rebuild_code_registry\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_rebuild_code_registry() function has been renamed to !registry_rebuild()',
+      '#text' => '!backdrop_rebuild_code_registry() function has been renamed to !registry_rebuild()',
       '#args' => array(
-        '!drupal_rebuild_code_registry' => _drupalapi('drupal_rebuild_code_registry', 6),
-        '!registry_rebuild' => _drupalapi('registry_rebuild', 7),
+        '!backdrop_rebuild_code_registry' => _backdropapi('backdrop_rebuild_code_registry', 6),
+        '!registry_rebuild' => _backdropapi('registry_rebuild', 7),
       ),
-      '#link' => _drupalnode(224333, 'rebuild_functions'),
+      '#link' => _backdropnode(224333, 'rebuild_functions'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_uninstall_module\s*\(',
+    '#value' => '[\s\(]backdrop_uninstall_module\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_uninstall_module() has been renamed to !drupal_uninstall_modules() and now takes an array of module names.',
+      '#text' => '!backdrop_uninstall_module() has been renamed to !backdrop_uninstall_modules() and now takes an array of module names.',
       '#args' => array(
-        '!drupal_uninstall_module' => _drupalapi('drupal_uninstall_module', 6),
-        '!drupal_uninstall_modules' => _drupalapi('drupal_uninstall_modules', 7),
+        '!backdrop_uninstall_module' => _backdropapi('backdrop_uninstall_module', 6),
+        '!backdrop_uninstall_modules' => _backdropapi('backdrop_uninstall_modules', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_uninstall_modules'),
+      '#link' => _backdropnode(224333, 'backdrop_uninstall_modules'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_http_request\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
+    '#value' => '[\s\(]backdrop_http_request\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
     '#warning' => array(
-      '#text' => 'Parameters to !drupal_http_request() have changed.',
+      '#text' => 'Parameters to !backdrop_http_request() have changed.',
       '#args' => array(
-        '!drupal_http_request' => _drupalapi('drupal_http_request', 7),
+        '!backdrop_http_request' => _backdropapi('backdrop_http_request', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_http_request_parameters'),
+      '#link' => _backdropnode(224333, 'backdrop_http_request_parameters'),
     ),
   );
   $rules[] = array(
@@ -106,7 +106,7 @@ function coder_review_7x_reviews() {
     '#value' => 'admin\/reports\/settings',
     '#warning' => array(
       '#text' => 'Statistics settings have moved to "admin/config/system/statistics" and there is a new "administer statistics" permission.',
-      '#link' => _drupalnode(224333, 'moved_statistics_settings'),
+      '#link' => _backdropnode(224333, 'moved_statistics_settings'),
     ),
   );
   $rules[] = array(
@@ -115,10 +115,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!module_rebuild_cache() has been renamed to !system_get_module_data().',
       '#args' => array(
-        '!module_rebuild_cache' => _drupalapi('module_rebuild_cache', 6),
-        '!system_get_module_data' => _drupalapi('system_get_module_data', 7),
+        '!module_rebuild_cache' => _backdropapi('module_rebuild_cache', 6),
+        '!system_get_module_data' => _backdropapi('system_get_module_data', 7),
       ),
-      '#link' => _drupalnode(224333, 'system_get_module_data'),
+      '#link' => _backdropnode(224333, 'system_get_module_data'),
     ),
   );
   $rules[] = array(
@@ -127,58 +127,58 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!system_theme_data() has been renamed to !system_get_theme_data().',
       '#args' => array(
-        '!system_theme_data' => _drupalapi('system_theme_data', 6),
-        '!system_get_theme_data' => _drupalapi('system_get_theme_data', 7),
+        '!system_theme_data' => _backdropapi('system_theme_data', 6),
+        '!system_get_theme_data' => _backdropapi('system_get_theme_data', 7),
       ),
-      '#link' => _drupalnode(224333, 'system_get_module_data'),
+      '#link' => _backdropnode(224333, 'system_get_module_data'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_set_html_head\s*\(',
+    '#value' => '[\s\(]backdrop_set_html_head\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_set_html_head() has been renamed to !drupal_add_html_head().',
+      '#text' => '!backdrop_set_html_head() has been renamed to !backdrop_add_html_head().',
       '#args' => array(
-        '!drupal_set_html_head' => _drupalapi('drupal_set_html_head', 6),
-        '!drupal_add_html_head' => _drupalapi('drupal_add_html_head', 7),
+        '!backdrop_set_html_head' => _backdropapi('backdrop_set_html_head', 6),
+        '!backdrop_add_html_head' => _backdropapi('backdrop_add_html_head', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_set_html_head'),
+      '#link' => _backdropnode(224333, 'backdrop_set_html_head'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_eval\s*\(',
+    '#value' => '[\s\(]backdrop_eval\s*\(',
     '#warning' => array(
-      '#text' => "!drupal_eval() has been renamed to !php_eval() and should be wrapped in a module_exists('php') check.",
+      '#text' => "!backdrop_eval() has been renamed to !php_eval() and should be wrapped in a module_exists('php') check.",
       '#args' => array(
-        '!drupal_eval' => _drupalapi('drupal_eval', 6),
-        '!php_eval' => _drupalapi('php_eval', 7),
+        '!backdrop_eval' => _backdropapi('backdrop_eval', 6),
+        '!php_eval' => _backdropapi('php_eval', 7),
       ),
-      '#link' => _drupalnode(224333, 'php_eval'),
+      '#link' => _backdropnode(224333, 'php_eval'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_set_content\s*\(',
+    '#value' => '[\s\(]backdrop_set_content\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_set_content() has been renamed to !drupal_add_region_content().',
+      '#text' => '!backdrop_set_content() has been renamed to !backdrop_add_region_content().',
       '#args' => array(
-        '!drupal_set_content' => _drupalapi('drupal_set_content', 6),
-        '!drupal_add_region_content' => _drupalapi('drupal_add_region_content', 7),
+        '!backdrop_set_content' => _backdropapi('backdrop_set_content', 6),
+        '!backdrop_add_region_content' => _backdropapi('backdrop_add_region_content', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_set_content'),
+      '#link' => _backdropnode(224333, 'backdrop_set_content'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_get_content\s*\(',
+    '#value' => '[\s\(]backdrop_get_content\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_get_content() has been renamed to !drupal_get_region_content().',
+      '#text' => '!backdrop_get_content() has been renamed to !backdrop_get_region_content().',
       '#args' => array(
-        '!drupal_get_content' => _drupalapi('drupal_get_content', 6),
-        '!drupal_get_region_content' => _drupalapi('drupal_get_region_content', 7),
+        '!backdrop_get_content' => _backdropapi('backdrop_get_content', 6),
+        '!backdrop_get_region_content' => _backdropapi('backdrop_get_region_content', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_set_content'),
+      '#link' => _backdropnode(224333, 'backdrop_set_content'),
     ),
   );
   $rules[] = array(
@@ -188,28 +188,28 @@ function coder_review_7x_reviews() {
   $rules[] = array(
     '#type' => 'regex',
     '#value' => '[\s\(]set_time_limit\s*\(',
-    '#function-not' => '^drupal_set_time_limit$',
+    '#function-not' => '^backdrop_set_time_limit$',
     '#warning' => array(
-      '#text' => 'Use !drupal_set_time_limit() instead of !set_time_limit().',
+      '#text' => 'Use !backdrop_set_time_limit() instead of !set_time_limit().',
       '#args' => array(
-        '!drupal_set_time_limit' => _drupalapi('drupal_set_time_limit', 7),
+        '!backdrop_set_time_limit' => _backdropapi('backdrop_set_time_limit', 7),
         '!set_time_limit' => _phpapi('set_time_limit'),
       ),
-      '#link' => _drupalnode(224333, 'time_limit'),
+      '#link' => _backdropnode(224333, 'time_limit'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(](drupal_set_header|drupal_get_headers)\s*\(',
+    '#value' => '[\s\(](backdrop_set_header|backdrop_get_headers)\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_set_header() has been renamed to !drupal_add_http_header() and its parameters changed, and !drupal_get_headers() renamed to !drupal_get_http_header()',
+      '#text' => '!backdrop_set_header() has been renamed to !backdrop_add_http_header() and its parameters changed, and !backdrop_get_headers() renamed to !backdrop_get_http_header()',
       '#args' => array(
-        '!drupal_set_header' => _drupalapi('drupal_set_header', 6),
-        '!drupal_get_headers' => _drupalapi('drupal_get_headers', 6),
-        '!drupal_add_http_header' => _drupalapi('drupal_add_http_header', 7),
-        '!drupal_get_http_header' => _drupalapi('drupal_get_http_header', 7),
+        '!backdrop_set_header' => _backdropapi('backdrop_set_header', 6),
+        '!backdrop_get_headers' => _backdropapi('backdrop_get_headers', 6),
+        '!backdrop_add_http_header' => _backdropapi('backdrop_add_http_header', 7),
+        '!backdrop_get_http_header' => _backdropapi('backdrop_get_http_header', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_set_header_renamed'),
+      '#link' => _backdropnode(224333, 'backdrop_set_header_renamed'),
     ),
   );
   $rules[] = array(
@@ -218,19 +218,19 @@ function coder_review_7x_reviews() {
     '#not' => 'WATCHDOG_EMERGENCY',
     '#warning' => array(
       '#text' => 'WATCHDOG_EMERG was renamed to WATCHDOG_EMERGENCY',
-      '#link' => _drupalnode(224333, 'watchdog_emerg'),
+      '#link' => _backdropnode(224333, 'watchdog_emerg'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_urlencode\s*\(',
+    '#value' => '[\s\(]backdrop_urlencode\s*\(',
     '#warning' => array(
-      '#text' => 'Use !drupal_encode_path() instead of !drupal_urlencode().',
+      '#text' => 'Use !backdrop_encode_path() instead of !backdrop_urlencode().',
       '#args' => array(
-        '!drupal_encode_path' => _drupalapi('drupal_encode_path', 7),
-        '!drupal_urlencode' => _drupalapi('drupal_urlencode', 6),
+        '!backdrop_encode_path' => _backdropapi('backdrop_encode_path', 7),
+        '!backdrop_urlencode' => _backdropapi('backdrop_urlencode', 6),
       ),
-      '#link' => _drupalnode(224333, 'remove-drupal-urlencode'),
+      '#link' => _backdropnode(224333, 'remove-backdrop-urlencode'),
     ),
   );
   $rules[] = array(
@@ -239,14 +239,14 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_search() has been separated out into several other hooks: !hook_search_info(), !hook_search_admin(), !hook_search_execute(), !hook_search_reset(), !hook_search_status()',
       '#args' => array(
-        '!hook_search' => _drupalapi('hook_search', 6),
-        '!hook_search_info' => _drupalapi('hook_search_info', 7),
-        '!hook_search_admin' => _drupalapi('hook_search_admin', 7),
-        '!hook_search_execute' => _drupalapi('hook_search_execute', 7),
-        '!hook_search_reset' => _drupalapi('hook_search_reset', 7),
-        '!hook_search_status' => _drupalapi('hook_search_status', 7),
+        '!hook_search' => _backdropapi('hook_search', 6),
+        '!hook_search_info' => _backdropapi('hook_search_info', 7),
+        '!hook_search_admin' => _backdropapi('hook_search_admin', 7),
+        '!hook_search_execute' => _backdropapi('hook_search_execute', 7),
+        '!hook_search_reset' => _backdropapi('hook_search_reset', 7),
+        '!hook_search_status' => _backdropapi('hook_search_status', 7),
       ),
-      '#link' => _drupalnode(224333, 'search-api'),
+      '#link' => _backdropnode(224333, 'search-api'),
     ),
   );
   $rules[] = array(
@@ -255,9 +255,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!do_search() has been deprecated and instead modules should perform the search query using the "SearchQuery" extension.',
       '#args' => array(
-        '!do_search' => _drupalapi('do_search', 6),
+        '!do_search' => _backdropapi('do_search', 6),
       ),
-      '#link' => _drupalnode(224333, 'search-api'),
+      '#link' => _backdropnode(224333, 'search-api'),
     ),
   );
   $rules[] = array(
@@ -266,10 +266,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_perm() has been renamed to !hook_permission().',
       '#args' => array(
-        '!hook_perm' => _drupalapi('hook_perm', 6),
-        '!hook_permission' => _drupalapi('hook_permission', 7),
+        '!hook_perm' => _backdropapi('hook_perm', 6),
+        '!hook_permission' => _backdropapi('hook_permission', 7),
       ),
-      '#link' => _drupalnode(224333, 'hook_permission'),
+      '#link' => _backdropnode(224333, 'hook_permission'),
     ),
   );
   $rules[] = array(
@@ -280,9 +280,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Permissions are required to have titles and descriptions in !hook_permission().',
       '#args' => array(
-        '!hook_permission' => _drupalapi('hook_permission', 7),
+        '!hook_permission' => _backdropapi('hook_permission', 7),
       ),
-      '#link' => _drupalnode(224333, 'descriptions_permissions'),
+      '#link' => _backdropnode(224333, 'descriptions_permissions'),
     ),
   );
   // @todo: does this properly check for DBTNG?
@@ -292,7 +292,7 @@ function coder_review_7x_reviews() {
     '#value' => '^(select\s+.*\s+from\s+{permission}|insert\s+into\s+{permission}|update\s+{permission}\s+set|delete\s+from\s+{permission})',
     '#warning' => array(
       '#text' => "The 'permission' table has been renamed to 'role_permission' and has a different structure.",
-      '#link' => _drupalnode(224333, 'permission_tables'),
+      '#link' => _backdropnode(224333, 'permission_tables'),
     ),
   );
   $rules[] = array(
@@ -301,7 +301,7 @@ function coder_review_7x_reviews() {
     '#value' => '^use PHP for block visibility$',
     '#warning' => array(
       '#text' => 'The "use PHP for block visibility" permission has been replaced by the more generic "use PHP for settings" permission.',
-      '#link' => _drupalnode(224333, 'php_permissions'),
+      '#link' => _backdropnode(224333, 'php_permissions'),
     ),
   );
   $rules[] = array(
@@ -311,10 +311,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_access() removed in favor of !hook_node_access().',
       '#args' => array(
-        '!hook_access' => _drupalapi('hook_access', 6),
-        '!hook_node_access' => _drupalapi('hook_node_access', 7),
+        '!hook_access' => _backdropapi('hook_access', 6),
+        '!hook_node_access' => _backdropapi('hook_node_access', 7),
       ),
-      '#link' => _drupalnode(224333, 'hook_node_access'),
+      '#link' => _backdropnode(224333, 'hook_node_access'),
     ),
   );
   $rules[] = array(
@@ -325,9 +325,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Schema descriptions are no longer translated in !hook_schema()',
       '#args' => array(
-        '!hook_schema' => _drupalapi('hook_schema', 6),
+        '!hook_schema' => _backdropapi('hook_schema', 6),
       ),
-      '#link' => _drupalnode(224333, 'schema_translation'),
+      '#link' => _backdropnode(224333, 'schema_translation'),
     ),
   );
   $rules[] = array(
@@ -336,10 +336,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!db_rewrite_sql() replaced with !hook_query_alter()',
       '#args' => array(
-        '!db_rewrite_sql' => _drupalapi('db_rewrite_sql', 6),
-        '!hook_query_alter' => _drupalapi('hook_query_alter', 7),
+        '!db_rewrite_sql' => _backdropapi('db_rewrite_sql', 6),
+        '!hook_query_alter' => _backdropapi('hook_query_alter', 7),
       ),
-      '#link' => _drupalnode(224333, 'db_rewrite_sql'),
+      '#link' => _backdropnode(224333, 'db_rewrite_sql'),
     ),
   );
   $rules[] = array(
@@ -349,7 +349,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\'"]description[\'"]\s*=>\s*.*?&lt;.*?&gt;',
     '#warning' => array(
       '#text' => 'Schema descriptions are now plain text instead of HTML.',
-      '#link' => _drupalnode(224333, 'schema_html'),
+      '#link' => _backdropnode(224333, 'schema_html'),
     ),
   );
   $rules[] = array(
@@ -358,21 +358,21 @@ function coder_review_7x_reviews() {
     '#value' => 'db_query\s*\(\s*[\'"]select\s+count\s*\(\s*\*\s*\)\s+from\s+',
     '#warning' => array(
       '#text' => 'You may not want to use SELECT COUNT(*), if all you want to do is check for the existence of any rows, rather than actually counting the number of rows.',
-      '#link' => _drupalnode(224333, 'select_count'),
+      '#link' => _backdropnode(224333, 'select_count'),
     ),
     '#severity' => 'minor'
   );
   $rules[] = array(
     '#type' => 'regex',
     '#source' => 'php',
-    '#value' => '[\s\(]drupal_(un)?install_schema\s*\(',
+    '#value' => '[\s\(]backdrop_(un)?install_schema\s*\(',
     '#warning' => array(
       '#text' => 'A module no longer should explicitly install or uninstall its database schema in !hook_install() or !hook_uninstall().',
       '#args' => array(
-        '!hook_install' => _drupalapi('hook_install', 7),
-        '!hook_uninstall' => _drupalapi('hook_uninstall', 7),
+        '!hook_install' => _backdropapi('hook_install', 7),
+        '!hook_uninstall' => _backdropapi('hook_uninstall', 7),
       ),
-      '#link' => _drupalnode(224333, 'install-schema'),
+      '#link' => _backdropnode(224333, 'install-schema'),
     ),
     '#function' => '_(un)?install$',
     '#function-not' => '^system_install$',
@@ -384,9 +384,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'The parameters to !hook_menu_link_alter() have changed.',
       '#args' => array(
-        '!hook_menu_link_alter' => _drupalapi('hook_menu_link_alter', 7),
+        '!hook_menu_link_alter' => _backdropapi('hook_menu_link_alter', 7),
       ),
-      '#link' => _drupalnode(224333, 'hook_menu_link_alter'),
+      '#link' => _backdropnode(224333, 'hook_menu_link_alter'),
     ),
   );
   // @todo: this should also be in another review that gets run regularly.
@@ -401,9 +401,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_block() has been split into a number of smaller hooks.',
       '#args' => array(
-        '!hook_block' => _drupalapi('hook_block', 6),
+        '!hook_block' => _backdropapi('hook_block', 6),
       ),
-      '#link' => _drupalnode(224333, 'remove_op'),
+      '#link' => _backdropnode(224333, 'remove_op'),
     ),
   );
   $rules[] = array(
@@ -412,10 +412,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!_comment_load() has been renamed to !comment_load()',
       '#args' => array(
-        '!_comment_load' => _drupalapi('_comment_load', 6),
-        '!comment_load' => _drupalapi('comment_load', 7),
+        '!_comment_load' => _backdropapi('_comment_load', 6),
+        '!comment_load' => _backdropapi('comment_load', 7),
       ),
-      '#link' => _drupalnode(224333, 'comment_load'),
+      '#link' => _backdropnode(224333, 'comment_load'),
     ),
   );
   $rules[] = array(
@@ -425,7 +425,7 @@ function coder_review_7x_reviews() {
     '#value' => '%_comment',
     '#warning' => array(
       '#text' => '%_comment wildcard has been renamed to %comment',
-      '#link' => _drupalnode(224333, 'comment_load'),
+      '#link' => _backdropnode(224333, 'comment_load'),
     ),
   );
   $rules[] = array(
@@ -434,7 +434,7 @@ function coder_review_7x_reviews() {
     '#value' => '\{comments\}\s+WHERE\s+.*?\s*status\s*(!=|=|<>|>|<)\s*(0|1)',
     '#warning' => array(
       '#text' => 'Comment status values in the database have flipped so they match node status. We recommend you use constants like COMMENT_NOT_PUBLISHED in the future.',
-      '#link' => _drupalnode(224333, 'comment_status'),
+      '#link' => _backdropnode(224333, 'comment_status'),
     ),
   );
   $rules[] = array(
@@ -443,10 +443,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!comment_validate() has been removed and !comment_form_validate() should be used instead.',
       '#args' => array(
-        '!comment_validate' => _drupalapi('comment_validate', 6),
-        '!comment_form_validate' => _drupalapi('comment_form_validate', 7),
+        '!comment_validate' => _backdropapi('comment_validate', 6),
+        '!comment_form_validate' => _backdropapi('comment_form_validate', 7),
       ),
-      '#link' => _drupalnode(224333, 'comment_validate_removed'),
+      '#link' => _backdropnode(224333, 'comment_validate_removed'),
     ),
   );
   $rules[] = array(
@@ -455,9 +455,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!comment_node_url() has been removed. Use "node/" .  $comment->nid to build URLs instead.',
       '#args' => array(
-        '!comment_node_url' => _drupalapi('comment_node_url', 6),
+        '!comment_node_url' => _backdropapi('comment_node_url', 6),
       ),
-      '#link' => _drupalnode(224333, 'comment_node_url'),
+      '#link' => _backdropnode(224333, 'comment_node_url'),
     ),
   );
   $rules[] = array(
@@ -466,23 +466,23 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Parameters for !check_markup() have changed',
       '#args' => array(
-        '!check_markup' => _drupalapi('check_markup', 7),
+        '!check_markup' => _backdropapi('check_markup', 7),
       ),
-      '#link' => _drupalnode(224333, 'check_markup_params'),
+      '#link' => _backdropnode(224333, 'check_markup_params'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
     '#source' => 'allphp',
-    '#value' => '[\s\(]drupal_set_title\s*\(\s*(check_plain\s*\(|t\s*\(\s*[\'"][^@%]*(@\w|\%\w))',
+    '#value' => '[\s\(]backdrop_set_title\s*\(\s*(check_plain\s*\(|t\s*\(\s*[\'"][^@%]*(@\w|\%\w))',
     '#never' => 'PASS_THROUGH',
     '#warning' => array(
-      '#text' => '!drupal_set_title() now uses !check_plain() by default',
+      '#text' => '!backdrop_set_title() now uses !check_plain() by default',
       '#args' => array(
-        '!drupal_set_title' => _drupalapi('drupal_set_title', 7),
-        '!check_plain' => _drupalapi('check_plain', 7),
+        '!backdrop_set_title' => _backdropapi('backdrop_set_title', 7),
+        '!check_plain' => _backdropapi('check_plain', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_set_title'),
+      '#link' => _backdropnode(224333, 'backdrop_set_title'),
     ),
   );
   $rules[] = array(
@@ -491,10 +491,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_filter() has been removed in favour of !hook_filter_info().',
       '#args' => array(
-        '!hook_filter_info' => _drupalapi('hook_filter_info', 7),
-        '!hook_filter' => _drupalapi('hook_filter', 6),
+        '!hook_filter_info' => _backdropapi('hook_filter_info', 7),
+        '!hook_filter' => _backdropapi('hook_filter', 6),
       ),
-      '#link' => _drupalnode(224333, 'hook_filter_info'),
+      '#link' => _backdropnode(224333, 'hook_filter_info'),
     ),
   );
   $rules[] = array(
@@ -503,10 +503,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_filter_tips() has been removed in favour of !hook_filter_info().',
       '#args' => array(
-        '!hook_filter_info' => _drupalapi('hook_filter_info', 7),
-        '!hook_filter_tips' => _drupalapi('hook_filter_tips', 6),
+        '!hook_filter_info' => _backdropapi('hook_filter_info', 7),
+        '!hook_filter_tips' => _backdropapi('hook_filter_tips', 6),
       ),
-      '#link' => _drupalnode(224333, 'hook_filter_info'),
+      '#link' => _backdropnode(224333, 'hook_filter_info'),
     ),
   );
   $rules[] = array(
@@ -514,7 +514,7 @@ function coder_review_7x_reviews() {
     '#value' => '\$form\[.+?=\s*filter_form\(',
     '#warning' => array(
       '#text' => 'New #text_format to assign text format selection to fields.',
-      '#link' => _drupalnode(224333, 'text_format'),
+      '#link' => _backdropnode(224333, 'text_format'),
     ),
   );
   $rules[] = array(
@@ -523,7 +523,7 @@ function coder_review_7x_reviews() {
     '#value' => 'admin\/settings\/filters(\/.*?)?',
     '#warning' => array(
       '#text' => 'Administrative URLs in the Filter module have been renamed from plural to singular.',
-      '#link' => _drupalnode(224333, 'filter_urls'),
+      '#link' => _backdropnode(224333, 'filter_urls'),
     ),
   );
   $rules[] = array(
@@ -533,9 +533,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!taxonomy_get_tree()\'s $depth and $max_depth parameters have changed positions.',
       '#args' => array(
-        '!taxonomy_get_tree' => _drupalapi('taxonomy_get_tree', 7),
+        '!taxonomy_get_tree' => _backdropapi('taxonomy_get_tree', 7),
       ),
-      '#link' => _drupalnode(224333, 'taxonomy_get_tree'),
+      '#link' => _backdropnode(224333, 'taxonomy_get_tree'),
     ),
   );
   $taxonomy_tables = '\{(term_data|term_hierarchy|term_node|term_relation|term_synonym|vocabulary|vocabulary_node_types)\}';
@@ -545,7 +545,7 @@ function coder_review_7x_reviews() {
     '#value' => '^(select\s+.*\s+from\s+' . $taxonomy_tables . '|insert\s+into\s+' . $taxonomy_tables . '|update\s+' . $taxonomy_tables . '\s+set|delete\s+from\s+' . $taxonomy_tables . ')',
     '#warning' => array(
       '#text' => "Taxonomy DB table names have changed to begin with 'taxonomy_'",
-      '#link' => _drupalnode(224333, 'taxonomy_tables'),
+      '#link' => _backdropnode(224333, 'taxonomy_tables'),
     ),
   );
   $rules[] = array(
@@ -554,19 +554,19 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!taxonomy_get_term() function has been renamed to !taxonomy_term_load()',
       '#args' => array(
-        '!taxonomy_get_term' => _drupalapi('taxonomy_get_term', 6),
-        '!taxonomy_term_load' => _drupalapi('taxonomy_term_load', 7),
+        '!taxonomy_get_term' => _backdropapi('taxonomy_get_term', 6),
+        '!taxonomy_term_load' => _backdropapi('taxonomy_term_load', 7),
       ),
-      '#link' => _drupalnode(224333, 'taxonomy_crud'),
+      '#link' => _backdropnode(224333, 'taxonomy_crud'),
     ),
   );
   $taxonomy_save_term_warning = array(
     '#text' => '!taxonomy_save_term() function has been renamed to !taxonomy_term_save() and takes a term object as a parameter instead of any array.',
     '#args' => array(
-      '!taxonomy_save_term' => _drupalapi('taxonomy_save_term', 6),
-      '!taxonomy_term_save' => _drupalapi('taxonomy_term_save', 7),
+      '!taxonomy_save_term' => _backdropapi('taxonomy_save_term', 6),
+      '!taxonomy_term_save' => _backdropapi('taxonomy_term_save', 7),
     ),
-    '#link' => _drupalnode(224333, 'taxonomy_crud'),
+    '#link' => _backdropnode(224333, 'taxonomy_crud'),
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -585,19 +585,19 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!taxonomy_del_term() function has been renamed to !taxonomy_term_delete()',
       '#args' => array(
-        '!taxonomy_del_term' => _drupalapi('taxonomy_del_term', 6),
-        '!taxonomy_term_delete' => _drupalapi('taxonomy_term_delete', 7),
+        '!taxonomy_del_term' => _backdropapi('taxonomy_del_term', 6),
+        '!taxonomy_term_delete' => _backdropapi('taxonomy_term_delete', 7),
       ),
-      '#link' => _drupalnode(224333, 'taxonomy_crud'),
+      '#link' => _backdropnode(224333, 'taxonomy_crud'),
     ),
   );
   $taxonomy_save_vocabulary_warning = array(
     '#text' => '!taxonomy_save_vocabulary() function has been renamed to !taxonomy_vocabulary_save() and takes a vocabulary object as a parameter instead of any array.',
     '#args' => array(
-      '!taxonomy_save_vocabulary' => _drupalapi('taxonomy_save_vocabulary', 6),
-      '!taxonomy_vocabulary_save' => _drupalapi('taxonomy_vocabulary_save', 7),
+      '!taxonomy_save_vocabulary' => _backdropapi('taxonomy_save_vocabulary', 6),
+      '!taxonomy_vocabulary_save' => _backdropapi('taxonomy_vocabulary_save', 7),
     ),
-    '#link' => _drupalnode(224333, 'taxonomy_crud'),
+    '#link' => _backdropnode(224333, 'taxonomy_crud'),
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -616,10 +616,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!taxonomy_del_vocabulary() function has been renamed to !taxonomy_vocabulary_delete()',
       '#args' => array(
-        '!taxonomy_del_vocabulary' => _drupalapi('taxonomy_del_vocabulary', 6),
-        '!taxonomy_vocabulary_delete' => _drupalapi('taxonomy_vocabulary_delete', 7),
+        '!taxonomy_del_vocabulary' => _backdropapi('taxonomy_del_vocabulary', 6),
+        '!taxonomy_vocabulary_delete' => _backdropapi('taxonomy_vocabulary_delete', 7),
       ),
-      '#link' => _drupalnode(224333, 'taxonomy_crud'),
+      '#link' => _backdropnode(224333, 'taxonomy_crud'),
     ),
   );
   $rules[] = array(
@@ -629,7 +629,7 @@ function coder_review_7x_reviews() {
     '#warning' => '_coder_review_7x_taxonomy_paths_warning',
     '#warning' => array(
       '#text' => 'Support for taxonomy term paths with multiple tids and depth specification has been removed.',
-      '#link' => _drupalnode(224333, 'taxonomy_paths'),
+      '#link' => _backdropnode(224333, 'taxonomy_paths'),
     ),
   );
   $rules[] = array(
@@ -637,41 +637,41 @@ function coder_review_7x_reviews() {
     '#value' => '[\s\(]taxonomy_get_related\s*\(',
     '#warning' => array(
       '#text' => 'The related terms functionality has been removed from the taxonomy module.',
-      '#link' => _drupalnode(224333, 'related_terms'),
+      '#link' => _backdropnode(224333, 'related_terms'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => 'Drupal\.behaviors\..+?\s*=\s*function\s*\(',
+    '#value' => 'Backdrop\.behaviors\..+?\s*=\s*function\s*\(',
     '#filename' => array('js'),
-    '#warning' => _coder_review_7x_drupal_behaviors_warning(),
+    '#warning' => _coder_review_7x_backdrop_behaviors_warning(),
   );
   $rules[] = array(
     '#type' => 'callback',
-    '#value' => '_coder_review_7x_drupal_behaviors_callback',
+    '#value' => '_coder_review_7x_backdrop_behaviors_callback',
     '#filename' => array('js'),
   );
   $rules[] = array(
     '#type' => 'regex',
     '#source' => 'allphp',
-    '#value' => '[\s\(]drupal_add_js\s*\(\s*' . $argex . '\s*,\s*[\'"](module|theme|core)[\'"]\s*[,\)]',
+    '#value' => '[\s\(]backdrop_add_js\s*\(\s*' . $argex . '\s*,\s*[\'"](module|theme|core)[\'"]\s*[,\)]',
     '#warning' => array(
-      '#text' => "Replace 'core', 'module' and 'theme' with 'file' in !drupal_add_js()",
+      '#text' => "Replace 'core', 'module' and 'theme' with 'file' in !backdrop_add_js()",
       '#args' => array(
-        '!drupal_add_js' => _drupalapi('drupal_add_js', 7),
+        '!backdrop_add_js' => _backdropapi('backdrop_add_js', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_add_js_weight'),
+      '#link' => _backdropnode(224333, 'backdrop_add_js_weight'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_add_js\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
+    '#value' => '[\s\(]backdrop_add_js\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
     '#warning' => array(
-      '#text' => 'Parameters to !drupal_add_js() have changed.',
+      '#text' => 'Parameters to !backdrop_add_js() have changed.',
       '#args' => array(
-        '!drupal_add_js' => _drupalapi('drupal_add_js', 7),
+        '!backdrop_add_js' => _backdropapi('backdrop_add_js', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_add_js_options'),
+      '#link' => _backdropnode(224333, 'backdrop_add_js_options'),
     ),
   );
   $rules[] = array(
@@ -682,9 +682,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'There is a new !hook_js_alter() to alter JavaScript.',
       '#args' => array(
-        '!hook_js_alter' => _drupalapi('hook_js_alter', 7),
+        '!hook_js_alter' => _backdropapi('hook_js_alter', 7),
       ),
-      '#link' => _drupalnode(224333, 'hook_js_alter'),
+      '#link' => _backdropnode(224333, 'hook_js_alter'),
     ),
   );
   $rules[] = array(
@@ -694,25 +694,25 @@ function coder_review_7x_reviews() {
     '#warning' => '_coder_review_7x_javascript_compatibility_warning',
     '#warning' => array(
       '#text' => 'JavaScript should be compatible with other libraries than jQuery.',
-      '#link' => _drupalnode(224333, 'javascript_compatibility'),
+      '#link' => _backdropnode(224333, 'javascript_compatibility'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
     '#source' => 'allphp',
-    '#value' => '[\s\(]drupal_add_html_head\s*\(\s*[\'"].*?<script\s.*?src\s*=\s*[\'"][a-zA-Z:\/\._\-0-9]+?\.js',
-    '#warning' => '_coder_review_7x_drupal_add_js_external_warning',
+    '#value' => '[\s\(]backdrop_add_html_head\s*\(\s*[\'"].*?<script\s.*?src\s*=\s*[\'"][a-zA-Z:\/\._\-0-9]+?\.js',
+    '#warning' => '_coder_review_7x_backdrop_add_js_external_warning',
     '#warning' => array(
-      '#text' => 'External JavaScript can now be referenced through !drupal_add_js().',
+      '#text' => 'External JavaScript can now be referenced through !backdrop_add_js().',
       '#args' => array(
-        '!drupal_add_js' => _drupalapi('drupal_add_js', 7),
+        '!backdrop_add_js' => _backdropapi('backdrop_add_js', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_add_js_external'),
+      '#link' => _backdropnode(224333, 'backdrop_add_js_external'),
     ),
   );
   $jquery_13_warning = array(
     '#text' => 'jQuery has been upgraded to version 1.3.',
-    '#link' => _drupalnode(224333, 'jquery_13'),
+    '#link' => _backdropnode(224333, 'jquery_13'),
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -729,35 +729,35 @@ function coder_review_7x_reviews() {
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => 'Drupal.jsEnabled',
+    '#value' => 'Backdrop.jsEnabled',
     '#filename' => array('js'),
     '#warning' => '_coder_review_7x_no_jsenabled_warning',
     '#warning' => array(
-      '#text' => 'JavaScript variable Drupal.jsEnabled has been removed.',
-      '#link' => _drupalnode(224333, 'no-jsenabled'),
+      '#text' => 'JavaScript variable Backdrop.jsEnabled has been removed.',
+      '#link' => _backdropnode(224333, 'no-jsenabled'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_add_css\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
+    '#value' => '[\s\(]backdrop_add_css\s*\(\s*(' . $argex . '\s*,\s*){2,}(' . $argex . ')\s*\)',
     '#warning' => array(
-      '#text' => 'Parameters to !drupal_add_css() have changed.',
+      '#text' => 'Parameters to !backdrop_add_css() have changed.',
       '#args' => array(
-        '!drupal_add_css' => _drupalapi('drupal_add_css', 7),
+        '!backdrop_add_css' => _backdropapi('backdrop_add_css', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_add_js_options'),
+      '#link' => _backdropnode(224333, 'backdrop_add_js_options'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_rebuild_theme_registry\s*\(',
+    '#value' => '[\s\(]backdrop_rebuild_theme_registry\s*\(',
     '#warning' => array(
-      '#text' => '!drupal_rebuild_theme_registry() function has been renamed to !drupal_theme_rebuild()',
+      '#text' => '!backdrop_rebuild_theme_registry() function has been renamed to !backdrop_theme_rebuild()',
       '#args' => array(
-        '!drupal_rebuild_theme_registry' => _drupalapi('drupal_rebuild_theme_registry', 6),
-        '!drupal_theme_rebuild' => _drupalapi('drupal_theme_rebuild', 7),
+        '!backdrop_rebuild_theme_registry' => _backdropapi('backdrop_rebuild_theme_registry', 6),
+        '!backdrop_theme_rebuild' => _backdropapi('backdrop_theme_rebuild', 7),
       ),
-      '#link' => _drupalnode(224333, 'rebuild_functions'),
+      '#link' => _backdropnode(224333, 'rebuild_functions'),
     ),
   );
   $rules[] = array(
@@ -766,20 +766,20 @@ function coder_review_7x_reviews() {
     '#value' => '[\s\(]theme\s*\(\s*[\'"]page[\'"]',
     '#warning' => '_coder_review_7x_theme_page_warning',
     '#warning' => array(
-      '#text' => 'Instead of "theme(\'page\')" use !drupal_set_page_content()',
+      '#text' => 'Instead of "theme(\'page\')" use !backdrop_set_page_content()',
       '#args' => array(
-        '!drupal_set_page_content' => _drupalapi('drupal_set_page_content', 7),
+        '!backdrop_set_page_content' => _backdropapi('backdrop_set_page_content', 7),
       ),
-      '#link' => _drupalnode(224333, 'theme_page'),
+      '#link' => _backdropnode(224333, 'theme_page'),
     ),
   );
   $hook_footer_warning = array(
     '#text' => '!hook_footer() and !theme_closure() were removed.',
     '#args' => array(
-      '!hook_footer' => _drupalapi('hook_footer', 6),
-      '!theme_closure' => _drupalapi('theme_closure', 6),
+      '!hook_footer' => _backdropapi('hook_footer', 6),
+      '!theme_closure' => _backdropapi('theme_closure', 6),
     ),
-    '#link' => _drupalnode(224333, 'hook_footer'),
+    '#link' => _backdropnode(224333, 'hook_footer'),
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -798,7 +798,7 @@ function coder_review_7x_reviews() {
     '#filename' => array('tpl.php'),
     '#warning' => array(
       '#text' => '$closure has been changed to $page_bottom.',
-      '#link' => _drupalnode(224333, 'hook_footer'),
+      '#link' => _backdropnode(224333, 'hook_footer'),
     ),
   );
   $rules[] = array(
@@ -808,7 +808,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\'"]#type[\'"]',
     '#warning' => array(
       '#text' => '@todo: The warning hook for this was missing, what should this message say?',
-      '#link' => _drupalnode(224333, 'element_theme_properties'),
+      '#link' => _backdropnode(224333, 'element_theme_properties'),
     ),
   );
   $rules[] = array(
@@ -820,9 +820,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Easier check for node form during !hook_form_alter().',
       '#args' => array(
-        '!hook_form_alter' => _drupalapi('hook_form_alter', 7),
+        '!hook_form_alter' => _backdropapi('hook_form_alter', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_form'),
+      '#link' => _backdropnode(224333, 'node_form'),
     ),
   );
   $rules[] = array(
@@ -832,10 +832,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Parameters to !hook_form_alter() have changed.',
       '#args' => array(
-        '!hook_form_alter' => _drupalapi('hook_form_alter', 7),
+        '!hook_form_alter' => _backdropapi('hook_form_alter', 7),
       ),
       // @todo: is there a good link for this?
-//    '#link' => _drupalnode(224333, 'node_form'),
+//    '#link' => _backdropnode(224333, 'node_form'),
     ),
   );
   $rules[] = array(
@@ -845,27 +845,27 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!expand_password_confirm(), !expand_date(), !expand_radios(), !form_expand_ahah(), !expand_checkboxes(), !process_weight() have been renamed.',
       '#args' => array(
-        '!expand_password_confirm' => _drupalapi('expand_password_confirm', 6),
-        '!expand_date' => _drupalapi('expand_date', 6),
-        '!expand_radios' => _drupalapi('expand_radios', 6),
-        '!form_expand_ahah' => _drupalapi('form_expand_ahah', 6),
-        '!expand_checkboxes' => _drupalapi('expand_checkboxes', 6),
-        '!process_weight' => _drupalapi('process_weight', 6),
+        '!expand_password_confirm' => _backdropapi('expand_password_confirm', 6),
+        '!expand_date' => _backdropapi('expand_date', 6),
+        '!expand_radios' => _backdropapi('expand_radios', 6),
+        '!form_expand_ahah' => _backdropapi('form_expand_ahah', 6),
+        '!expand_checkboxes' => _backdropapi('expand_checkboxes', 6),
+        '!process_weight' => _backdropapi('process_weight', 6),
       ),
-      '#link' => _drupalnode(224333, 'process_functions'),
+      '#link' => _backdropnode(224333, 'process_functions'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_execute\s*\(',
-    '#warning' => '_coder_review_7x_drupal_execute_renamed_warning',
+    '#value' => '[\s\(]backdrop_execute\s*\(',
+    '#warning' => '_coder_review_7x_backdrop_execute_renamed_warning',
     '#warning' => array(
-      '#text' => '!drupal_execute() has been renamed to !drupal_form_submit()',
+      '#text' => '!backdrop_execute() has been renamed to !backdrop_form_submit()',
       '#args' => array(
-        '!drupal_execute' => _drupalapi('drupal_execute', 6),
-        '!drupal_form_submit' => _drupalapi('drupal_form_submit', 7),
+        '!backdrop_execute' => _backdropapi('backdrop_execute', 6),
+        '!backdrop_form_submit' => _backdropapi('backdrop_form_submit', 7),
       ),
-      '#link' => _drupalnode(224333, 'drupal_execute_drupal_form_submit'),
+      '#link' => _backdropnode(224333, 'backdrop_execute_backdrop_form_submit'),
     ),
   );
   $rules[] = array(
@@ -874,7 +874,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\'"]#ahah[\'"]',
     '#warning' => array(
       '#text' => '#ahah has changed to #ajax and the call details have changed.',
-      '#link' => _drupalnode(224333, 'ahah-now-ajax'),
+      '#link' => _backdropnode(224333, 'ahah-now-ajax'),
     ),
   );
   $rules[] = array(
@@ -884,17 +884,17 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Parameters to !file_scan_directory() have changed.',
       '#args' => array(
-        '!file_scan_directory' => _drupalapi('file_scan_directory', 7),
+        '!file_scan_directory' => _backdropapi('file_scan_directory', 7),
       ),
-      '#link' => _drupalnode(224333, 'file_scan_directory_array_itize'),
+      '#link' => _backdropnode(224333, 'file_scan_directory_array_itize'),
     ),
   );
   $file_scan_directory_nomask_warning = array(
     '#text' => '!file_scan_directory() now uses a preg regular expression for the nomask parameter.',
     '#args' => array(
-      '!file_scan_directory' => _drupalapi('file_scan_directory', 7),
+      '!file_scan_directory' => _backdropapi('file_scan_directory', 7),
     ),
-    '#link' => _drupalnode(224333, 'file_scan_directory_nomask'),
+    '#link' => _backdropnode(224333, 'file_scan_directory_nomask'),
   );
   $rules[] = array(
     '#type' => 'regex',
@@ -915,10 +915,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!file_set_status() has been removed and !file_save() should be used in its place.',
       '#args' => array(
-        '!file_set_status' => _drupalapi('file_set_status', 6),
-        '!file_save' => _drupalapi('file_save', 7),
+        '!file_set_status' => _backdropapi('file_set_status', 6),
+        '!file_save' => _backdropapi('file_save', 7),
       ),
-      '#link' => _drupalnode(224333, 'file_set_status'),
+      '#link' => _backdropnode(224333, 'file_set_status'),
     ),
   );
   $rules[] = array(
@@ -927,7 +927,7 @@ function coder_review_7x_reviews() {
     '#case-sensitive' => TRUE,
     '#warning' => array(
       '#text' => 'Removed FILE_STATUS_TEMPORARY constant.',
-      '#link' => _drupalnode(224333, 'remove_FILE_STATUS_TEMPORARY'),
+      '#link' => _backdropnode(224333, 'remove_FILE_STATUS_TEMPORARY'),
     ),
   );
   $rules[] = array(
@@ -938,22 +938,22 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!file_scan_directory() now uses preg regular expressions.',
       '#args' => array(
-        '!file_scan_directory' => _drupalapi('file_scan_directory', 7),
+        '!file_scan_directory' => _backdropapi('file_scan_directory', 7),
       ),
-      '#link' => _drupalnode(224333, 'preg_match'),
+      '#link' => _backdropnode(224333, 'preg_match'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
     '#source' => 'allphp',
-    '#value' => '[\s\(]drupal_system_listing\s*\(\s*[\'"][^\/].*?[^\/][\'"]\s*,',
-    '#never' => '[\s\(]drupal_system_listing\s*\(\s*[\'"]\/.*?\/[\'"]\s*,',
+    '#value' => '[\s\(]backdrop_system_listing\s*\(\s*[\'"][^\/].*?[^\/][\'"]\s*,',
+    '#never' => '[\s\(]backdrop_system_listing\s*\(\s*[\'"]\/.*?\/[\'"]\s*,',
     '#warning' => array(
-      '#text' => '!drupal_system_listing() now uses preg regular expressions.',
+      '#text' => '!backdrop_system_listing() now uses preg regular expressions.',
       '#args' => array(
-        '!drupal_system_listing' => _drupalapi('drupal_system_listing', 7),
+        '!backdrop_system_listing' => _backdropapi('backdrop_system_listing', 7),
       ),
-      '#link' => _drupalnode(224333, 'preg_match'),
+      '#link' => _backdropnode(224333, 'preg_match'),
     ),
   );
   $rules[] = array(
@@ -962,10 +962,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!user_delete() replaced by !user_cancel()',
       '#args' => array(
-        '!user_delete' => _drupalapi('user_delete', 6),
-        '!user_cancel' => _drupalapi('user_cancel', 7),
+        '!user_delete' => _backdropapi('user_delete', 6),
+        '!user_cancel' => _backdropapi('user_cancel', 7),
       ),
-      '#link' => _drupalnode(224333, 'user_cancel'),
+      '#link' => _backdropnode(224333, 'user_cancel'),
     ),
   );
   $rules[] = array(
@@ -974,10 +974,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_user() has been removed in favour of hook_user_$op functions, for example !hook_user_presave().',
       '#args' => array(
-        '!hook_user' => _drupalapi('hook_user', 6),
-        '!hook_user_presave' => _drupalapi('hook_user_presave', 7),
+        '!hook_user' => _backdropapi('hook_user', 6),
+        '!hook_user_presave' => _backdropapi('hook_user_presave', 7),
       ),
-      '#link' => _drupalnode(224333, 'remove_op'),
+      '#link' => _backdropnode(224333, 'remove_op'),
     ),
   );
   $rules[] = array(
@@ -986,7 +986,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\'"]logout[\'"]',
     '#warning' => array(
       '#text' => 'Log out path changed from \'logout\' to \'user/logout\'',
-      '#link' => _drupalnode(224333, 'logout_path'),
+      '#link' => _backdropnode(224333, 'logout_path'),
     ),
   );
   $rules[] = array(
@@ -995,9 +995,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!user_load() now only takes a user ID as its argument.',
       '#args' => array(
-        '!user_load' => _drupalapi('user_load', 7),
+        '!user_load' => _backdropapi('user_load', 7),
       ),
-      '#link' => _drupalnode(224333, 'user_load_multiple'),
+      '#link' => _backdropnode(224333, 'user_load_multiple'),
     ),
   );
   $rules[] = array(
@@ -1006,9 +1006,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Parameters to !user_authenticate() have changed.',
       '#args' => array(
-        '!user_authenticate' => _drupalapi('user_authenticate', 7),
+        '!user_authenticate' => _backdropapi('user_authenticate', 7),
       ),
-      '#link' => _drupalnode(224333, 'user_authenticate'),
+      '#link' => _backdropnode(224333, 'user_authenticate'),
     ),
   );
   $rules[] = array(
@@ -1017,10 +1017,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_profile_alter() has been removed in favour of !hook_user_view().',
       '#args' => array(
-        '!hook_profile_alter' => _drupalapi('hook_profile_alter', 6),
-        '!hook_user_view' => _drupalapi('hook_user_view', 7),
+        '!hook_profile_alter' => _backdropapi('hook_profile_alter', 6),
+        '!hook_user_view' => _backdropapi('hook_user_view', 7),
       ),
-      '#link' => _drupalnode(224333, 'hook-user-changes'),
+      '#link' => _backdropnode(224333, 'hook-user-changes'),
     ),
   );
   $rules[] = array(
@@ -1029,7 +1029,7 @@ function coder_review_7x_reviews() {
     '#value' => '^(select\s+.*\s+from\s+{node_revisions}|insert\s+into\s+{node_revisions}|update\s+{node_revisions}\s+set|delete\s+from\s+{node_revisions})',
     '#warning' => array(
       '#text' => "The 'node_revisions' table has been renamed to 'node_revision'.",
-//    '#link' => _drupalnode(224333, 'taxonomy_tables'),
+//    '#link' => _backdropnode(224333, 'taxonomy_tables'),
     ),
   );
   $rules[] = array(
@@ -1039,10 +1039,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Node and taxonomy links are no longer emitted by !hook_link() and !hook_link_alter().',
       '#args' => array(
-        '!hook_link' => _drupalapi('hook_link', 7),
-        '!hook_link_alter' => _drupalapi('hook_link_alter', 7),
+        '!hook_link' => _backdropapi('hook_link', 7),
+        '!hook_link_alter' => _backdropapi('hook_link_alter', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_links'),
+      '#link' => _backdropnode(224333, 'node_links'),
     ),
   );
   $rules[] = array(
@@ -1052,9 +1052,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!node_load() now only takes nid and vid as parameters.',
       '#args' => array(
-        '!node_load' => _drupalapi('node_load', 7),
+        '!node_load' => _backdropapi('node_load', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_load_multiple'),
+      '#link' => _backdropnode(224333, 'node_load_multiple'),
     ),
   );
   $rules[] = array(
@@ -1065,9 +1065,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Change "module" to "base" in !hook_node_info()',
       '#args' => array(
-        '!hook_node_info' => _drupalapi('hook_node_info', 7),
+        '!hook_node_info' => _backdropapi('hook_node_info', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_type_base'),
+      '#link' => _backdropnode(224333, 'node_type_base'),
     ),
   );
   $rules[] = array(
@@ -1078,9 +1078,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'For content types managed by the node module, change "node" to "node_content" in !hook_node_info()',
       '#args' => array(
-        '!hook_node_info' => _drupalapi('hook_node_info', 7),
+        '!hook_node_info' => _backdropapi('hook_node_info', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_type_base'),
+      '#link' => _backdropnode(224333, 'node_type_base'),
     ),
   );
   $rules[] = array(
@@ -1089,9 +1089,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_nodeapi() has been split into a number of smaller hooks.',
       '#args' => array(
-        '!hook_nodeapi' => _drupalapi('hook_nodeapi', 6),
+        '!hook_nodeapi' => _backdropapi('hook_nodeapi', 6),
       ),
-      '#link' => _drupalnode(224333, 'remove_op'),
+      '#link' => _backdropnode(224333, 'remove_op'),
     ),
   );
   $rules[] = array(
@@ -1100,10 +1100,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!hook_comment() has been split into a number of smaller hooks, for example !hook_comment_view().',
       '#args' => array(
-        '!hook_comment' => _drupalapi('hook_comment', 6),
-        '!hook_comment_view' => _drupalapi('hook_comment_view', 7),
+        '!hook_comment' => _backdropapi('hook_comment', 6),
+        '!hook_comment_view' => _backdropapi('hook_comment_view', 7),
       ),
-      '#link' => _drupalnode(224333, 'remove_op'),
+      '#link' => _backdropnode(224333, 'remove_op'),
     ),
   );
   $rules[] = array(
@@ -1112,10 +1112,10 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!node_invoke_nodeapi() has been removed and !module_invoke_all(\'node_\' . $hook, $node); should be used instead.',
       '#args' => array(
-        '!node_invoke_nodeapi' => _drupalapi('node_invoke_nodeapi', 6),
-        '!module_invoke_all' => _drupalapi('module_invoke_all', 6),
+        '!node_invoke_nodeapi' => _backdropapi('node_invoke_nodeapi', 6),
+        '!module_invoke_all' => _backdropapi('module_invoke_all', 6),
       ),
-      '#link' => _drupalnode(224333, 'node_invoke_nodeapi'),
+      '#link' => _backdropnode(224333, 'node_invoke_nodeapi'),
     ),
   );
   $rules[] = array(
@@ -1126,9 +1126,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Removed $op "rss item" from !hook_nodeapi() in favor of NODE_BUILD_RSS.',
       '#args' => array(
-        '!hook_nodeapi' => _drupalapi('hook_nodeapi', 7),
+        '!hook_nodeapi' => _backdropapi('hook_nodeapi', 7),
       ),
-      '#link' => _drupalnode(224333, 'node_build_rss'),
+      '#link' => _backdropnode(224333, 'node_build_rss'),
     ),
   );
   $rules[] = array(
@@ -1137,9 +1137,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!node_get_types() function has been replaced by node_type_get_$op() functions.',
       '#args' => array(
-        '!node_get_types' => _drupalapi('node_get_types', 6),
+        '!node_get_types' => _backdropapi('node_get_types', 6),
       ),
-      '#link' => _drupalnode(224333, 'node_type_get_functions'),
+      '#link' => _backdropnode(224333, 'node_type_get_functions'),
     ),
   );
   $rules[] = array(
@@ -1147,7 +1147,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\s\(]\$node->build_mode',
     '#warning' => array(
       '#text' => '$node->build_mode property removed.',
-      '#link' => _drupalnode(224333, 'build_mode'),
+      '#link' => _backdropnode(224333, 'build_mode'),
     ),
   );
   $rules[] = array(
@@ -1155,7 +1155,7 @@ function coder_review_7x_reviews() {
     '#value' => '[\s\(]NODE_BUILD_PREVIEW',
     '#warning' => array(
       '#text' => 'NODE_BUILD_PREVIEW has been replaced by the $node->in_preview boolean flag.',
-      '#link' => _drupalnode(224333, 'build_mode'),
+      '#link' => _backdropnode(224333, 'build_mode'),
     ),
   );
   $rules[] = array(
@@ -1163,7 +1163,7 @@ function coder_review_7x_reviews() {
     '#value' => 'function\s+[a-z0-9_]+_(nodeapi)_[a-z]+\s*\(',
     '#warning' => array(
       '#text' => 'hook_nodeapi_xxx() has been renamed to hook_node_xxx().',
-      '#link' => _drupalnode(224333, 'hook_node_xxx'),
+      '#link' => _backdropnode(224333, 'hook_node_xxx'),
     ),
   );
   $rules[] = array(
@@ -1174,9 +1174,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Context has been added to !t() as the third parameter, locale has to be an element in the array. Example: array("context" => "frontpage", "locale" => "de").',
       '#args' => array(
-        '!t' => _drupalapi('t', 7),
+        '!t' => _backdropapi('t', 7),
       ),
-      '#link' => _drupalnode(224333, 'locale_context'),
+      '#link' => _backdropnode(224333, 'locale_context'),
     ),
   );
   $rules[] = array(
@@ -1185,9 +1185,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Context has been added to !format_plural() as the fifth parameter, locale has to be an element in the array. Example: array("context" => "frontpage", "locale" => "de").',
       '#args' => array(
-        '!format_plural' => _drupalapi('format_plural', 7),
+        '!format_plural' => _backdropapi('format_plural', 7),
       ),
-      '#link' => _drupalnode(224333, 'locale_context'),
+      '#link' => _backdropnode(224333, 'locale_context'),
     ),
   );
   $rules[] = array(
@@ -1197,9 +1197,9 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!book_toc()\'s $depth_limit and $exclude parameters have changed positions.',
       '#args' => array(
-        '!book_toc' => _drupalapi('book_toc', 7),
+        '!book_toc' => _backdropapi('book_toc', 7),
       ),
-      '#link' => _drupalnode(224333, 'book_toc_parameters'),
+      '#link' => _backdropnode(224333, 'book_toc_parameters'),
     ),
   );
   $rules[] = array(
@@ -1209,22 +1209,22 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => '!referer_uri() has been removed and replaced with the PHP global $_SERVER[\'HTTP_REFERER\']',
       '#args' => array(
-        '!referer_uri' => _drupalapi('referer_uri', 6),
+        '!referer_uri' => _backdropapi('referer_uri', 6),
       ),
-      '#link' => _drupalnode(224333, 'referer_uri'),
+      '#link' => _backdropnode(224333, 'referer_uri'),
     ),
   );
   $rules[] = array(
     '#type' => 'regex',
-    '#value' => '[\s\(]drupal_clone\s*\(',
-    '#warning' => '_coder_review_7x_drupal_clone_warning',
+    '#value' => '[\s\(]backdrop_clone\s*\(',
+    '#warning' => '_coder_review_7x_backdrop_clone_warning',
     '#warning' => array(
-      '#text' => '!drupal_clone() has been removed and the PHP 5 !clone should be used instead.',
+      '#text' => '!backdrop_clone() has been removed and the PHP 5 !clone should be used instead.',
       '#args' => array(
-        '!drupal_clone' => _drupalapi('drupal_clone', 6),
+        '!backdrop_clone' => _backdropapi('backdrop_clone', 6),
         '!clone' => _phpapi('clone'),
       ),
-      '#link' => _drupalnode(224333, 'drupal_clone'),
+      '#link' => _backdropnode(224333, 'backdrop_clone'),
     ),
   );
   $rules[] = array(
@@ -1234,15 +1234,15 @@ function coder_review_7x_reviews() {
     '#warning' => array(
       '#text' => 'Parameters for !actions_synchronize() have changed',
       '#args' => array(
-        '!actions_synchronize' => _drupalapi('actions_synchronize', 7),
+        '!actions_synchronize' => _backdropapi('actions_synchronize', 7),
       ),
-      '#link' => _drupalnode(224333, 'actions_synchronize'),
+      '#link' => _backdropnode(224333, 'actions_synchronize'),
     ),
   );
 
   $review = array(
     '#title' => 'Converting 6.x modules to 7.x',
-    '#link' => _drupalnode(394070),
+    '#link' => _backdropnode(394070),
     '#rules' => $rules,
     '#severity' => 'critical',
     '#version' => 2,
@@ -1280,7 +1280,7 @@ function _coder_review_7x_info_file_callback(&$coder_args, $review, $rule, $line
           $tmprule = $rule;
           $tmprule['#warning'] = array(
             '#text' => 'Module .info files must now specify all loadable code files explicitly.',
-            '#link' => _drupalnode(224333, 'registry'),
+            '#link' => _backdropnode(224333, 'registry'),
           );
           _coder_review_error($results, $tmprule, $severity_name, $lineno, $line, $coder_args['#ignores']);
         }
@@ -1312,7 +1312,7 @@ function _coder_review_7x_module_implements_callback(&$coder_args, $review, $rul
         $tmprule = $rule;
         $tmprule['#warning'] = array(
           '#text' => 'Use module_implements not module_list when calling hook implementations.',
-          '#link' => _drupalnode(224333, 'module_implements_not_module_list'),
+          '#link' => _backdropnode(224333, 'module_implements_not_module_list'),
         );
         _coder_review_error($results, $tmprule, $severity_name, $lineno, $line[0], $coder_args['#ignores']);
       }
@@ -1347,7 +1347,7 @@ function _coder_review_7x_cache_implementation_callback(&$coder_args, $review, $
             $tmprule = $rule;
             $tmprule['#warning'] = array(
               '#text' => 'Alternative cache implementations have changed.',
-              '#link' => _drupalnode(224333, 'cache_implementation'),
+              '#link' => _backdropnode(224333, 'cache_implementation'),
             );
             _coder_review_error($results, $tmprule, $severity_name, $lineno, $line, $coder_args['#ignores']);
           }
@@ -1360,7 +1360,7 @@ function _coder_review_7x_cache_implementation_callback(&$coder_args, $review, $
 /**
  * @todo: add a function header comment.
  */
-function _coder_review_7x_drupal_behaviors_callback(&$coder_args, $review, $rule, $lines, &$results) {
+function _coder_review_7x_backdrop_behaviors_callback(&$coder_args, $review, $rule, $lines, &$results) {
   // @NOTE: no simpletest for this.
   $filename = $coder_args['#filename'];
   if (file_exists($filename)) {
@@ -1375,13 +1375,13 @@ function _coder_review_7x_drupal_behaviors_callback(&$coder_args, $review, $rule
           if (preg_match('/(^|[\s\(=])function\s*([a-zA-Z_]+?|\()/', $line)) {
             $detach = FALSE;
           }
-          if (preg_match('/Drupal\.detachBehaviors\s*\(/', $line)) {
+          if (preg_match('/Backdrop\.detachBehaviors\s*\(/', $line)) {
             $detach = TRUE;
           }
           if (!$detach && preg_match('/(jQuery\.|\$\.|\$\([a-zA-Z_#\'"\-]+?\)\.)(ajax|get|getJSON|post|load)/', $line)) {
             $severity_name = _coder_review_severity_name($coder_args, $review, $rule);
             $tmprule = $rule;
-            $tmprule['#warning'] = _coder_review_7x_drupal_behaviors_warning();
+            $tmprule['#warning'] = _coder_review_7x_backdrop_behaviors_warning();
             _coder_review_error($results, $tmprule, $severity_name, $lineno, $line, $coder_args['#ignores']);
           }
         }
@@ -1418,7 +1418,7 @@ function _coder_review_7x_comment_doxygen_file_callback(&$coder_args, $review, $
       $tmprule = $rule;
       $tmprule['#warning'] = array(
         '#text' => 'For .install files, the @file description should be of the format "Install, update and uninstall functions for the XXX module.".',
-        '#link' => _drupalnode(224333, 'afile'),
+        '#link' => _backdropnode(224333, 'afile'),
       );
       _coder_review_error($results, $tmprule, $severity_name, $theme_lineno, $theme_line, $coder_args['#ignores']);
     }
@@ -1428,7 +1428,7 @@ function _coder_review_7x_comment_doxygen_file_callback(&$coder_args, $review, $
 /**
  * Make sure user defined block module as a dependency if using block functions.
  *
- * @see http://drupal.org/node/224333#block_optional
+ * @see http://backdrop.org/node/224333#block_optional
  */
 function _coder_review_7x_optional_block_callback(&$coder_args, $review, $rule, $lines, &$results) {
   $functions_to_check = array('block_list', 'block_custom_block_get', 'block_page_build');
@@ -1448,8 +1448,8 @@ function _coder_review_7x_optional_block_callback(&$coder_args, $review, $rule, 
   }
 
   // Check if the dependency has been declared.
-  if (function_exists('drupal_parse_info_file')) {
-    $ini = drupal_parse_info_file($path);
+  if (function_exists('backdrop_parse_info_file')) {
+    $ini = backdrop_parse_info_file($path);
     $dependency_declared = (isset($ini['dependencies']) && is_array($ini['dependencies'])) ? in_array('block', $ini['dependencies']) : FALSE;
   }
 
@@ -1463,7 +1463,7 @@ function _coder_review_7x_optional_block_callback(&$coder_args, $review, $rule, 
             $tmprule = $rule;
             $tmprule['#warning'] = array(
               '#text' => "Block module is now optional, make sure you declare it as a dependency in your module's .info file.",
-              '#link' => _drupalnode(224333, 'block_optional'),
+              '#link' => _backdropnode(224333, 'block_optional'),
             );
             _coder_review_error($results, $tmprule, $severity_name, $lineno, $line, $coder_args['#ignores']);
           }
@@ -1478,15 +1478,15 @@ function _coder_review_7x_optional_block_callback(&$coder_args, $review, $rule, 
  */
 
 /**
- * Return the warning text for http://drupal.org/node/224333#drupal_behaviors.
+ * Return the warning text for http://backdrop.org/node/224333#backdrop_behaviors.
  *
  * This is in it's own function because the text is needed in both the rules definition,
  * and in a callback function, so rather than define the warning twice, just define it
  * once here.
  */
-function _coder_review_7x_drupal_behaviors_warning() {
+function _coder_review_7x_backdrop_behaviors_warning() {
   return array(
-    '#text' => 'Changed Drupal.behaviors to objects having the methods "attach" and "detach".',
-    '#link' => _drupalnode(224333, 'drupal_behaviors'),
+    '#text' => 'Changed Backdrop.behaviors to objects having the methods "attach" and "detach".',
+    '#link' => _backdropnode(224333, 'backdrop_behaviors'),
   );
 }

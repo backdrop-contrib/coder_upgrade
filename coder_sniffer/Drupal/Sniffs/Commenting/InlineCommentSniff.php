@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP_CodeSniffer_Sniffs_Drupal_Commenting_InlineCommentSniff.
+ * PHP_CodeSniffer_Sniffs_Backdrop_Commenting_InlineCommentSniff.
  *
  * PHP version 5
  *
@@ -14,7 +14,7 @@
  */
 
 /**
- * PHP_CodeSniffer_Sniffs_Drupal_Commenting_InlineCommentSniff.
+ * PHP_CodeSniffer_Sniffs_Backdrop_Commenting_InlineCommentSniff.
  *
  * Checks that no perl-style comments are used. Checks that inline comments ("//")
  * have a space after //, start capitalized and end with proper punctuation.
@@ -29,7 +29,7 @@
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_Sniff
 {
 
 

@@ -18,11 +18,11 @@ class CoderReviewSnifferTest extends CoderReviewTestCase {
    *   (optional) The test identifier. Defaults to NULL.
    */
   function __construct($id = NULL) {
-    // Remove the Drupal autoloading classes so that CodeSniffer can load it's
+    // Remove the Backdrop autoloading classes so that CodeSniffer can load it's
     // own classes. Without this, these tests would need to run with
-    // DrupalWebTestCase instead of DrupalUnitTestCase.
-    spl_autoload_unregister('drupal_autoload_class');
-    spl_autoload_unregister('drupal_autoload_interface');
+    // BackdropWebTestCase instead of BackdropUnitTestCase.
+    spl_autoload_unregister('backdrop_autoload_class');
+    spl_autoload_unregister('backdrop_autoload_interface');
 
     parent::__construct('sniffer', $id);
   }

@@ -8,12 +8,12 @@
 /**
  * Implements hook_drush_command().
  */
-function drupalcs_drush_command() {
+function backdropcs_drush_command() {
   $items = array();
 
-  $items['drupalcs'] = array(
+  $items['backdropcs'] = array(
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
-    'description' => dt('Executes PHP_CodeSniffer with Drupal Coding Standards on a particular directory.'),
+    'description' => dt('Executes PHP_CodeSniffer with Backdrop Coding Standards on a particular directory.'),
     'arguments' => array(
       'path' => dt('The path that you wish to scan.'),
     ),
@@ -21,7 +21,7 @@ function drupalcs_drush_command() {
     'options' => array(
       'extensions' => array(
         'description' => dt('Comma delimited list of file extensions to scan. The default is @default', array(
-          '@default' => implode(',', _drupalcs_extensions()),
+          '@default' => implode(',', _backdropcs_extensions()),
         )),
         'example-value' => 'php,module',
       ),
@@ -54,8 +54,8 @@ function drupalcs_drush_command() {
  */
 function drushrc_drush_help($section) {
   switch ($section) {
-    case 'drush:drupalcs':{
-      return dt('This command will execute PHP_CodeSniffer on a given path, using Drupal Coding Standard definitions.');
+    case 'drush:backdropcs':{
+      return dt('This command will execute PHP_CodeSniffer on a given path, using Backdrop Coding Standard definitions.');
     }
   }
 }
@@ -63,15 +63,15 @@ function drushrc_drush_help($section) {
 /**
  * Implements drush_hook_COMMAND_validate().
  */
-function drush_drupalcs_validate($path = '') {
-  if (!_drupalcs_is_compatible_phpcs_installed()) {
-    $path_to_phpcs = _drupalcs_get_path();
+function drush_backdropcs_validate($path = '') {
+  if (!_backdropcs_is_compatible_phpcs_installed()) {
+    $path_to_phpcs = _backdropcs_get_path();
     if ($path_to_phpcs) {
       return drush_set_error('NOT_INSTALLED', dt('PHP_CodeSniffer is not installed.'));
     }
     else {
-      return drush_set_error('INCOMPATIBLE', dt('No compatible version of PHP_CodeSniffer was found; you must have 1.3.4 or higher.  Alternatively, you can symbolically link with the following command: sudo ln -sv @path $(pear config-get php_dir)/PHP/CodeSniffer/Standards/Drupal', array(
-        '@path' => _drupalcs_get_standard($path_to_phpcs),
+      return drush_set_error('INCOMPATIBLE', dt('No compatible version of PHP_CodeSniffer was found; you must have 1.3.4 or higher.  Alternatively, you can symbolically link with the following command: sudo ln -sv @path $(pear config-get php_dir)/PHP/CodeSniffer/Standards/Backdrop', array(
+        '@path' => _backdropcs_get_standard($path_to_phpcs),
       )));
     }
   }
@@ -81,21 +81,21 @@ function drush_drupalcs_validate($path = '') {
 }
 
 /**
- * Drush command callback; executes PHP_CodeSniffer with Drupal standards.
+ * Drush command callback; executes PHP_CodeSniffer with Backdrop standards.
  */
-function drush_drupalcs($path = '') {
-  $phpcs_path = _drupalcs_get_path();
+function drush_backdropcs($path = '') {
+  $phpcs_path = _backdropcs_get_path();
 
   // Start building the command; begin with the executable.
   $command = $phpcs_path;
 
   // Add the standard.
-  $command .= ' --standard=' . _drupalcs_get_standard($phpcs_path);
+  $command .= ' --standard=' . _backdropcs_get_standard($phpcs_path);
 
   // Define the extensions; allow overriding.
   $extensions = drush_get_option('extensions');
   if (!$extensions) {
-    $extensions = implode(',', _drupalcs_extensions(drush_get_option('mode')));
+    $extensions = implode(',', _backdropcs_extensions(drush_get_option('mode')));
   }
   $command .= ' --extensions=' . $extensions;
 
@@ -140,9 +140,9 @@ function drush_drupalcs($path = '') {
  *   string.
  *
  * @return array
- *   An array of file extensions that cover standard Drupal projects.
+ *   An array of file extensions that cover standard Backdrop projects.
  */
-function _drupalcs_extensions($mode = '') {
+function _backdropcs_extensions($mode = '') {
   $extensions = array(
     'php',
     'module',
@@ -168,13 +168,13 @@ function _drupalcs_extensions($mode = '') {
  *   A Boolean indicating whether or not a compatible version of
  *   PHP_CodeSniffer is installed.
  */
-function _drupalcs_is_compatible_phpcs_installed() {
+function _backdropcs_is_compatible_phpcs_installed() {
   // Check to see if phpcs is installed.
-  $version = _drupalcs_get_phpcs_version('phpcs');
+  $version = _backdropcs_get_phpcs_version('phpcs');
 
   if ($version) {
-    // Check if Drupal standard is installed.
-    if (_drupalcs_is_drupal_standard_installed('phpcs')) {
+    // Check if Backdrop standard is installed.
+    if (_backdropcs_is_backdrop_standard_installed('phpcs')) {
       return TRUE;
     }
     // A fix was applied after version 1.3.3 that allowed external Sniff paths.
@@ -199,7 +199,7 @@ function _drupalcs_is_compatible_phpcs_installed() {
  * @return string
  *   The version of PHP_CodeSniffer, or FALSE if it cannot be determined.
  */
-function _drupalcs_get_phpcs_version($path_to_phpcs) {
+function _backdropcs_get_phpcs_version($path_to_phpcs) {
   static $phpcs_version = NULL;
 
   if (is_null($phpcs_version)) {
@@ -218,15 +218,15 @@ function _drupalcs_get_phpcs_version($path_to_phpcs) {
 }
 
 /**
- * Checks to see if the Drupal standard profile has been installed.
+ * Checks to see if the Backdrop standard profile has been installed.
  *
  * @param string $path_to_phpcs
  *   The path to PHP_CodeSniffer.
  *
  * @return bool
- *   TRUE if Drupal standard profile has been installed; otherwsie, FALSE.
+ *   TRUE if Backdrop standard profile has been installed; otherwsie, FALSE.
  */
-function _drupalcs_is_drupal_standard_installed($path_to_phpcs) {
+function _backdropcs_is_backdrop_standard_installed($path_to_phpcs) {
   static $standard_installed = NULL;
 
   if (is_null($standard_installed)) {
@@ -234,7 +234,7 @@ function _drupalcs_is_drupal_standard_installed($path_to_phpcs) {
     $result = drush_shell_exec($path_to_phpcs . ' -i');
     if ($result) {
       $phpcs_installed = array_pop(drush_shell_exec_output());
-      if (strpos($phpcs_installed, 'Drupal')) {
+      if (strpos($phpcs_installed, 'Backdrop')) {
         $standard_installed = TRUE;
       }
     }
@@ -249,8 +249,8 @@ function _drupalcs_is_drupal_standard_installed($path_to_phpcs) {
  * @return string
  *   The path to PHP_CodeSniffer.
  */
-function _drupalcs_get_path() {
-  if (_drupalcs_is_compatible_phpcs_installed()) {
+function _backdropcs_get_path() {
+  if (_backdropcs_is_compatible_phpcs_installed()) {
     return 'phpcs';
   }
   // This is a potential place to check for libraries.
@@ -266,9 +266,9 @@ function _drupalcs_get_path() {
  * @return string
  *   The proper phpcs standard definition, full path or just the name.
  */
-function _drupalcs_get_standard($path_to_phpcs) {
-  $standard_name = 'Drupal';
-  if (_drupalcs_is_drupal_standard_installed($path_to_phpcs)) {
+function _backdropcs_get_standard($path_to_phpcs) {
+  $standard_name = 'Backdrop';
+  if (_backdropcs_is_backdrop_standard_installed($path_to_phpcs)) {
     return $standard_name;
   }
   return dirname(__FILE__) . '/' . $standard_name;

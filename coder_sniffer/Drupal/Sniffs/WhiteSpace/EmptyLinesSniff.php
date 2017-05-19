@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_WhiteSpace_EmptyLinesSniff.
+ * Backdrop_Sniffs_WhiteSpace_EmptyLinesSniff.
  *
  * PHP version 5
  *
@@ -11,7 +11,7 @@
  */
 
 /**
- * Drupal_Sniffs_WhiteSpace_EmptyLinesSniff.
+ * Backdrop_Sniffs_WhiteSpace_EmptyLinesSniff.
  *
  * Checks that there are not more than 2 empty lines following each other.
  *
@@ -20,7 +20,7 @@
  * @author   Klaus Purer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_EmptyLinesSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_WhiteSpace_EmptyLinesSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**

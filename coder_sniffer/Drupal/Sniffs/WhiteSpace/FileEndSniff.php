@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_WhiteSpace_FileEndSniff.
+ * Backdrop_Sniffs_WhiteSpace_FileEndSniff.
  *
  * PHP version 5
  *
@@ -11,7 +11,7 @@
  */
 
 /**
- * Drupal_Sniffs_WhiteSpace_FileEndSniff.
+ * Backdrop_Sniffs_WhiteSpace_FileEndSniff.
  *
  * Checks that a file ends in exactly one single new line character.
  *
@@ -20,7 +20,7 @@
  * @author   Klaus Purer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_WhiteSpace_FileEndSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_WhiteSpace_FileEndSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**

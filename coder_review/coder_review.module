@@ -9,16 +9,16 @@
  * additional review standards.
  *
  * Built-in support for:
- * - Drupal Coding Standards - http://drupal.org/node/318
- * - Handle text in a secure fashion - http://drupal.org/node/28984
- * - Converting 4.6.x modules to 4.7.x - http://drupal.org/node/22218
- * - Converting 4.7.x modules to 5.x - http://drupal.org/node/64279
- * - Converting 5.x modules to 6.x - http://drupal.org/node/114774
- * - Comment Standards - http://drupal.org/node/1354
- * - SQL coding conventions - http://drupal.org/node/2497
+ * - Backdrop Coding Standards - http://backdrop.org/node/318
+ * - Handle text in a secure fashion - http://backdrop.org/node/28984
+ * - Converting 4.6.x modules to 4.7.x - http://backdrop.org/node/22218
+ * - Converting 4.7.x modules to 5.x - http://backdrop.org/node/64279
+ * - Converting 5.x modules to 6.x - http://backdrop.org/node/114774
+ * - Comment Standards - http://backdrop.org/node/1354
+ * - SQL coding conventions - http://backdrop.org/node/2497
  *
  * Credit also to dries:
- * - http://cvs.drupal.org/viewcvs/drupal/drupal/scripts/code-style.pl
+ * - http://cvs.backdrop.org/viewcvs/backdrop/backdrop/scripts/code-style.pl
  */
 
 /**
@@ -34,7 +34,7 @@ function coder_review_flush_caches() {
 function coder_review_help($page, $arg) {
   switch ($page) {
     case 'coder_review#disclaimer':
-      return _t('Coder provides helpful hints trying to minimize false positives, but offers no guarantees. You are the final arbitrar. If in doubt, please read the Drupal documentation (see review links below and <a href="@api">api.drupal.org</a>).', array('@api' => 'http://api.drupal.org'));
+      return _t('Coder provides helpful hints trying to minimize false positives, but offers no guarantees. You are the final arbitrar. If in doubt, please read the Backdrop documentation (see review links below and <a href="@api">api.backdrop.org</a>).', array('@api' => 'http://api.backdrop.org'));
   }
 }
 
@@ -59,7 +59,7 @@ function coder_review_permission() {
 function coder_review_menu() {
   $items['admin/config/development/coder/review'] = array(
     'title' => 'Review',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('coder_review_page_form'),
     'access arguments' => array('view code review'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -68,8 +68,8 @@ function coder_review_menu() {
   // @ignore upgrade6x_1
   foreach (array('select', 'default', 'active', 'core', 'all', 'files', 'patches') as $delta => $option) {
     $items["admin/config/development/coder/review/$option"] = array(
-      'title' => drupal_ucfirst($option),
-      'page callback' => 'drupal_get_form',
+      'title' => backdrop_ucfirst($option),
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('coder_review_page_form', $option),
       'access arguments' => array('view code review'),
       'type' => $delta ? MENU_LOCAL_TASK : MENU_DEFAULT_LOCAL_TASK,
@@ -79,7 +79,7 @@ function coder_review_menu() {
   $items['admin/config/development/coder/review/settings'] = array(
     'title' => 'Settings',
     'description' => 'Select code review plugins and modules',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('coder_review_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
@@ -93,7 +93,7 @@ function coder_review_menu() {
  * Implements hook_menu_alter().
  */
 function coder_review_menu_alter(&$items) {
-  $items['admin/config/development/coder']['page callback'] = 'drupal_get_form';
+  $items['admin/config/development/coder']['page callback'] = 'backdrop_get_form';
   $items['admin/config/development/coder']['page arguments'] = array('coder_review_page_form');
 }
 
@@ -108,7 +108,7 @@ function coder_review_form_system_modules_alter(&$form, &$form_state, $form_id) 
     return;
   }
 
-  $path = drupal_get_path('module', 'coder_review');
+  $path = backdrop_get_path('module', 'coder_review');
   $form['#attached']['css'][] = "$path/coder_review.css";
 
   foreach ($form['modules'] as $package_name => &$package) {
@@ -160,7 +160,7 @@ function _coder_review_settings_form(array $settings, &$system, &$files) {
   }
 
   // Add the javascript.
-  if (function_exists('drupal_get_path')) {
+  if (function_exists('backdrop_get_path')) {
     $form['#attached']['js'][] = _coder_review_path() . '/coder_review.js';
   }
 
@@ -210,7 +210,7 @@ function _coder_review_settings_form(array $settings, &$system, &$files) {
     '#type' => 'checkbox',
     '#default_value' => $settings['coder_ignore'],
     '#title' => _t('handle code ignores'),
-    '#description' => _t('Coder is a helpful assistant, not a Drill Sergant. Since the developer should always know better than Coder, the <a href="!help">Coder @ignore system</a> allows developers to tell coder to ignore certain warnings. Uncheck this field to see all warnings, even those that are ignored.', array('!help' => _drupalnode(1772676))),
+    '#description' => _t('Coder is a helpful assistant, not a Drill Sergant. Since the developer should always know better than Coder, the <a href="!help">Coder @ignore system</a> allows developers to tell coder to ignore certain warnings. Uncheck this field to see all warnings, even those that are ignored.', array('!help' => _backdropnode(1772676))),
   );
 
   if ($settings['coder_files']) {
@@ -254,7 +254,7 @@ function _coder_review_settings_form(array $settings, &$system, &$files) {
       '#title' => _t('Link to patch'),
       '#size' => 150,
       '#default_value' => $settings['coder_patch_link'],
-      '#description' => _t('The path should be relative to the drupal home directory, without a / at the start, for example: %example_path', array('%example_path' => drupal_get_path('module', 'coder') . '/name-of-file.patch')),
+      '#description' => _t('The path should be relative to the backdrop home directory, without a / at the start, for example: %example_path', array('%example_path' => backdrop_get_path('module', 'coder') . '/name-of-file.patch')),
       '#weight' => -3,
     );
     $form['coder_what']['coder_patch_or'] = array(
@@ -321,7 +321,7 @@ function _coder_review_settings_form(array $settings, &$system, &$files) {
         $in_patch = 1;
       }
       elseif (preg_match("/^\s/", $line)) {
-        $patch .= drupal_substr($line, 1) . "\n";
+        $patch .= backdrop_substr($line, 1) . "\n";
         $in_patch = 1;
       }
       else {
@@ -346,7 +346,7 @@ function _coder_review_settings_form(array $settings, &$system, &$files) {
         $display_name .= ' (' . _t('active') . ')';
         $system_active[$system->name] = $system->name;
       }
-      if (_coder_review_is_drupal_core($system)) {
+      if (_coder_review_is_backdrop_core($system)) {
         $display_name .= ' (' . _t('core') . ')';
         $system_core[$system->name] = $system->name;
       }
@@ -559,14 +559,14 @@ function coder_review_page_form($form, &$form_state, $arg = '') {
     $settings = $form_state['storage'];
     $settings['coder_modules'] = _coder_review_settings_array($form_state, 'module');
     $settings['coder_themes'] = _coder_review_settings_array($form_state, 'theme');
-    if (function_exists('drupal_set_title')) {
-      drupal_set_title(t('Code review (submitted options)'), PASS_THROUGH);
+    if (function_exists('backdrop_set_title')) {
+      backdrop_set_title(t('Code review (submitted options)'), PASS_THROUGH);
     }
   }
   else {
     $settings = _coder_review_get_default_settings($arg);
-    if ($arg && function_exists('drupal_set_title')) {
-      drupal_set_title(t('Code review (@options)', array('@options' => isset($arg) ? $arg : 'default options')), PASS_THROUGH);
+    if ($arg && function_exists('backdrop_set_title')) {
+      backdrop_set_title(t('Code review (@options)', array('@options' => isset($arg) ? $arg : 'default options')), PASS_THROUGH);
     }
   }
   $settings += array(
@@ -597,7 +597,7 @@ function coder_review_page_form($form, &$form_state, $arg = '') {
 
     // Code review non-module core files.
     $module_weight = 0;
-    if ($settings['coder_core'] && function_exists('drupal_alter')) {
+    if ($settings['coder_core'] && function_exists('backdrop_alter')) {
       $php_extensions = variable_get('coder_review_php_ext', array('inc', 'php', 'install', 'test'));
       $coder_args = array(
         '#reviews' => $reviews,
@@ -607,7 +607,7 @@ function coder_review_page_form($form, &$form_state, $arg = '') {
         '#cache' => TRUE,
         '#settings_ignore' => $settings['coder_ignore'],
       );
-      drupal_alter('coder_review_args', $coder_args);
+      backdrop_alter('coder_review_args', $coder_args);
 
       // Review core PHP files.
       $form['core_php'] = array(
@@ -679,8 +679,8 @@ function coder_review_page_form($form, &$form_state, $arg = '') {
             '#cache' => TRUE,
             '#settings_ignore' => $settings['coder_ignore'],
           );
-          if (function_exists('drupal_alter')) {
-            drupal_alter('coder_review_args', $coder_args);
+          if (function_exists('backdrop_alter')) {
+            backdrop_alter('coder_review_args', $coder_args);
           }
 
           // Process this one file.
@@ -797,7 +797,7 @@ function coder_review_page_form($form, &$form_state, $arg = '') {
       }
       $form['settings'][] = $coder_form;
 
-      if (function_exists('drupal_get_path')) {
+      if (function_exists('backdrop_get_path')) {
         $form['#attached']['css'][] = _coder_review_path() . '/coder_review.css';
       }
     }
@@ -995,7 +995,7 @@ function theme_coder_review_table_cols($variables) {
       if (!isset($rows[$row])) {
         $rows[$row] = array();
       }
-      $rows[$row][$col] = drupal_render($element);
+      $rows[$row][$col] = backdrop_render($element);
     }
   }
 

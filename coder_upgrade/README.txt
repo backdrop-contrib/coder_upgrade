@@ -10,16 +10,16 @@ CONTENTS OF THIS FILE
 
 AUTHOR
 ------
-Jim Berry ("solotandem", http://drupal.org/user/240748)
+Jim Berry ("solotandem", http://backdrop.org/user/240748)
 
 DESCRIPTION
 -----------
 This module provides upgrade routines to modify a source code file for changes
-to the Drupal core APIs. Currently, the module provides routines for an upgrade
-from Drupal 6 to 7.
+to the Backdrop core APIs. Currently, the module provides routines for an upgrade
+from Backdrop 6 to 7.
 
 This module utilizes the Grammar Parser library to modify source code in a
-precise and programmatic fashion. The module utilizes the familiar Drupal hook
+precise and programmatic fashion. The module utilizes the familiar Backdrop hook
 system to invoke upgrade routines, allowing other modules to enhance or modify
 a routine.
 
@@ -29,7 +29,7 @@ enable other contributed modules relying on that API to upgrade their code.
 INSTALLATION
 ------------
 To use this module, install it in a modules directory. See
-http://drupal.org/node/895232 for further information.
+http://backdrop.org/node/895232 for further information.
 
 The included Drush Make file provides a convenient method of downloading and
 installing the correct version of the Grammar Parser Library (>=1) dependency.

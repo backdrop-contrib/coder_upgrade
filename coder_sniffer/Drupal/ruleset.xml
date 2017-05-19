@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- See http://pear.php.net/manual/en/package.php.php-codesniffer.annotated-ruleset.php -->
-<ruleset name="Drupal">
- <description>Drupal coding standard</description>
+<ruleset name="Backdrop">
+ <description>Backdrop coding standard</description>
 
  <rule ref="Internal.NoCodeFound">
   <!-- Usually there is no code in txt or info files, so we suppress warnings about
@@ -11,31 +11,31 @@
   <exclude-pattern>*.info</exclude-pattern>
  </rule>
 
- <rule ref="Drupal.Commenting.FileComment">
+ <rule ref="Backdrop.Commenting.FileComment">
   <!-- Do not run this sniff on txt files. -->
   <exclude-pattern>*.txt</exclude-pattern>
  </rule>
- <rule ref="Drupal.Commenting.FileComment.SpacingAfter">
+ <rule ref="Backdrop.Commenting.FileComment.SpacingAfter">
   <!-- Do not run this sniff on template files. -->
   <exclude-pattern>*.tpl.php</exclude-pattern>
  </rule>
- <rule ref="Drupal.ControlStructures.ControlSignature">
+ <rule ref="Backdrop.ControlStructures.ControlSignature">
   <!-- Do not run this sniff on template files. -->
   <exclude-pattern>*.tpl.php</exclude-pattern>
  </rule>
- <rule ref="Drupal.ControlStructures.ElseCatchNewline">
+ <rule ref="Backdrop.ControlStructures.ElseCatchNewline">
   <!-- Do not run this sniff on template files. -->
   <exclude-pattern>*.tpl.php</exclude-pattern>
  </rule>
- <rule ref="Drupal.Formatting.DisallowCloseTag">
+ <rule ref="Backdrop.Formatting.DisallowCloseTag">
   <!-- Do not run this sniff on template files. -->
   <exclude-pattern>*.tpl.php</exclude-pattern>
  </rule>
- <rule ref="Drupal.WhiteSpace.ScopeClosingBrace">
+ <rule ref="Backdrop.WhiteSpace.ScopeClosingBrace">
   <!-- Do not run this sniff on template files. -->
   <exclude-pattern>*.tpl.php</exclude-pattern>
  </rule>
- <rule ref="Drupal.WhiteSpace.ScopeIndent">
+ <rule ref="Backdrop.WhiteSpace.ScopeIndent">
   <!-- Do not run this sniff on template files, as the indentation might follow
   the HTML -->
   <exclude-pattern>*.tpl.php</exclude-pattern>

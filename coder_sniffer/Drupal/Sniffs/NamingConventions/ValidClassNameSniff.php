@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_NamingConventions_ValidClassNameSniff.
+ * Backdrop_Sniffs_NamingConventions_ValidClassNameSniff.
  *
  * PHP version 5
  *
@@ -14,7 +14,7 @@
  */
 
 /**
- * Drupal_Sniffs_NamingConventions_ValidClassNameSniff.
+ * Backdrop_Sniffs_NamingConventions_ValidClassNameSniff.
  *
  * Ensures class and interface names start with a capital letter
  * and do not use _ separators.
@@ -28,7 +28,7 @@
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
 {
 
 

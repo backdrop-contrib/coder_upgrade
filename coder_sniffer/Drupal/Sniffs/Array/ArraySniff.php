@@ -1,6 +1,6 @@
 <?php
 /**
- * Drupal_Sniffs_Array_ArraySniff.
+ * Backdrop_Sniffs_Array_ArraySniff.
  *
  * PHP version 5
  *
@@ -10,9 +10,9 @@
  */
 
 /**
- * Drupal_Sniffs_Array_ArraySniff.
+ * Backdrop_Sniffs_Array_ArraySniff.
  *
- * Checks if the array's are styled in the Drupal way.
+ * Checks if the array's are styled in the Backdrop way.
  * - Comma after the last array element
  * - Indentation is 2 spaces for multi line array definitions
  *
@@ -20,7 +20,7 @@
  * @package  PHP_CodeSniffer
  * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Array_ArraySniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Array_ArraySniff implements PHP_CodeSniffer_Sniff
 {
 
 

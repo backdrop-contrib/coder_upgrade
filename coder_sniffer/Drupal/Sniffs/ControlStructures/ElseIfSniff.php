@@ -29,7 +29,7 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === fal
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_ControlStructures_ElseIfSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_ControlStructures_ElseIfSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**

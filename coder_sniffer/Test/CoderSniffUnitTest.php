@@ -57,7 +57,7 @@ abstract class CoderSniffUnitTest extends PHPUnit_Framework_TestCase
         $testFiles = $this->getTestFiles();
         $sniffCodes = $this->getSniffCodes();
 
-        self::$phpcs->process(array(), 'coder_sniffer/Drupal', $sniffCodes);
+        self::$phpcs->process(array(), 'coder_sniffer/Backdrop', $sniffCodes);
 
         $failureMessages = array();
         foreach ($testFiles as $testFile) {

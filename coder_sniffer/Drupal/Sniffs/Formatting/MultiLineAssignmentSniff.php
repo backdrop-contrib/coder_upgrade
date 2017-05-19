@@ -13,7 +13,7 @@
  */
 
 /**
- * Drupal_Sniffs_Formatting_MultiLineAssignmentSniff.
+ * Backdrop_Sniffs_Formatting_MultiLineAssignmentSniff.
  *
  * If an assignment goes over two lines, ensure the equal sign is indented.
  *
@@ -25,7 +25,7 @@
  * @version   Release: 1.2.0RC3
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class Drupal_Sniffs_Formatting_MultiLineAssignmentSniff implements PHP_CodeSniffer_Sniff
+class Backdrop_Sniffs_Formatting_MultiLineAssignmentSniff implements PHP_CodeSniffer_Sniff
 {
 
 

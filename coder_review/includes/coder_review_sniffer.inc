@@ -28,7 +28,7 @@ function coder_review_sniffer_reviews() {
   }
 
   $review = array(
-    '#title' => 'Drupal CodeSniffer',
+    '#title' => 'Backdrop CodeSniffer',
     '#link' => 'http://pear.php.net/package/PHP_CodeSniffer',
     '#rules' => $rules,
     '#version' => 2,
@@ -84,7 +84,7 @@ function _coder_review_sniffer_callback(array &$coder_args, array $review, array
     $phpcs_cli = new CoderReviewCodeSnifferClient($allowed_extensions);
     $phpcs->setCli($phpcs_cli);
 
-    $sniffer_dir = __DIR__ . '/../../coder_sniffer/Drupal';
+    $sniffer_dir = __DIR__ . '/../../coder_sniffer/Backdrop';
     $phpcs->process(array(), $sniffer_dir, array());
     $phpcs->populateTokenListeners();
   }
@@ -94,7 +94,7 @@ function _coder_review_sniffer_callback(array &$coder_args, array $review, array
   // Then restore it back to our directory.
   $filename = realpath($coder_args['#filename']);
   if (!$filename) {
-    $tmpname = drupal_tempnam('temporary://', 'file');
+    $tmpname = backdrop_tempnam('temporary://', 'file');
     if (file_put_contents($tmpname, $coder_args['#raw_contents']) !== FALSE) {
       $filename = $tmpname;
     }
@@ -135,7 +135,7 @@ function _coder_review_sniffer_warnings(array &$results, array $rule, array $lin
     foreach ($sniffer_warning as $warning_no => $warning) {
       $tmprule = $rule;
       $tmprule['#review_name'] = 'sniffer';
-      $tmprule['#rule_name'] = str_replace('.', '_', strtolower(str_replace('Drupal.', '', $warning[0]['source'])));
+      $tmprule['#rule_name'] = str_replace('.', '_', strtolower(str_replace('Backdrop.', '', $warning[0]['source'])));
       $tmprule['#warning'] = $warning[0]['message'];
       // @todo: set the severiy name.
       $severity_name = 'minor'; // $warning[0]['severity'];

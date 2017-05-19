@@ -5,13 +5,13 @@ TEST: JavaScript
 function _locale_rebuild_js($langcode = NULL) {
   if (!empty($translations)) {
 
-    $data = "Drupal.locale = { ";
+    $data = "Backdrop.locale = { ";
 
     if (!empty($language->formula)) {
       $data .= "'pluralFormula': function(\$n) { return Number({$language->formula}); }, ";
     }
 
-    $data .= "'strings': ". drupal_to_js($translations) ." };";
+    $data .= "'strings': ". backdrop_to_js($translations) ." };";
     $data_hash = md5($data);
   }
 }

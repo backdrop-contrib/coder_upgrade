@@ -2,7 +2,7 @@
 TEST: Parenthesis
 
 --INPUT--
-function drupal_mail_send($message) {
+function backdrop_mail_send($message) {
   return mail(
     $message['to'],
     mime_header_encode($message['subject']),
@@ -12,7 +12,7 @@ function drupal_mail_send($message) {
 }
 
 --INPUT--
-function drupal_to_js($var) {
+function backdrop_to_js($var) {
   switch (gettype($var)) {
     case 'string':
       return '"'. str_replace(array("\r", "\n", "<", ">", "&"),
@@ -24,7 +24,7 @@ function drupal_to_js($var) {
 }
 
 --EXPECT--
-function drupal_to_js($var) {
+function backdrop_to_js($var) {
   switch (gettype($var)) {
     case 'string':
       return '"'. str_replace(array("\r", "\n", "<", ">", "&"),
@@ -38,7 +38,7 @@ function drupal_to_js($var) {
 }
 
 --INPUT--
-function drupal_urlencode($text) {
+function backdrop_urlencode($text) {
   if (variable_get('clean_url', '0')) {
     return str_replace(array('%2F', '%26', '%23', '//'),
                        array('/', '%2526', '%2523', '/%252F'),
@@ -47,7 +47,7 @@ function drupal_urlencode($text) {
 }
 
 --EXPECT--
-function drupal_urlencode($text) {
+function backdrop_urlencode($text) {
   if (variable_get('clean_url', '0')) {
     return str_replace(array('%2F', '%26', '%23', '//'),
       array('/', '%2526', '%2523', '/%252F'),
