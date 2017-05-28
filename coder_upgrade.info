@@ -1,0 +1,7 @@
+name = Coder Upgrade
+description = Modifies source code to assist with the upgrade of a module for changes to a relied upon API.
+package = Development
+backdrop = 1.x
+type = module
+
+configure = admin/config/development/coder/upgrade/settings

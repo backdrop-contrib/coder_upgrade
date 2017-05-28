@@ -1,6 +1,0 @@
-name = Coder
-description = Developer Module that assists with code review and version upgrade
-package = Development
-backdrop = 1.x
-type = module
-configure = admin/config/development/coder
