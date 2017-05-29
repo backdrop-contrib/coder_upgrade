@@ -4,4 +4,4 @@ package = Development
 backdrop = 1.x
 type = module
 
-configure = admin/config/development/coder/upgrade/settings
+configure = admin/config/development/coder-upgrade/settings

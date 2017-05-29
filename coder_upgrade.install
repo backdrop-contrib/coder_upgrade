@@ -50,19 +50,6 @@ function coder_upgrade_uninstall() {
   // Remove the module input and output directories.
   $dir = coder_upgrade_directory_path('base', FALSE);
   coder_upgrade_clean_directory($dir, TRUE);
-
-  // Remove items from {variables} table.
-  variable_del('coder_upgrade_dir');
-  variable_del('coder_upgrade_dir_old');
-  variable_del('coder_upgrade_dir_new');
-  variable_del('coder_upgrade_dir_patch');
-
-  variable_del('coder_upgrade_upgrade_core');
-  variable_del('coder_upgrade_replace_files');
-  variable_del('coder_upgrade_preserve_array_format');
-  variable_del('coder_upgrade_enable_debug_output');
-  variable_del('coder_upgrade_enable_parser_debug_output');
-  variable_del('coder_upgrade_use_separate_process');
 }
 
 /**

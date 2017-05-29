@@ -105,19 +105,20 @@ function coder_upgrade_clean_directory($path, $remove_me = FALSE) {
  *   A string of the directory path.
  */
 function coder_upgrade_directory_path($name, $add_slash = TRUE, $stream_format = FALSE) {
+  $config = config('coder_upgrade.settings');
   $slash = $add_slash ? '/' : '';
   $prefix_no_slash = $stream_format ? file_default_scheme() . ':/' : file_stream_path();
   $prefix = $prefix_no_slash . '/';
 
   switch ($name) {
     case 'base':
-      return $prefix . variable_get('coder_upgrade_dir', DEADWOOD_DIR) . $slash;
+      return $prefix . $config->get('coder_upgrade_dir') . $slash;
     case 'old':
-      return $prefix . variable_get('coder_upgrade_dir_old', DEADWOOD_OLD) . $slash;
+      return $prefix . $config->get('coder_upgrade_dir_old') . $slash;
     case 'new':
-      return $prefix . variable_get('coder_upgrade_dir_new', DEADWOOD_NEW) . $slash;
+      return $prefix . $config->get('coder_upgrade_dir_new') . $slash;
     case 'patch':
-      return $prefix . variable_get('coder_upgrade_dir_patch', DEADWOOD_PATCH) . $slash;
+      return $prefix . $config->get('coder_upgrade_dir_patch') . $slash;
     case '':
       return $prefix_no_slash; // @todo Is this correct with a stream format?
     default:

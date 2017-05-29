@@ -10,6 +10,8 @@
  * Form builder for the settings form.
  */
 function coder_upgrade_settings_form($form, &$form_state) {
+  $form['#config'] = 'coder_upgrade.settings';
+
   // Build the form.
   $form['tabs'] = array(
     '#type' => 'vertical_tabs',
@@ -31,7 +33,8 @@ function coder_upgrade_settings_form($form, &$form_state) {
  *   Form item.
  */
 function coder_upgrade_general_build() {
-  require_once BACKDROP_ROOT . '/' . libraries_get_path('grammar_parser') . '/engine/parser.inc';
+  $config = config('coder_upgrade.settings');
+  // require_once BACKDROP_ROOT . '/' . libraries_get_path('grammar_parser') . '/engine/parser.inc';
   $parser = new PGPParser();
 
   $form = array(
@@ -46,7 +49,7 @@ function coder_upgrade_general_build() {
     '#type' => 'textfield',
     '#title' => t('Module base directory'),
     '#required' => TRUE,
-    '#default_value' => variable_get('coder_upgrade_dir', DEADWOOD_DIR),
+    '#default_value' => $config->get('coder_upgrade_dir'),
     '#description' => t('Directory beneath the file system path (@path) in which are housed the old, new and patch directories. Default is @default. In the old directory, place the 6.x module code to be upgraded. The upgraded code is saved to the new directory and patch files are written to the patch directory.', array('@path' => $path, '@default' => DEADWOOD_DIR)),
     '#size' => 30,
     '#maxlength' => 255,
@@ -56,35 +59,35 @@ function coder_upgrade_general_build() {
   $form['coder_upgrade_upgrade_core'] = array(
     '#type' => 'checkbox',
     '#title' => t('Update Backdrop core modules'),
-    '#default_value' => variable_get('coder_upgrade_upgrade_core', FALSE),
+    '#default_value' => $config->get('coder_upgrade_upgrade_core'),
     '#description' => t('If checked, then the list of modules to select for upgrade will be the Backdrop core modules. Otherwise, the list will be created from contributed modules.'),
   );
 
   $form['coder_upgrade_replace_files'] = array(
     '#type' => 'checkbox',
     '#title' => t('Replace files'),
-    '#default_value' => variable_get('coder_upgrade_replace_files', FALSE),
+    '#default_value' => $config->get('coder_upgrade_replace_files'),
     '#description' => t('If checked, then the original file will be written to the output directory shown above and then replaced with the upgraded file. Otherwise, the upgraded file will be written to the output directory shown above.'),
   );
 
   $form['coder_upgrade_preserve_array_format'] = array(
     '#type' => 'checkbox',
     '#title' => t('Preserve array formatting'),
-    '#default_value' => variable_get('coder_upgrade_preserve_array_format', FALSE),
+    '#default_value' => $config->get('coder_upgrade_preserve_array_format'),
     '#description' => t('If checked, then array expressions will be formatted to match the input. If not checked, then array expressions will be formatted per Backdrop coding standards. This means array expressions will be inlined in function calls, function parameters, and when a single value. Otherwise, the expression will will be multiline formatted.'),
   );
 
   $form['coder_upgrade_enable_debug_output'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable debug output from coder upgrade'),
-    '#default_value' => variable_get('coder_upgrade_enable_debug_output', FALSE),
+    '#default_value' => $config->get('coder_upgrade_enable_debug_output'),
     '#description' => t('If checked, then coder upgrade debug output will be written to the file @file. WARNING: This option should NOT be enabled except for testing and development purposes, and then only on smaller files containing the code to be debugged.', array('@file' => coder_upgrade_path('debug'))),
   );
 
   $form['coder_upgrade_enable_parser_debug_output'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable debug output from grammar parser'),
-    '#default_value' => variable_get('coder_upgrade_enable_parser_debug_output', FALSE),
+    '#default_value' => $config->get('coder_upgrade_enable_parser_debug_output'),
     '#description' => t('If checked, then grammar parser debug output will be written to the file @file. WARNING: This option should NOT be enabled except for testing and development purposes, and then only on smaller files containing the code to be debugged.', array('@file' => $parser->debugPath())),
   );
 
@@ -110,7 +113,7 @@ function coder_upgrade_performance_build() {
   $form['coder_upgrade_use_separate_process'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use separate process'),
-    '#default_value' => variable_get('coder_upgrade_use_separate_process', FALSE),
+    '#default_value' => config_get('coder_upgrade.settings', 'coder_upgrade_use_separate_process'),
     '#description' => t('If checked, then Coder Upgrade will be run in a separate process without a Backdrop bootstrap.'),
   );
 
@@ -129,23 +132,25 @@ function coder_upgrade_performance_build() {
  * Rename module input and output directories based on user settings.
  */
 function coder_upgrade_settings_form_submit($form, &$form_state) {
+  $config = config('coder_upgrade.settings');
   $values = $form_state['values'];
   $op = isset($values['op']) ? $values['op'] : '';
 
-  $cur = variable_get('coder_upgrade_dir', DEADWOOD_DIR);
+  $cur = $config->get('coder_upgrade_dir');
   $new = $op == t('Reset to defaults') ? DEADWOOD_DIR : $values['coder_upgrade_dir'];
   if ($new != $cur) {
     if (rename(coder_upgrade_directory_path($cur, FALSE), coder_upgrade_directory_path($new, FALSE))) {
-      variable_set('coder_upgrade_dir_old', $new . '/old');
-      variable_set('coder_upgrade_dir_new', $new . '/new');
-      variable_set('coder_upgrade_dir_patch', $new . '/patch');
+      $config->set('coder_upgrade_dir_old', $new . '/old');
+      $config->set('coder_upgrade_dir_new', $new . '/new');
+      $config->set('coder_upgrade_dir_patch', $new . '/patch');
       backdrop_set_message(t('Base directory was renamed to ' . $new . '.'));
     }
     else {
       // Reset the directory variable.
-      variable_set('coder_upgrade_dir', $cur);
+      $config->set('coder_upgrade_dir', $cur);
       backdrop_set_message(t('Could not rename base directory'), 'error');
     }
+    $config->save();
   }
 }
 

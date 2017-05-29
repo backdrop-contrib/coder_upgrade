@@ -488,7 +488,7 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
    * Changes made to conform to revised core api or standards:
    * - use third person tense in hook_x comments
    * - manually include files again
-   * Change settings menu path to 'admin/config/development/coder/upgrade/settings'.
+   * Change settings menu path to 'admin/config/development/coder-upgrade/settings'.
    * Disable upgrade functionality until grammar parser refactoring is complete.
 
 - Changes (2009-10-18):
@@ -531,8 +531,8 @@ coder_upgrade 7.x-1.x, 2009-xx-xx (development version)
 - Changes (2009-07-07):
    * Add module to coder project as coder_upgrade.
    * Rename conversion directories to 'coder_upgrade/old' and '/new'.
-   * Change menu path to 'admin/development/coder/upgrade'.
-   * Change menu path to 'admin/settings/coder/upgrade'.
+   * Change menu path to 'admin/development/coder-upgrade'.
+   * Change menu path to 'admin/settings/coder-upgrade'.
    * Add directory called 'conversions' and move conversion .inc files there.
    * Remove deadwood node type.
    * Add upgrade path to .install file (require uninstall of Deadwood).

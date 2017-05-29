@@ -82,8 +82,8 @@ if (!function_exists('file_unmanaged_delete')) {
   }
 }
 
-if (!function_exists('variable_get')) {
-  function variable_get($name, $default = NULL) {
+if (!function_exists('config_get')) {
+  function config_get($name, $default = NULL) {
     global $_coder_upgrade_variables;
 
     return isset($_coder_upgrade_variables[$name]) ? $_coder_upgrade_variables[$name] : $default;

@@ -50,8 +50,8 @@ function coder_upgrade_menu_alter(&$items) {
     // Remove the Coder menu item.
     unset($items['admin/config/development/coder']);
     // Promote the menu items defined by this module.
-    $items['admin/config/development/coder/upgrade']['title'] = 'Coder Upgrade';
-    $items['admin/config/development/coder/upgrade']['type'] = MENU_NORMAL_ITEM;
+    $items['admin/config/development/coder-upgrade']['title'] = 'Coder Upgrade';
+    $items['admin/config/development/coder-upgrade']['type'] = MENU_NORMAL_ITEM;
   }
 }
 
@@ -59,8 +59,52 @@ function coder_upgrade_menu_alter(&$items) {
  * Implements hook_help().
  */
 function coder_upgrade_help($path, $arg) {
-  if (strpos($path, 'admin/config/development/coder/upgrade') === 0 || $path == 'admin/help#coder_upgrade') {
+  if (strpos($path, 'admin/config/development/coder-upgrade') === 0 || $path == 'admin/help#coder_upgrade') {
     module_load_include('inc', 'coder_upgrade', 'includes/help');
     return _coder_upgrade_help($path, $arg);
   }
 }
+
+/**
+ * Implements hook_config_info().
+ */
+function coder_upgrade_config_info() {
+  $prefixes['coder_upgrade.settings'] = array(
+    'label' => t('Coder Upgrade settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function coder_upgrade_autoload_info() {
+  return array(
+    'PGPEditor' => 'grammar_parser/editor.inc',
+    'PGPNode' => 'grammar_parser/list.inc',
+    'PGPList' => 'grammar_parser/list.inc',
+    'PGPBody' => 'grammar_parser/list.inc',
+    'PGPExpression' => 'grammar_parser/list.inc',
+    'PGPOperand' => 'grammar_parser/list.inc',
+    'PGPString' => 'grammar_parser/list.inc',
+    'PGPBase' => 'grammar_parser/object.inc',
+    'PGPArray' => 'grammar_parser/object.inc',
+    'PGPFunctionCall' => 'grammar_parser/object.inc',
+    'PGPAssignment' => 'grammar_parser/object.inc',
+    'PGPClass' => 'grammar_parser/object.inc',
+    'PGPConditional' => 'grammar_parser/object.inc',
+    'PGPFor' => 'grammar_parser/object.inc',
+    'PGPForeach' => 'grammar_parser/object.inc',
+    'PGPCase' => 'grammar_parser/object.inc',
+    'PGPDeclare' => 'grammar_parser/object.inc',
+    'PGPTryCatch' => 'grammar_parser/object.inc',
+    'PGPListStatement' => 'grammar_parser/object.inc',
+    'PGPNamespace' => 'grammar_parser/object.inc',
+    'PGPUse' => 'grammar_parser/object.inc',
+    'PGPParser' => 'grammar_parser/parser.inc',
+    'PGPReader' => 'grammar_parser/reader.inc',
+    'PGPWriter' => 'grammar_parser/writer.inc',
+  );
+}
+

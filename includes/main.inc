@@ -41,17 +41,18 @@ function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) 
     return FALSE;
   }
 
+  $config = config('coder_upgrade.settings');
   $_coder_upgrade_log = TRUE;
   if ($_coder_upgrade_log) {
     // Clear the log file.
     coder_upgrade_path_clear('log');
-    if (!variable_get('coder_upgrade_use_separate_process', FALSE)) {
+    if (!$config->get('coder_upgrade_use_separate_process')) {
       coder_upgrade_path_clear('memory');
     }
     coder_upgrade_memory_print('initial');
   }
   // Set debug output preference.
-  $_coder_upgrade_debug = variable_get('coder_upgrade_enable_debug_output', FALSE);
+  $_coder_upgrade_debug = $config->get('coder_upgrade_enable_debug_output');
   if ($_coder_upgrade_debug) {
     // Clear the debug file.
     coder_upgrade_path_clear('debug');
@@ -62,7 +63,7 @@ function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) 
   coder_upgrade_load_parser();
 
   // Set file replacement parameter.
-  $_coder_upgrade_replace_files = variable_get('coder_upgrade_replace_files', FALSE);
+  $_coder_upgrade_replace_files = $config->get('coder_upgrade_replace_files');
   // Initialize list of class files.
   $_coder_upgrade_class_files = array();
 
@@ -132,7 +133,7 @@ function coder_upgrade_load_parser() {
   if (!$parser_loaded) {
     $parser_loaded = TRUE;
     // Include parser files.
-    libraries_load('grammar_parser');
+    // libraries_load('grammar_parser');
     coder_upgrade_memory_print('load parser code');
   }
 }
@@ -335,6 +336,7 @@ function coder_upgrade_apply_regex($filename, &$new) {
  *   The contents of the file to convert.
  */
 function coder_upgrade_apply_parser($filename, &$new) {
+  $config = config('coder_upgrade.settings');
   global $_coder_upgrade_class_files;
   // Categorize certain files.
   $is_info_file = pathinfo($filename, PATHINFO_EXTENSION) == 'info';
@@ -348,9 +350,9 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $filename);
   // Set array formatting preference.
-  $reader->setPreserveArrayFormat(variable_get('coder_upgrade_preserve_array_format', FALSE));
+  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
   // Set debug output preference.
-  $reader->setDebug(variable_get('coder_upgrade_enable_parser_debug_output', FALSE));
+  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
   coder_upgrade_memory_print('set snippet');
   $reader->addTokenNames();

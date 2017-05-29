@@ -1643,7 +1643,7 @@ function example_backdrop_execute() {
  */
 function example_menu() {
   // Using backdrop_get_form.
-  $items['admin/config/development/coder/upgrade'] = array(
+  $items['admin/config/development/coder-upgrade'] = array(
     'title' => 'Upgrade',
     'description' => 'Convert module code from version 6.x to 7.x.',
     'page callback' => 'backdrop_get_form',
@@ -1671,7 +1671,7 @@ function example_menu() {
             $menu_item = !empty($info['default']['menu'][$op]) ? $info['default']['menu'][$op] : array();
           }
           // Set other items.
-          $items['admin/config/development/coder/upgrade2'] = array(
+          $items['admin/config/development/coder-upgrade2'] = array(
             'title' => 'Upgrade',
             'description' => 'Convert module code from version 6.x to 7.x.',
             'page callback' => 'backdrop_get_form',

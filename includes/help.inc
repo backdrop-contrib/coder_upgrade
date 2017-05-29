@@ -13,9 +13,9 @@ function _coder_upgrade_help($path, $arg) {
   $input = coder_upgrade_directory_path('old', FALSE);
   $output = coder_upgrade_directory_path('new', FALSE);
   switch ($path) {
-    case 'admin/config/development/coder/upgrade/settings':
+    case 'admin/config/development/coder-upgrade/settings':
       return tp('This is a list of the variables used by the automated module conversion suite.');
-    case 'admin/config/development/coder/upgrade':
+    case 'admin/config/development/coder-upgrade':
       return tp('The purpose of this module is to automate as much as possible the task of updating a contributed module for Backdrop API changes.' .
                 ' This particular module helps update the 6.x version of a contributed module to the 7.x version API.' .
                 ' Relative to the Backdrop core APIs, the list of automated conversions to be applied is indicated !list.' .
@@ -47,11 +47,11 @@ function _coder_upgrade_help($path, $arg) {
                 ' You may also upload your module to a modules directory beneath the sites directory (e.g. sites/all/modules).',
                   array('@input' => $input,
                        '@output' => $output,
-                       '!link' => l(t('here'), 'admin/config/development/coder/upgrade/settings'))) .
+                       '!link' => l(t('here'), 'admin/config/development/coder-upgrade/settings'))) .
              tp('To apply the conversions, go to the !link page, select the appropriate runtime parameters based on the instructions below, and click the Convert files button.' .
                 ' In the instructions below, references to checkboxes and other interface items apply to the development page.',
                  array('@input' => $input,
-                       '!link' => l(t('Conversions Development'), 'admin/config/development/coder/upgrade'))) .
+                       '!link' => l(t('Conversions Development'), 'admin/config/development/coder-upgrade'))) .
              tp('To convert 6.x files to 7.x files do the following:') .
               t('<ol>
                  <li>On the Upgrades tab, select the conversion (or upgrade) categories to apply by checking the appropriate boxes in the list.</li>

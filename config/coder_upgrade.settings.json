@@ -1,0 +1,13 @@
+{
+    "_config_name": "coder_upgrade.settings",
+    "coder_upgrade_dir" : "coder_upgrade",
+    "coder_upgrade_dir_old" : "coder_upgrade/old",
+    "coder_upgrade_dir_new" : "coder_upgrade/new",
+    "coder_upgrade_dir_patch" : "coder_upgrade/patch",
+    "coder_upgrade_upgrade_core" : false,
+    "coder_upgrade_replace_files" : false,
+    "coder_upgrade_preserve_array_format" : false,
+    "coder_upgrade_enable_debug_output" : false,
+    "coder_upgrade_enable_parser_debug_output" : false,
+    "coder_upgrade_use_separate_process" : false
+}

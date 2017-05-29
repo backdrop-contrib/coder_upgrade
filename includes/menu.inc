@@ -11,7 +11,7 @@
  */
 function _coder_upgrade_menu() {
   // Conversion items.
-  $items['admin/config/development/coder/upgrade'] = array(
+  $items['admin/config/development/coder-upgrade'] = array(
     'title' => 'Upgrade',
     'description' => 'Convert module code from version 6.x to 7.x.',
     'page callback' => 'backdrop_get_form',
@@ -22,13 +22,13 @@ function _coder_upgrade_menu() {
   );
 
   // Run items.
-  $items['admin/config/development/coder/upgrade/run'] = array(
+  $items['admin/config/development/coder-upgrade/run'] = array(
     'title' => 'Run',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
   // Settings related items.
-  $items['admin/config/development/coder/upgrade/settings'] = array(
+  $items['admin/config/development/coder-upgrade/settings'] = array(
     'title' => 'Settings',
     'description' => 'Configure the module conversion suite.',
     'page callback' => 'backdrop_get_form',

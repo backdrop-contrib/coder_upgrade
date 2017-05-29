@@ -34,7 +34,7 @@ function coder_upgrade_conversions_form($form, &$form_state) {
   $form['convert'] = array(
     '#type' => 'submit',
     '#value' => t('Convert files'),
-    '#disabled' => !gplib_version_check(),
+    //'#disabled' => !gplib_version_check(),
   );
 
   return $form;
@@ -162,7 +162,7 @@ function coder_upgrade_extensions_build(&$extensions) {
  */
 function coder_upgrade_directories_build(&$directories) {
   // Build the directory list.
-  $deadwood_dir = variable_get('coder_upgrade_dir_old', DEADWOOD_OLD);
+  $deadwood_dir = config_get('coder_upgrade.settings', 'coder_upgrade_dir_old');
   $dirs = coder_upgrade_directory_list();
 
   $header = array(
@@ -299,7 +299,7 @@ function coder_upgrade_conversions_apply($form_state) {
 
   // Apply conversion routines.
 //   module_load_include('inc', 'coder_upgrade', 'includes/main');
-  if (variable_get('coder_upgrade_use_separate_process', FALSE)) {
+  if (config_get('coder_upgrade.settings', 'coder_upgrade_use_separate_process')) {
     // Conversion routines will be run in a separate process.
     backdrop_set_message(t('Module conversion routines will run in a separate process.'));
     $path = coder_upgrade_parameters_save($upgrades, $extensions, $items);
@@ -382,6 +382,7 @@ function coder_upgrade_conversions_prepare($form_state) {
  * Saves the runtime parameters to a file for use by script.
  */
 function coder_upgrade_parameters_save($upgrades, $extensions, $items) {
+  $config = config('coder_upgrade.settings');
   // Add path to upgrades array for use by script.
   foreach ($upgrades as $name => &$upgrade) {
     $upgrade['path'] = backdrop_get_path('module', $upgrade['module']);
@@ -389,19 +390,19 @@ function coder_upgrade_parameters_save($upgrades, $extensions, $items) {
   // Create paths array.
   $paths = array(
     'files_base' => coder_upgrade_directory_path('', FALSE),
-    'libraries_base' => str_replace('/grammar_parser', '', libraries_get_path('grammar_parser')),
+    //'libraries_base' => str_replace('/grammar_parser', '', libraries_get_path('grammar_parser')),
     'modules_base' => str_replace('/coder', '', backdrop_get_path('module', 'coder')),
   );
   // Create variables array.
   $variables = array(
-    'coder_upgrade_dir' => variable_get('coder_upgrade_dir', DEADWOOD_DIR),
-    'coder_upgrade_dir_patch' => variable_get('coder_upgrade_dir_patch', DEADWOOD_PATCH),
+    'coder_upgrade_dir' => $config->get('coder_upgrade_dir'),
+    'coder_upgrade_dir_patch' => $config->get('coder_upgrade_dir_patch'),
 
-    'coder_upgrade_replace_files' => variable_get('coder_upgrade_replace_files', FALSE),
-    'coder_upgrade_preserve_array_format' => variable_get('coder_upgrade_preserve_array_format', FALSE),
-    'coder_upgrade_enable_debug_output' => variable_get('coder_upgrade_enable_debug_output', FALSE),
-    'coder_upgrade_enable_parser_debug_output' => variable_get('coder_upgrade_enable_parser_debug_output', FALSE),
-    'coder_upgrade_use_separate_process' => variable_get('coder_upgrade_use_separate_process', FALSE),
+    'coder_upgrade_replace_files' => $config->get('coder_upgrade_replace_files', FALSE),
+    'coder_upgrade_preserve_array_format' => $config->get('coder_upgrade_preserve_array_format'),
+    'coder_upgrade_enable_debug_output' => $config->get('coder_upgrade_enable_debug_output'),
+    'coder_upgrade_enable_parser_debug_output' => $config->get('coder_upgrade_enable_parser_debug_output'),
+    'coder_upgrade_use_separate_process' => $config->get('coder_upgrade_use_separate_process'),
   );
   // Create parameters array.
   $parameters['paths'] = $paths;
@@ -557,7 +558,7 @@ function coder_upgrade_directory_list() {
  *   Array of contributed modules.
  */
 function coder_upgrade_module_list($core = NULL, $status = -1) {
-  $test = is_null($core) ? variable_get('coder_upgrade_upgrade_core', FALSE) : $core;
+  $test = is_null($core) ? config_get('coder_upgrade.settings', 'coder_upgrade_upgrade_core') : $core;
   $like = $test ? 'LIKE' : 'NOT LIKE';
   $where = $status == -1 ? '' : 'AND status = :status';
 
