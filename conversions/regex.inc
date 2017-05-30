@@ -49,6 +49,10 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/taxonomy_get_term_by_name/";
   $to[] = "taxonomy_term_load_multiple_by_name";
 
+  // format_username() has been renamed.
+  $from[] = "/format_username/";
+  $to[] = "user_format_name";
+
   coder_upgrade_do_conversions($from, $to, $new);
   coder_upgrade_save_changes($cur, $new, $file, $hook);
 }
