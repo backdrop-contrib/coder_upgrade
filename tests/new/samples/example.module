@@ -8,7 +8,7 @@
 // This function is missing a Doxygen style comment.
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_update_7000() {
   $ret = array();
@@ -18,7 +18,7 @@ function example_update_7000() {
     $ret = array();
     // hook_update_N() no longer returns a $ret array. Instead, return
     // nothing or a translated string indicating the update ran successfully.
-    // See http://backdrop.org/node/224333#update_sql.
+    // See http://drupal.org/node/224333#update_sql.
     return t('TODO Add a descriptive string here to show in the UI.') /* smoke1 $ret smoke2 */;
   }
 }
@@ -26,13 +26,13 @@ function example_update_7000() {
 /* This function is missing a Doxygen style comment. */
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_update_7001() {
   $ret = array();
   // hook_update_N() no longer returns a $ret array. Instead, return
   // nothing or a translated string indicating the update ran successfully.
-  // See http://backdrop.org/node/224333#update_sql.
+  // See http://drupal.org/node/224333#update_sql.
   return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
 }
 
@@ -43,7 +43,7 @@ function example_update_7002() {
   $ret = array();
   // hook_update_N() no longer returns a $ret array. Instead, return
   // nothing or a translated string indicating the update ran successfully.
-  // See http://backdrop.org/node/224333#update_sql.
+  // See http://drupal.org/node/224333#update_sql.
   return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
 }
 
@@ -53,7 +53,7 @@ function example_update_7002() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_absolute_includes() {
   // Change require, require_once, include, and include_once.
@@ -98,10 +98,10 @@ function example_absolute_includes() {
   require_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'transactions') . '/transactions.inc';
 }
 
-// Related to http://backdrop.org/node/224333#registry
+// Related to http://drupal.org/node/224333#registry
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_function_exists() {
   // function_exists() -- Change the next line but leave this alone
@@ -112,10 +112,10 @@ function example_function_exists() {
 }
 
 // TODO This was reverted!!!
-// http://backdrop.org/files/issues/sessions_1.patch
+// http://drupal.org/files/issues/sessions_1.patch
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_set_session() {
   // $_SESSION['site_offline'] = variable_get('site_offline', FALSE) -- Change the next line but leave this alone
@@ -151,7 +151,7 @@ function example_set_session() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_request_time() {
   // time() -- Change the next line but leave this alone
@@ -161,7 +161,7 @@ function example_request_time() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_rebuild_functions() {
   // backdrop_rebuild_theme_registry() -- Change the next line but leave this alone
@@ -172,7 +172,7 @@ function example_rebuild_functions() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_uninstall_module() {
   // backdrop_uninstall_module() -- Change the next line but leave this alone
@@ -182,7 +182,7 @@ function example_uninstall_module() {
 // use module_implements not module_list when calling hook implementations
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_module_list() {
   foreach (module_implements($hook /* TODO Set this variable. */) as $module) {
@@ -193,7 +193,7 @@ function example_module_list() {
 // Parameters for backdrop_http_request() have changed
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_http_request() {
   // backdrop_http_request() -- Change the next line but leave this alone
@@ -211,7 +211,7 @@ function example_http_request() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_moved_statistics_settings() {
   backdrop_goto($path = 'admin/config/system/statistics');
@@ -219,7 +219,7 @@ function example_moved_statistics_settings() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_system_theme_data() {
   // module_rebuild_cache() -- Change the next line but leave this alone
@@ -230,7 +230,7 @@ function example_system_theme_data() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_static_variable() {
   static $menu1;
@@ -241,7 +241,7 @@ function example_static_variable() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_html_head() {
   // backdrop_set_html_head() -- Change the next line but leave this alone
@@ -254,7 +254,7 @@ function example_html_head() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_eval() {
   // backdrop_eval() -- Change the next line but leave this alone
@@ -285,7 +285,7 @@ function example_backdrop_eval() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_http_header_functions() {
   // backdrop_set_header() -- Change the next line but leave this alone
@@ -317,7 +317,7 @@ function example_http_header_functions() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_file_download() {
   if (_mymodule_access($filepath)) {
@@ -329,7 +329,7 @@ function example_file_download() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_set_content() {
   // backdrop_set_content() -- Change the next line but leave this alone
@@ -345,7 +345,7 @@ function example_set_content() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_time_limit() {
   // set_time_limit() -- Change the next line but leave this alone
@@ -356,10 +356,10 @@ function example_time_limit() {
   }
 }
 
-// http://backdrop.org/node/224333#remove-backdrop-urlencode
+// http://drupal.org/node/224333#remove-backdrop-urlencode
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_remove_backdrop_urlencode() {
   // backdrop_urlencode() -- Change the next line but leave this alone
@@ -386,8 +386,8 @@ function example_remove_backdrop_urlencode() {
  *
  * Use case 1: returns array directly.
  *
- * http://backdrop.org/node/224333#hook_permission
- * http://backdrop.org/node/224333#descriptions_permissions
+ * http://drupal.org/node/224333#hook_permission
+ * http://drupal.org/node/224333#descriptions_permissions
  */
 function example_permission() {
   return array(
@@ -453,7 +453,7 @@ function example_permission() {
 }
 
 /**
- * Other permission items in http://backdrop.org/files/issues/506976_0.patch.
+ * Other permission items in http://drupal.org/files/issues/506976_0.patch.
  */
 function example_perm_items() {
   $options = array();
@@ -479,7 +479,7 @@ function example_perm_items() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_php_permissions() {
   // 'use PHP for settings' -- Change the next line but leave this alone
@@ -492,7 +492,7 @@ function example_php_permissions() {
 /**
  * Implements hook_node_access().
  *
- * http://backdrop.org/node/224333#hook_node_access
+ * http://drupal.org/node/224333#hook_node_access
  */
 function example_node_access($node, $op, $account) {
   if ($op == 'create') {
@@ -513,7 +513,7 @@ function example_node_access($node, $op, $account) {
 // Do table renames along with the new dbtng format.
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_dbtng() {
   // db_query() -- Change the next line but leave this alone
@@ -577,7 +577,7 @@ function example_dbtng() {
 // Use case 1: returns array directly.
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_schema() {
   return array(
@@ -611,7 +611,7 @@ function example_schema() {
 // Use case 2: makes one assignment to array variable; returns variable.
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_schema() {
   $schema = array(
@@ -646,7 +646,7 @@ function example_schema() {
 // Use case 3: makes multiple assignments to array variable; returns variable.
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_schema() {
   $schema['forum'] = array(
@@ -679,7 +679,7 @@ function example_schema() {
 // Database schema (un)installed automatically
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_install() {
 //   backdrop_install_schema('example');
@@ -691,7 +691,7 @@ function example_install() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_uninstall() {
   $result = db_query("SELECT * FROM {example}");
@@ -708,7 +708,7 @@ function example_uninstall() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_schema_ret() {
   // db_add_field() -- Change the next line but leave this alone
@@ -753,7 +753,7 @@ function example_schema_ret() {
 // #db_result (not documented); see #741998
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_db_result() {
   $val = db_query('SELECT nid FROM {node}')->fetchField();
@@ -773,7 +773,7 @@ function example_db_result() {
 // #db_column_exists (not documented)
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_db_column_exists() {
   $ret = db_field_exists('table', 'field');
@@ -782,10 +782,10 @@ function example_db_column_exists() {
   }
 }
 
-// http://backdrop.org/node/224333#db_is_active
+// http://drupal.org/node/224333#db_is_active
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_db_is_active() {
   // db_is_active() -- Change the next line but leave this alone
@@ -807,7 +807,7 @@ function example_db_is_active() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_menu_link_alter(&$item) {
   // Example 1 - make all new admin links hidden (a.k.a disabled).
@@ -816,10 +816,10 @@ function example_menu_link_alter(&$item) {
   }
 }
 
-// http://backdrop.org/node/224333#admin_path_changes
+// http://drupal.org/node/224333#admin_path_changes
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_admin_path_changes() {
   $menu['admin/config/system/statistics'] = array();
@@ -844,12 +844,12 @@ function example_admin_path_changes() {
   $menu['admin/config/search/clean-urls'] = array();
 }
 
-// Where is http://backdrop.org/node/224333#menu-link-hooks?
+// Where is http://drupal.org/node/224333#menu-link-hooks?
 
-// http://backdrop.org/node/224333#menu_tree_data
+// http://drupal.org/node/224333#menu_tree_data
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_menu_tree_data() {
   $sql = "menu_tree_data
@@ -1034,7 +1034,7 @@ function example_block_view($delta) {
 /**
  * Implements hook_block().
  *
- * http://backdrop.org/node/224333#remove_op
+ * http://drupal.org/node/224333#remove_op
  */
 function example_block_OLD($op, $delta, $edit) {
   // TODO Remaining code in this function needs to be moved to the appropriate new hook function.
@@ -1102,14 +1102,14 @@ function example_block_view($delta) {
 /**
  * Implements hook_block().
  *
- * http://backdrop.org/node/224333#block_deltas_renamed
+ * http://drupal.org/node/224333#block_deltas_renamed
  */
 function example_block_OLD($op, $delta = 0, $edit = array()) { }
 
-// http://backdrop.org/node/224333#block_tables_renamed
+// http://drupal.org/node/224333#block_tables_renamed
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_block_db_tables() {
   $result = db_query("SELECT * FROM {block}");
@@ -1117,10 +1117,10 @@ function example_block_db_tables() {
   $result = db_query("SELECT * FROM {block_custom}");
 }
 
-// http://backdrop.org/node/224333#custom_block
+// http://drupal.org/node/224333#custom_block
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_custom_block() {
   block_custom_block_delete($form);
@@ -1139,7 +1139,7 @@ function example_custom_block() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_comment_load() {
   if ($value) {
@@ -1183,7 +1183,7 @@ function example_menu() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_comment_validate() {
   // comment_validate() -- Change the next line but leave this alone
@@ -1194,7 +1194,7 @@ function example_comment_validate() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_comment_node_url() {
   // comment_node_url() -- Change the next line but leave this alone
@@ -1354,7 +1354,7 @@ function example_comment_OLD(&$a1, $op) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_check_markup() {
   // check_markup() -- Change the next line but leave this alone
@@ -1365,7 +1365,7 @@ function example_check_markup() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_set_title() {
   // backdrop_set_title() -- Change the next line but leave this alone
@@ -1473,7 +1473,7 @@ function example_filter_tips_XXX($format, $long = FALSE) { }
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_hook_filter_urls() {
   $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
@@ -1485,7 +1485,7 @@ function example_hook_filter_urls() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_hook_filter_formats_parameters() {
   // filter_formats() -- Change the next line but leave this alone
@@ -1501,10 +1501,10 @@ function example_hook_filter_formats_parameters() {
  * Taxonomy
  */
 
-// http://backdrop.org/files/issues/taxonomy_get_tree-depth.patch
+// http://drupal.org/files/issues/taxonomy_get_tree-depth.patch
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_taxonomy_get_tree() {
   // Do we need to change module_invoke???
@@ -1544,7 +1544,7 @@ function example_taxonomy_get_tree() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_taxonomy_tables() {
   // vocabulary_node_types() -- Change the next line but leave this alone
@@ -1622,7 +1622,7 @@ function example_taxonomy_tables() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_taxonomy_crud() {
   // taxonomy_get_term() -- Change the next line but leave this alone
@@ -1640,10 +1640,10 @@ function example_taxonomy_crud() {
   taxonomy_vocabulary_delete($vid); // taxonomy_vocabulary_delete($vid)
 }
 
-// http://backdrop.org/node/224333#taxonomy_form_all
+// http://drupal.org/node/224333#taxonomy_form_all
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_taxonomy_form_all() {
   $form = array();
@@ -1671,10 +1671,10 @@ function example_taxonomy_form_all() {
   return $form;
 }
 
-// http://backdrop.org/node/224333#no-synonyms-taxonomy
+// http://drupal.org/node/224333#no-synonyms-taxonomy
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_no_synonyms_taxonomy() {
   // TODO The taxonomy synonym functionality has been removed.
@@ -1699,10 +1699,10 @@ function example_no_synonyms_taxonomy() {
  * Javascript
  */
 
-// http://backdrop.org/node/224333#backdrop_add_js_external
+// http://drupal.org/node/224333#backdrop_add_js_external
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_add_js_external() {
   // Single quotes.
@@ -1716,12 +1716,12 @@ function example_backdrop_add_js_external() {
   backdrop_add_js('http://example.com/example.js', array('type' => 'external'));
 }
 
-// http://backdrop.org/node/224333#backdrop_add_js_options
-// http://backdrop.org/node/224333#backdrop_add_js_weight
-// http://backdrop.org/node/224333#backdrop_add_css_weight
+// http://drupal.org/node/224333#backdrop_add_js_options
+// http://drupal.org/node/224333#backdrop_add_js_weight
+// http://drupal.org/node/224333#backdrop_add_css_weight
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_add_js_options() {
   backdrop_add_js('misc/collapse.js');
@@ -1746,10 +1746,10 @@ function example_backdrop_add_js_options() {
   backdrop_add_css('/modules/devel/devel.css', array('type' => 'file', 'weight' => CSS_THEME, 'preprocess' => FALSE));
 }
 
-// http://backdrop.org/node/224333#jquery_ui
+// http://drupal.org/node/224333#jquery_ui
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_jquery_ui() {
   backdrop_add_library('system', 'ui.accordion');
@@ -1766,10 +1766,10 @@ function example_jquery_ui() {
  * CSS
  */
 
-// http://backdrop.org/node/224333#backdrop_add_css_inline
+// http://drupal.org/node/224333#backdrop_add_css_inline
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_add_css_inline() {
   $color = variable_get('backgroundcolor', '#FFFFFF');
@@ -1783,10 +1783,10 @@ function example_backdrop_add_css_inline() {
     ', array('type' => 'inline'));
 }
 
-// http://backdrop.org/node/224333#form_clean_id
+// http://drupal.org/node/224333#form_clean_id
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_form_clean_id() {
   $class = backdrop_clean_css_identifier('string');
@@ -1800,7 +1800,7 @@ function example_form_clean_id() {
  * Theming
  */
 
-// http://backdrop.org/node/224333#theme_changes
+// http://drupal.org/node/224333#theme_changes
 /**
  * Implements hook_theme().
  *
@@ -1921,7 +1921,7 @@ function example_theme() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_theme_changes() {
   // Themes in uninstalled core modules.
@@ -1966,11 +1966,11 @@ function example_theme_changes() {
   theme('example_user_list');
 }
 
-// http://backdrop.org/node/224333#backdrop_render_children
-// http://backdrop.org/node/224333#theme_changes
+// http://drupal.org/node/224333#backdrop_render_children
+// http://drupal.org/node/224333#theme_changes
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_node_list($variables) {
   $items = $variables['items'];
@@ -1985,7 +1985,7 @@ function theme_example_node_list($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_node_search_admin($variables) {
   $form = $variables['form'];
@@ -1993,7 +1993,7 @@ function theme_example_node_search_admin($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_user_list($variables) {
   $users = $variables['users'];
@@ -2002,7 +2002,7 @@ function theme_example_user_list($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_user_list_2($variables) {
   $users1 = $variables['users1'];
@@ -2013,7 +2013,7 @@ function theme_example_user_list_2($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_coder_review_warning_msg($variables) {
   $error = $variables['error'];
@@ -2021,7 +2021,7 @@ function theme_example_coder_review_warning_msg($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_coder_review_table_cols($variables) {
   $form = $variables['form'];
@@ -2029,7 +2029,7 @@ function theme_example_coder_review_table_cols($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_phpapi($variables) {
   $function = $variables['function'];
@@ -2037,37 +2037,37 @@ function theme_example_phpapi($variables) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_missing() { }
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function theme_example_undefined($function = NULL) {
   // TODO: Should this theme example_undefined be declared in hook_theme()?
 }
 
-// http://backdrop.org/node/224333#theme_page
+// http://drupal.org/node/224333#theme_page
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_theme_page() {
   $form = array();
-  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
   // print theme('page', $form);
-  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
   // print theme("page", $form);
-  // TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.
+  // TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.
   // return theme('page', $output);
 }
 
-// http://backdrop.org/node/224333#placeholder
+// http://drupal.org/node/224333#placeholder
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_placeholder() {
   // theme('placeholder') -- Change the next line but leave this alone
@@ -2077,10 +2077,10 @@ function example_placeholder() {
   $placeholder = backdrop_placeholder(array("text" => $format->name));
 }
 
-// http://backdrop.org/node/224333#theme_pager
+// http://drupal.org/node/224333#theme_pager
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_theme_pager() {
   $pager = theme('pager', array('tags' => $tags, 'element' => $element, 'parameters' => $parameters, 'quantity' => $quantity));
@@ -2093,10 +2093,10 @@ function example_theme_pager() {
   $pager = theme('pager');
 }
 
-// http://backdrop.org/node/224333#theme_username
+// http://drupal.org/node/224333#theme_username
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_theme_username() {
   $user = user_load(1);
@@ -2111,7 +2111,7 @@ function example_theme_username() {
 /**
  * Implemenatation of hook_form_alter().
  *
- * http://backdrop.org/node/224333#node_form
+ * http://drupal.org/node/224333#node_form
  */
 function example_form_alter(&$form, &$form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -2132,11 +2132,11 @@ function example_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
-// http://backdrop.org/node/224333#process_functions
-// http://backdrop.org/files/issues/unify-process-callbacks_0.patch
+// http://drupal.org/node/224333#process_functions
+// http://drupal.org/files/issues/unify-process-callbacks_0.patch
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_process_functions() {
   $form['element'] = array(
@@ -2177,10 +2177,10 @@ function example_process_functions() {
   );
 }
 
-// http://backdrop.org/node/224333#backdrop_execute_backdrop_form_submit
+// http://drupal.org/node/224333#backdrop_execute_backdrop_form_submit
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_execute() {
   // backdrop_execute() -- Change the next line but leave this alone
@@ -2193,13 +2193,13 @@ function example_backdrop_execute() {
  * Implements hook_menu().
  *
  * Example for hook_forms_signature.
- * http://backdrop.org/node/224333#hook_forms_signature
+ * http://drupal.org/node/224333#hook_forms_signature
  */
 function example_menu() {
   // Using backdrop_get_form.
   $items['admin/config/development/coder-upgrade'] = array(
     'title' => 'Upgrade',
-    'description' => 'Convert module code from version 6.x to 7.x.',
+    'description' => 'Convert module code from version Drupal 7 to Backdrop.',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('example_conversions_form'),
     'access arguments' => array('administer code conversions'),
@@ -2227,7 +2227,7 @@ function example_menu() {
           // Set other items.
           $items['admin/config/development/coder-upgrade2'] = array(
             'title' => 'Upgrade',
-            'description' => 'Convert module code from version 6.x to 7.x.',
+            'description' => 'Convert module code from version Drupal 7 to Backdrop.',
             'page callback' => 'backdrop_get_form',
             'page arguments' => array('example_conversions_form2'),
             'access arguments' => array('administer code conversions'),
@@ -2276,7 +2276,7 @@ function example_menu() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_conversions_form($form, &$form_state) {
   $form = array();
@@ -2285,7 +2285,7 @@ function example_conversions_form($form, &$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_signup_admin_form(&$form_state) {
   $form = array();
@@ -2294,7 +2294,7 @@ function example_signup_admin_form(&$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_conversions_form2($form, &$form_state) {
   $form = array();
@@ -2303,7 +2303,7 @@ function example_conversions_form2($form, &$form_state) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_admin_form3($form, &$form_state, $p0) {
   $form = array();
@@ -2312,7 +2312,7 @@ function example_admin_form3($form, &$form_state, $p0) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_user_form2(&$form_state, $p0, $p1) {
   $form = array();
@@ -2321,7 +2321,7 @@ function example_user_form2(&$form_state, $p0, $p1) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_get_form() {
   $form = backdrop_get_form('example_my_form', $p0);
@@ -2331,7 +2331,7 @@ function example_backdrop_get_form() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_my_form($form, &$form_state, $p0) {
   $form = array();
@@ -2341,17 +2341,17 @@ function example_my_form($form, &$form_state, $p0) {
 /**
  * Implements hook_element_info().
  *
- * http://backdrop.org/node/224333#hook_element_info
+ * http://drupal.org/node/224333#hook_element_info
  */
 function example_element_info() {
   $type['filter_format'] = array('#input' => TRUE);
   return $type;
 }
 
-// http://backdrop.org/node/224333#fapi_changes
+// http://drupal.org/node/224333#fapi_changes
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_fapi_changes() {
   $form_state['#redirect'] = 'node/1';
@@ -2369,7 +2369,7 @@ function example_fapi_changes() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_file_scan_directory() {
   // Start with l() since we can use this code to get arguments. Easier with parser.
@@ -2408,7 +2408,7 @@ function example_file_scan_directory() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_file_set_status() {
   // file_set_status() -- Change the next line but leave this alone
@@ -2422,10 +2422,10 @@ function example_file_set_status() {
   $file = file_save($file);
 }
 
-// http://backdrop.org/node/224333#remove_~FILE_STATUS_PERMANENT
+// http://drupal.org/node/224333#remove_~FILE_STATUS_PERMANENT
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_remove_file_status_temporary() {
   $file->status = ~FILE_STATUS_PERMANENT;
@@ -2437,7 +2437,7 @@ function example_remove_file_status_temporary() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_system_listing() {
   // backdrop_system_listing() -- Change the next line but leave this alone
@@ -2452,7 +2452,7 @@ function example_backdrop_system_listing() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_file_prepare_directory() {
   file_prepare_directory($full_path, FILE_CREATE_DIRECTORY);
@@ -2480,10 +2480,10 @@ function example_file_prepare_directory() {
  * User API
  */
 
-// http://backdrop.org/node/224333#user_cancel
+// http://drupal.org/node/224333#user_cancel
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_user_cancel($edit, $uid) {
   // user_delete() -- Change the next line but leave this alone
@@ -2672,10 +2672,10 @@ function example_user_OLD($op, &$edit, &$user, $category = NULL) {
   }
 }
 
-// http://backdrop.org/node/224333#user_load_multiple
+// http://drupal.org/node/224333#user_load_multiple
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_user_load_multiple() {
   // user_load() -- Change the next line but leave this alone
@@ -2716,7 +2716,7 @@ function example_user_load_multiple() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_2_user_load_multiple($parameter) {
   // Add comment as we can not easily determine the nature of $parameter.
@@ -2728,7 +2728,7 @@ function example_2_user_load_multiple($parameter) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_user_authenticate() {
   // () -- Change the next line but leave this alone
@@ -2755,10 +2755,10 @@ function example_user_view($account, $view_mode) {
  * Node API
  */
 
-// http://backdrop.org/node/224333#node_load_multiple
+// http://drupal.org/node/224333#node_load_multiple
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_node_load() {
   $node = node_load(1);
@@ -2789,7 +2789,7 @@ function example_node_load() {
   }
 }
 
-// http://backdrop.org/node/224333#node_type_base
+// http://drupal.org/node/224333#node_type_base
 /**
  * Implements hook_node_info().
  *
@@ -2904,7 +2904,7 @@ function default_profile_tasks(&$task, $url) {
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
-  // documentation at: http://api.backdrop.org/api/HEAD/function/hook_node_info.
+  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
       'type' => 'page',
@@ -3030,9 +3030,9 @@ function example_link($type, $node = NULL, $teaser = FALSE) {
  *   Build mode, e.g. 'full', 'teaser'...
  */
 function node_build_content($node, $build_mode = 'full') { }
-// http://backdrop.org/node/224333#node_build_rss
+// http://drupal.org/node/224333#node_build_rss
 // Should there be a $build_mode parameter?
-// See http://api.backdrop.org/api/function/hook_node_view/7
+// See http://api.drupal.org/api/function/hook_node_view/7
 /**
  * An implementation of hook_node_view().
  */
@@ -3293,10 +3293,10 @@ function example_node_type_update($info) {
  */
 function example_node_type_OLD($op, $info) { }
 
-// http://backdrop.org/node/224333#node_invoke_nodeapi
+// http://drupal.org/node/224333#node_invoke_nodeapi
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_node_invoke_nodeapi() {
   module_invoke_all('node_build_alter', $node);
@@ -3322,10 +3322,10 @@ function example_node_invoke_nodeapi() {
   module_invoke_all('node_' . $op, $node, $a3);
 }
 
-// http://backdrop.org/node/224333#node_type_get_functions
+// http://drupal.org/node/224333#node_type_get_functions
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_node_type_get_functions() {
   $types = node_type_get_types();
@@ -3399,7 +3399,7 @@ function example_node_type_get_functions() {
   }
 }
 
-// http://backdrop.org/node/224333#hook_load_signature
+// http://drupal.org/node/224333#hook_load_signature
 /**
  * Implements hook_load().
  *
@@ -3434,7 +3434,7 @@ function example_load($nodes) {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_locale_context() {
   // () -- Change the next line but leave this alone
@@ -3461,7 +3461,7 @@ function example_locale_context() {
 /**
  * Implements hook_example().
  *
- * http://backdrop.org/node/224333#implementation_hook_comment
+ * http://drupal.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3470,7 +3470,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://backdrop.org/node/224333#implementation_hook_comment
+ * http://drupal.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3478,7 +3478,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://backdrop.org/node/224333#implementation_hook_comment
+ * http://drupal.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3487,7 +3487,7 @@ function example_example() {
 /**
  * Implements hook_example().
  *
- * http://backdrop.org/node/224333#implementation_hook_comment
+ * http://drupal.org/node/224333#implementation_hook_comment
  */
 function example_example() {
   // Do something.
@@ -3495,7 +3495,7 @@ function example_example() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_book_toc() {
   $toc = book_toc($bid, 9);
@@ -3512,7 +3512,7 @@ function example_book_toc() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_referer_uri() {
   // referer_uri() -- Change the next line but leave this alone
@@ -3523,7 +3523,7 @@ function example_referer_uri() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_clone() {
   // backdrop_clone() -- Change the next line but leave this alone
@@ -3535,7 +3535,7 @@ function example_backdrop_clone() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_actions_synchronize() {
   actions_synchronize($delete_orphans = FALSE);
@@ -3544,13 +3544,13 @@ function example_actions_synchronize() {
 // TODO Add example for menu_path_is_external().
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_url_is_external() { }
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_valid_path() {
   // Use case 1 - passes variable directly.
@@ -3798,10 +3798,10 @@ function example_trigger_info() {
   return $info;
 }
 
-// http://backdrop.org/node/224333#backdrop-goto-params
+// http://drupal.org/node/224333#backdrop-goto-params
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_backdrop_goto_params() {
   backdrop_goto('/node/1');
@@ -3834,7 +3834,7 @@ function example_backdrop_goto_params() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_date_format() {
   $shortdate = format_date($log->timestamp, 'short');
@@ -3844,7 +3844,7 @@ function example_date_format() {
 
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_url_query_parameter() {
   // Nothing to change.
@@ -3874,10 +3874,10 @@ function example_url_query_parameter() {
   );
 }
 
-// http://backdrop.org/node/224333#watchdog_emerg
+// http://drupal.org/node/224333#watchdog_emerg
 /**
  * @todo Please document this function.
- * @see http://backdrop.org/node/1354
+ * @see http://drupal.org/node/1354
  */
 function example_watchdog_emerg() {
   watchdog('example', 'This is an example emergency message', WATCHDOG_EMERGENCY);

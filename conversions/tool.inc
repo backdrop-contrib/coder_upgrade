@@ -4,11 +4,9 @@
  * Provides tools to assist with conversion routines.
  *
  * These routines use the grammar parser and are version-agnostic with respect
- * to Backdrop. An exception may be coder_upgrade_convert_op() which helps
- * with hook($op) style functions, many (or all?) of which were eliminated in
- * Backdrop 7.x. However, this pattern may remain in contributed modules.
+ * to Backdrop.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
@@ -214,7 +212,7 @@ function coder_upgrade_op_to_hook($node, $case_node, $hook, $parameters) {
    * Example: hook_link() becomes part of hook_node_view()
    * or hook_comment_view() based on $type parameter. Also hook_link_alter()
    * code goes in hook_node_view_alter() or hook_comment_view_alter().
-   * See http://backdrop.org/node/224333#node_links.
+   * See http://drupal.org/node/224333#node_links.
    */
 
   global $_coder_upgrade_module_name;

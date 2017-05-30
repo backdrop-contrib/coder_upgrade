@@ -5,141 +5,137 @@
  *
  * These routines use the grammar parser.
  *
- * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://backdrop.org/node/394070 that are marked with a
- * green check mark in the Upgrade column.
- *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
  * The upgrades to these functions are documented at the following urls.
  *
  * Module Info / Install
- * http://backdrop.org/node/224333#update_sql (OMITS the update hooks part)
+ * http://drupal.org/node/224333#update_sql (OMITS the update hooks part)
  *
  *
  * System
- * http://backdrop.org/node/224333#absolute_includes
- * http://backdrop.org/node/224333#registry
- * http://backdrop.org/node/224333#backdrop_set_session (REVERTED)
- * http://backdrop.org/node/224333#time
- * http://backdrop.org/node/224333#rebuild_functions
- * http://backdrop.org/node/224333#backdrop_uninstall_modules
- * http://backdrop.org/node/224333#module_implements_not_module_list
- * http://backdrop.org/node/224333#backdrop_http_request_parameters
- * http://backdrop.org/node/224333#system_get_module_data
- * http://backdrop.org/node/224333#static_variable_api (NOT IN THIS FUNCTION)
- * http://backdrop.org/node/224333#backdrop_set_html_head
- * http://backdrop.org/node/224333#php_eval
- * http://backdrop.org/node/224333#http_header_functions
- * http://backdrop.org/node/224333#backdrop_set_content
- * http://backdrop.org/node/224333#time_limit
- * http://backdrop.org/node/224333#backdrop_set_header_renamed
- * http://backdrop.org/node/224333#remove-backdrop-urlencode
+ * http://drupal.org/node/224333#absolute_includes
+ * http://drupal.org/node/224333#registry
+ * http://drupal.org/node/224333#backdrop_set_session (REVERTED)
+ * http://drupal.org/node/224333#time
+ * http://drupal.org/node/224333#rebuild_functions
+ * http://drupal.org/node/224333#backdrop_uninstall_modules
+ * http://drupal.org/node/224333#module_implements_not_module_list
+ * http://drupal.org/node/224333#backdrop_http_request_parameters
+ * http://drupal.org/node/224333#system_get_module_data
+ * http://drupal.org/node/224333#static_variable_api (NOT IN THIS FUNCTION)
+ * http://drupal.org/node/224333#backdrop_set_html_head
+ * http://drupal.org/node/224333#php_eval
+ * http://drupal.org/node/224333#http_header_functions
+ * http://drupal.org/node/224333#backdrop_set_content
+ * http://drupal.org/node/224333#time_limit
+ * http://drupal.org/node/224333#backdrop_set_header_renamed
+ * http://drupal.org/node/224333#remove-backdrop-urlencode
  *
  *
  * Database
- * http://backdrop.org/node/224333#schema_ret
+ * http://drupal.org/node/224333#schema_ret
  * #db_result (not documented)
- * http://backdrop.org/node/224333#db_is_active
+ * http://drupal.org/node/224333#db_is_active
  *
  *
  * Menu
- * http://backdrop.org/node/224333#comment_load (DUP Comments)
- * http://backdrop.org/node/224333#admin_path_changes
- * http://backdrop.org/node/224333#menu_tree_data
+ * http://drupal.org/node/224333#comment_load (DUP Comments)
+ * http://drupal.org/node/224333#admin_path_changes
+ * http://drupal.org/node/224333#menu_tree_data
  *
  *
  * Blocks
- * http://backdrop.org/node/224333#custom_block
+ * http://drupal.org/node/224333#custom_block
  *
  *
  * Comments
- * http://backdrop.org/node/224333#comment_load
- * http://backdrop.org/node/224333#comment_validate_removed
- * http://backdrop.org/node/224333#comment_node_url
+ * http://drupal.org/node/224333#comment_load
+ * http://drupal.org/node/224333#comment_validate_removed
+ * http://drupal.org/node/224333#comment_node_url
  *
  *
  * Input Sanitization and Input Formats
- * http://backdrop.org/node/224333#check_markup_params
- * http://backdrop.org/node/224333#backdrop_set_title
- * http://backdrop.org/node/224333#hook_filter_info (NOT IN THIS FUNCTION)
- * http://backdrop.org/node/224333#filter_formats_parameters
+ * http://drupal.org/node/224333#check_markup_params
+ * http://drupal.org/node/224333#backdrop_set_title
+ * http://drupal.org/node/224333#hook_filter_info (NOT IN THIS FUNCTION)
+ * http://drupal.org/node/224333#filter_formats_parameters
  *
  *
  * Taxonomy
- * http://backdrop.org/node/224333#taxonomy_get_tree
- * http://backdrop.org/node/224333#taxonomy_crud
- * http://backdrop.org/node/224333#taxonomy_form_all
- * http://backdrop.org/node/224333#no-synonyms-taxonomy
+ * http://drupal.org/node/224333#taxonomy_get_tree
+ * http://drupal.org/node/224333#taxonomy_crud
+ * http://drupal.org/node/224333#taxonomy_form_all
+ * http://drupal.org/node/224333#no-synonyms-taxonomy
  *
  *
  * Javascript
- * http://backdrop.org/node/224333#backdrop_add_js_options
- * http://backdrop.org/node/224333#backdrop_add_js_weight (Included with above)
- * http://backdrop.org/node/224333#backdrop_add_js_external
- * http://backdrop.org/node/224333#jquery_ui
- * http://backdrop.org/node/224333#rename-backdrop-to-js
+ * http://drupal.org/node/224333#backdrop_add_js_options
+ * http://drupal.org/node/224333#backdrop_add_js_weight (Included with above)
+ * http://drupal.org/node/224333#backdrop_add_js_external
+ * http://drupal.org/node/224333#jquery_ui
+ * http://drupal.org/node/224333#rename-backdrop-to-js
  *
  *
  * CSS
- * http://backdrop.org/node/224333#backdrop_add_js_options (DUP Javascript)
- * http://backdrop.org/node/224333#backdrop_add_css_inline
- * http://backdrop.org/node/224333#backdrop_add_css_weight (Should have a DUP in Javascript)
- * http://backdrop.org/node/224333#form_clean_id
+ * http://drupal.org/node/224333#backdrop_add_js_options (DUP Javascript)
+ * http://drupal.org/node/224333#backdrop_add_css_inline
+ * http://drupal.org/node/224333#backdrop_add_css_weight (Should have a DUP in Javascript)
+ * http://drupal.org/node/224333#form_clean_id
  *
  *
  * Theming
- * http://backdrop.org/node/224333#rebuild_functions (DUP System)
- * http://backdrop.org/node/224333#theme_page
- * http://backdrop.org/node/224333#theme_changes
- * http://backdrop.org/node/224333#placeholder
- * http://backdrop.org/node/224333#theme_pager
- * http://backdrop.org/node/224333#theme_username
+ * http://drupal.org/node/224333#rebuild_functions (DUP System)
+ * http://drupal.org/node/224333#theme_page
+ * http://drupal.org/node/224333#theme_changes
+ * http://drupal.org/node/224333#placeholder
+ * http://drupal.org/node/224333#theme_pager
+ * http://drupal.org/node/224333#theme_username
  *
  *
  * Form API
- * http://backdrop.org/node/224333#backdrop_execute_backdrop_form_submit
- * http://backdrop.org/node/224333#hook_forms_signature
+ * http://drupal.org/node/224333#backdrop_execute_backdrop_form_submit
+ * http://drupal.org/node/224333#hook_forms_signature
  *
  *
  * File API
- * http://backdrop.org/node/224333#file_scan_directory_array_itize
- * http://backdrop.org/node/224333#file_scan_directory_nomask
- * http://backdrop.org/node/224333#file_set_status
- * http://backdrop.org/node/224333#preg_match
- * http://backdrop.org/node/224333#file_scan_directory_property_names
- * http://backdrop.org/node/224333#file_prepare_directory
+ * http://drupal.org/node/224333#file_scan_directory_array_itize
+ * http://drupal.org/node/224333#file_scan_directory_nomask
+ * http://drupal.org/node/224333#file_set_status
+ * http://drupal.org/node/224333#preg_match
+ * http://drupal.org/node/224333#file_scan_directory_property_names
+ * http://drupal.org/node/224333#file_prepare_directory
  *
  *
  * User API
- * http://backdrop.org/node/224333#user_cancel (ALSO in convert_functions)
- * http://backdrop.org/node/224333#user_load_multiple
- * http://backdrop.org/node/224333#user_authenticate
+ * http://drupal.org/node/224333#user_cancel (ALSO in convert_functions)
+ * http://drupal.org/node/224333#user_load_multiple
+ * http://drupal.org/node/224333#user_authenticate
  *
  *
  * Node API
- * http://backdrop.org/node/224333#node_load_multiple
- * http://backdrop.org/node/224333#node_type_base (ALSO in convert_functions)
- * http://backdrop.org/node/224333#node_invoke_nodeapi
- * http://backdrop.org/node/224333#node_type_get_functions
+ * http://drupal.org/node/224333#node_load_multiple
+ * http://drupal.org/node/224333#node_type_base (ALSO in convert_functions)
+ * http://drupal.org/node/224333#node_invoke_nodeapi
+ * http://drupal.org/node/224333#node_type_get_functions
  *
  *
  * Multi-lingual
- * http://backdrop.org/node/224333#locale_context
+ * http://drupal.org/node/224333#locale_context
  *
  *
  * Miscellaneous
- * http://backdrop.org/node/224333#book_toc_parameters
- * http://backdrop.org/node/224333#referer_uri
- * http://backdrop.org/node/224333#backdrop_clone
- * http://backdrop.org/node/224333#actions_synchronize
- * http://backdrop.org/node/224333#url_is_external
- * http://backdrop.org/node/224333#backdrop_valid_path
- * http://backdrop.org/node/224333#backdrop_goto_params
- * http://backdrop.org/node/224333#format_date
- * http://backdrop.org/node/224333#url_query_parameter
+ * http://drupal.org/node/224333#book_toc_parameters
+ * http://drupal.org/node/224333#referer_uri
+ * http://drupal.org/node/224333#backdrop_clone
+ * http://drupal.org/node/224333#actions_synchronize
+ * http://drupal.org/node/224333#url_is_external
+ * http://drupal.org/node/224333#backdrop_valid_path
+ * http://drupal.org/node/224333#backdrop_goto_params
+ * http://drupal.org/node/224333#format_date
+ * http://drupal.org/node/224333#url_query_parameter
  */
 
 /**
@@ -156,7 +152,7 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
 //  $name = &$item->name;
 
   switch ($name) {
-    // http://backdrop.org/node/224333#custom_block
+    // http://drupal.org/node/224333#custom_block
     // All 'box' functions renamed to 'custom_block'.
     case 'block_box_delete':
     case 'block_box_delete_submit':
@@ -202,7 +198,7 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
 
       /*
        * TODO
-       * See http://backdrop.org/node/224333#update_sql
+       * See http://drupal.org/node/224333#update_sql
        * Search for assignments to and return statements with the $ret parameter
        * used in these db_operation function calls.
        *
@@ -211,7 +207,7 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
        */
       break;
 
-    // http://backdrop.org/node/224333#admin_path_changes
+    // http://drupal.org/node/224333#admin_path_changes
     // logout path changed to user/logout.
     case 'backdrop_goto':
     case 'url':
@@ -230,7 +226,7 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
       break;
 
     case 'backdrop_urlencode':
-      // http://backdrop.org/node/224333#remove-backdrop-urlencode
+      // http://drupal.org/node/224333#remove-backdrop-urlencode
       $item->name['value'] = 'backdrop_encode_path';
       break;
 
@@ -239,11 +235,11 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
     case 'include':
     case 'include_once':
       // These are included by $reader in function call list.
-      // Use with http://backdrop.org/node/224333#absolute_includes
+      // Use with http://drupal.org/node/224333#absolute_includes
       coder_upgrade_convert_require($item, $reader);
       break;
 
-    // http://backdrop.org/node/224333#no-synonyms-taxonomy
+    // http://drupal.org/node/224333#no-synonyms-taxonomy
     // Taxonomy synonyms have been removed.
     case 'taxonomy_get_synonyms':
     case 'taxonomy_get_synonym_root':
@@ -384,7 +380,7 @@ function coder_upgrade_upgrade_call_db_add_field_alter(&$item, &$reader) { // NE
 
   /*
    * TODO
-   * See http://backdrop.org/node/224333#update_sql
+   * See http://drupal.org/node/224333#update_sql
    * Search for assignments to and return statements with the $ret parameter
    * used in these db_operation function calls.
    *
@@ -884,7 +880,7 @@ function coder_upgrade_upgrade_call_backdrop_get_form_alter(&$node, &$reader) { 
 
   // Process function call.
   $name = &$item->name;
-  // http://backdrop.org/node/224333#hook_forms_signature
+  // http://drupal.org/node/224333#hook_forms_signature
   /*
    * This needs to be approached from multiple angles.
    *
@@ -976,7 +972,7 @@ function coder_upgrade_upgrade_call_backdrop_get_headers_alter(&$node, &$reader)
   // Process function call.
   $name = &$item->name;
 //  $name['value'] = 'backdrop_get_header'; // Overwritten by following change.
-  // http://backdrop.org/node/224333#backdrop_set_header_renamed
+  // http://drupal.org/node/224333#backdrop_set_header_renamed
   $name['value'] = 'backdrop_get_http_header';
 }
 
@@ -1189,7 +1185,7 @@ function coder_upgrade_upgrade_call_backdrop_set_header_alter(&$node, &$reader) 
 
   // Process function call.
   $name = &$item->name;
-  // http://backdrop.org/node/224333#backdrop_set_header_renamed
+  // http://drupal.org/node/224333#backdrop_set_header_renamed
   $name['value'] = 'backdrop_add_http_header';
 
   if (!$item->parameterCount()) {
@@ -1281,7 +1277,7 @@ function coder_upgrade_upgrade_call_backdrop_set_html_head_alter(&$node, &$reade
 
   $count = $item->parameters->count();
   if ($count == 1) {
-    // http://backdrop.org/node/224333#backdrop_add_css_inline
+    // http://drupal.org/node/224333#backdrop_add_css_inline
     // Inline css can be now added via backdrop_add_css
     $p0 = $item->printParameter();
     if (preg_match('#^([\'"])\s*<style type=[\'"]text/css[\'"]>(.*)</style>#si', $p0, $matches)) {
@@ -1289,7 +1285,7 @@ function coder_upgrade_upgrade_call_backdrop_set_html_head_alter(&$node, &$reade
       $editor->setParameters($item, array($matches[1] . $matches[2] . $matches[1], "array('type' => 'inline')"));
       return;
     }
-    // http://backdrop.org/node/224333#backdrop_add_js_external
+    // http://drupal.org/node/224333#backdrop_add_js_external
     // External JavaScript files can be now added via backdrop_add_js
     if (preg_match('#^[\'"]<script.*src=[\'"](.*?)[\'"]#i', $p0, $matches)) {
       $name['value'] = 'backdrop_add_js';
@@ -1400,7 +1396,7 @@ function coder_upgrade_upgrade_call_file_check_directory_alter(&$node, &$reader)
   // Get the function call object.
   $item = &$node->data;
 
-  // http://backdrop.org/node/224333#file_prepare_directory
+  // http://drupal.org/node/224333#file_prepare_directory
   $name = &$item->name;
   $name['value'] = 'file_prepare_directory';
 }
@@ -1432,7 +1428,7 @@ function coder_upgrade_upgrade_call_file_scan_directory_alter(&$node, &$reader) 
 
   if ($item->parameters->count() > 1) {
     // Change mask from ereg to preg style.
-    // Part of http://backdrop.org/node/224333#preg_match
+    // Part of http://drupal.org/node/224333#preg_match
     $mask = $item->getParameter(1);
     $operand = $mask->getElement();
     if (is_array($operand) && $operand['type'] == T_CONSTANT_ENCAPSED_STRING) {
@@ -1466,7 +1462,7 @@ function coder_upgrade_upgrade_call_file_scan_directory_alter(&$node, &$reader) 
 
   if ($item->parameters->count() > 2) {
     // Change nomask from array to preg style.
-    // http://backdrop.org/node/224333#file_scan_directory_nomask
+    // http://drupal.org/node/224333#file_scan_directory_nomask
     $nomask = $item->getParameter(2);
     $operand = $nomask->getElement();
     if ($operand instanceof PGPArray) {
@@ -1500,7 +1496,7 @@ function coder_upgrade_upgrade_call_file_scan_directory_alter(&$node, &$reader) 
 
   if ($item->parameters->count() > 5) {
     // Change key values.
-    // http://backdrop.org/node/224333#file_scan_directory_property_names
+    // http://drupal.org/node/224333#file_scan_directory_property_names
     $operand = $item->getParameter(5)->getElement();
     if (is_array($operand) && $operand['type'] == T_CONSTANT_ENCAPSED_STRING) {
       // Parameter is a string.
@@ -1518,7 +1514,7 @@ function coder_upgrade_upgrade_call_file_scan_directory_alter(&$node, &$reader) 
     // TODO Add a comment if unable to make the change. This applies to all routines!!!
   }
 
-  // http://backdrop.org/node/224333#file_scan_directory_array_itize
+  // http://drupal.org/node/224333#file_scan_directory_array_itize
   // Arrayitize the parameters.
   $keys = array('nomask', 'callback', 'recurse', 'key', 'min_depth');
   $defaults = array(/*"array('.', '..', 'CVS')"*/ "'/(\.\.?|CVS)$/'", '0', 'TRUE', /*"'filename'"*/ "'uri'", 0);
@@ -1534,7 +1530,7 @@ function coder_upgrade_upgrade_call_file_scan_directory_alter(&$node, &$reader) 
   }
 
   // TODO Could regex for '->filename' and change to '->filepath'???
-  // See http://backdrop.org/files/issues/file_scan_directory-1.patch
+  // See http://drupal.org/files/issues/file_scan_directory-1.patch
 }
 
 /**
@@ -1750,7 +1746,7 @@ function coder_upgrade_upgrade_call_form_clean_id_alter(&$node, &$reader) {
   // Get the function call object.
   $item = &$node->data;
 
-  // http://backdrop.org/node/224333#form_clean_id
+  // http://drupal.org/node/224333#form_clean_id
   $name = &$item->name;
   $name['value'] = 'backdrop_clean_css_identifier';
 }
@@ -1789,7 +1785,7 @@ function coder_upgrade_upgrade_call_jquery_ui_add_alter(&$node, &$reader) {
   // Get the function call object.
   $item = &$node->data;
 
-  // http://backdrop.org/node/224333#jquery_ui
+  // http://drupal.org/node/224333#jquery_ui
   // jquery_ui_add is now backdrop_add_library which loads a single library.
   $name = &$item->name;
   $name['value'] = 'backdrop_add_library';
@@ -1927,7 +1923,7 @@ function coder_upgrade_upgrade_call_module_invoke_alter(&$node, &$reader) { // D
 
   // Process function call.
   $name = &$item->name;
-  // http://backdrop.org/node/224333#taxonomy_get_tree
+  // http://drupal.org/node/224333#taxonomy_get_tree
   $depth = '$max_depth = NULL /* TODO Set this variable. */';
   $count = $item->parameters->count();
   // Confirm this call relates to our topic.
@@ -2191,7 +2187,7 @@ function coder_upgrade_upgrade_call__node_type_set_defaults_alter(&$node, &$read
 
   // Process function call.
   $name = &$item->name;
-  // http://backdrop.org/node/224333#node_type_base
+  // http://drupal.org/node/224333#node_type_base
   $name['value'] = 'node_type_set_defaults';
 }
 
@@ -2220,7 +2216,7 @@ function coder_upgrade_convert_require(&$item, &$reader) { // DONE
   $editor = PGPEditor::getInstance();
 
   // These language elements are included by $reader in function call list.
-  // Use with http://backdrop.org/node/224333#absolute_includes
+  // Use with http://drupal.org/node/224333#absolute_includes
 
   // Eliminate parentheses (if any).
   $item->noparens = 1;
@@ -2475,9 +2471,9 @@ function coder_upgrade_upgrade_call_theme_alter(&$node, &$reader) { // DONE
       $editor->insertParameter($item, $index + 1, "''");
     }
   }
-  // http://backdrop.org/node/224333#theme_page
+  // http://drupal.org/node/224333#theme_page
   if ($theme == 'page') { // DONE
-    $item->insertStatementBefore($editor->commentToStatement('// TODO Please change this theme call as discussed at http://backdrop.org/node/224333#theme_page.'));
+    $item->insertStatementBefore($editor->commentToStatement('// TODO Please change this theme call as discussed at http://drupal.org/node/224333#theme_page.'));
     // Get the statement (i.e. node) this function call is part of.
     $parent = &$item->parent;
     // Comment out the statement.
@@ -2485,19 +2481,19 @@ function coder_upgrade_upgrade_call_theme_alter(&$node, &$reader) { // DONE
     $parent->data = $editor->textToStatements('// ' . $text)->getElement();
     return;
   }
-  // http://backdrop.org/node/224333##theme_pager
+  // http://drupal.org/node/224333##theme_pager
   // Limit parameter has been removed.
   if ($theme == 'pager') { // DONE
     $item->deleteParameter(2); // Does nothing if no third parameter.
   }
-  // http://backdrop.org/node/224333#placeholder
+  // http://drupal.org/node/224333#placeholder
   // theme('placeholder') has been replaced by backdrop_placeholder().
   if ($theme == 'placeholder') { // DONE
     $item->deleteParameter();
     $name['value'] = 'backdrop_placeholder';
     return;
   }
-  // http://backdrop.org/node/224333#theme_username
+  // http://drupal.org/node/224333#theme_username
   // theme('username') parameters have changed.
   // Note: this is automatically handled below.
 //  if ($theme == 'username') { // DONE
@@ -2508,7 +2504,7 @@ function coder_upgrade_upgrade_call_theme_alter(&$node, &$reader) { // DONE
 //  }
 
   /*
-   * http://backdrop.org/node/224333#theme_changes
+   * http://drupal.org/node/224333#theme_changes
    *
    * In module pre-processing, create a global variable to hold the array of
    * theme registrations for all core files (including disabled modules). Add
@@ -2518,7 +2514,7 @@ function coder_upgrade_upgrade_call_theme_alter(&$node, &$reader) { // DONE
    *
    * See backdrop_common_theme() in common.inc and hook_theme in the core modules.
    *
-   * See http://backdrop.org/files/issues/theme-wip-572618-83.patch
+   * See http://drupal.org/files/issues/theme-wip-572618-83.patch
    */
 
   $theme = trim($item->printParameter(0), "'\"");

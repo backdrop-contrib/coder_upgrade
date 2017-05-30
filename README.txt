@@ -10,7 +10,7 @@ CONTENTS OF THIS FILE
 
 AUTHOR
 ------
-Jim Berry ("solotandem", http://backdrop.org/user/240748)
+Jim Berry ("solotandem", http://drupal.org/user/240748)
 
 DESCRIPTION
 -----------
@@ -29,7 +29,7 @@ enable other contributed modules relying on that API to upgrade their code.
 INSTALLATION
 ------------
 To use this module, install it in a modules directory. See
-http://backdrop.org/node/895232 for further information.
+http://drupal.org/node/895232 for further information.
 
 The included Drush Make file provides a convenient method of downloading and
 installing the correct version of the Grammar Parser Library (>=1) dependency.

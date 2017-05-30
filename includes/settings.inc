@@ -3,7 +3,7 @@
  * @file
  * Provides module conversion settings form.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
@@ -50,7 +50,7 @@ function coder_upgrade_general_build() {
     '#title' => t('Module base directory'),
     '#required' => TRUE,
     '#default_value' => $config->get('coder_upgrade_dir'),
-    '#description' => t('Directory beneath the file system path (@path) in which are housed the old, new and patch directories. Default is @default. In the old directory, place the 6.x module code to be upgraded. The upgraded code is saved to the new directory and patch files are written to the patch directory.', array('@path' => $path, '@default' => DEADWOOD_DIR)),
+    '#description' => t('Directory beneath the file system path (@path) in which are housed the old, new and patch directories. Default is @default. In the old directory, place the Drupal module code to be upgraded. The upgraded code is saved to the new directory and patch files are written to the patch directory.', array('@path' => $path, '@default' => DEADWOOD_DIR)),
     '#size' => 30,
     '#maxlength' => 255,
     '#validate' => array('coder_upgrade_validate_dir'),

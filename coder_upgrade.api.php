@@ -3,7 +3,7 @@
  * @file
  * Documents hooks provided by this module.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
@@ -25,7 +25,7 @@
  * @code
  *   function your_module_name_upgrade_info() {
  *     $upgrade = array(
- *       'title' => t('Your module API changes from 6.x to 7.x'),
+ *       'title' => t('Your module API changes from Drupal 7 to Backdrop'),
  *       'link' => 'http://...',
  *     );
  *     return array('your_module_name' => $upgrade);
@@ -44,7 +44,7 @@
  */
 function hook_upgrade_info() {
   $upgrade = array(
-    'title' => t('Your module API changes from 6.x to 7.x'),
+    'title' => t('Your module API changes from Drupal 7 to Backdrop'),
     'link' => 'http://...',
     'module' => 'your_module_name',
     'files' => array(
@@ -444,7 +444,7 @@ function hook_upgrade_regex_install_alter(&$file) {
  */
 function your_module_name_upgrade_info() {
   $upgrade = array(
-    'title' => t('Your module API changes from 6.x to 7.x'),
+    'title' => t('Your module API changes from Drupal 7 to Backdrop'),
     'link' => 'http://...',
     'files' => array(
       'upgrades/your_module_name.upgrade',

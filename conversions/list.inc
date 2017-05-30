@@ -4,10 +4,10 @@
  * Provides list of conversion routines.
  *
  * The functions in these conversion routine files correspond to the topics in
- * the category roadmap at http://backdrop.org/node/394070 that are marked with
+ * the category roadmap at http://drupal.org/node/394070 that are marked with
  * a green check mark in the Upgrade column.
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
@@ -27,14 +27,14 @@ function _coder_upgrade_upgrades() {
  */
 function coder_upgrade_upgrade_info() {
   $format = array(
-    'title' => t('Coding standards for 6.x and 7.x (parse and rewrite code files using the Grammar Parser) (it is recommended to run this routine before applying core API change routines so that the patch files accurately reflect the routines applied)'),
-    'link' => 'http://backdrop.org/coding-standards',
+    'title' => t('Coding standards for Backdrop (parse and rewrite code files using the Grammar Parser) (it is recommended to run this routine before applying core API change routines so that the patch files accurately reflect the routines applied)'),
+    'link' => 'https://api.backdropcms.org/coding-standards',
     'module' => 'grammar_parser',
     'files' => array(),
   );
   $upgrade = array(
-    'title' => t('Core API changes from 6.x to 7.x (also includes coding standards changes from rewrite of code files using the Grammar Parser)'),
-    'link' => 'http://backdrop.org/node/394070',
+    'title' => t('Core API changes from Drupal 7 to Backdrop (also includes coding standards changes from rewrite of code files using the Grammar Parser)'),
+    'link' => 'https://api.backdropcms.org/change-records',
     'module' => 'coder_upgrade',
     'files' => array(
       'conversions/begin.inc',

@@ -48,7 +48,7 @@
  *  -- file=sites/[files_directory]/files/coder_upgrade/runtime.txt \
  *  > sites/[files_directory]/files/coder_upgrade/coder_upgrade.run.txt 2>&1
  *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 if (!script_is_cli()) {

@@ -5,19 +5,15 @@
  *
  * These routines use the grammar parser.
  *
- * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://backdrop.org/node/394070 that are marked with a
- * green check mark in the Upgrade column.
- *
- * Copyright 2009-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
  * The upgrades to these functions are documented at the following urls.
  *
  * Database
- * http://backdrop.org/node/224333#dbtng (NOT FINISHED)
- * http://backdrop.org/node/224333#db_rewrite_sql (NOT FINISHED)
+ * http://drupal.org/node/224333#dbtng (NOT FINISHED)
+ * http://drupal.org/node/224333#db_rewrite_sql (NOT FINISHED)
  */
 
 /**
@@ -73,7 +69,7 @@ function coder_upgrade_upgrade_call_db_query_range_alter(&$node, &$reader) { // 
   }
 
   // Add finishing touches to new query syntax for a range query.
-  // See http://backdrop.org/node/310075.
+  // See http://drupal.org/node/310075.
   // ->range($from, $count)
 }
 
@@ -81,7 +77,7 @@ function coder_upgrade_upgrade_call_db_query_range_alter(&$node, &$reader) { // 
  * Implements hook_upgrade_call_db_rewrite_sql_alter().
  *
  * @todo db_rewrite_sql() replaced with hook_query_alter()
- * @see http://backdrop.org/node/224333#db_rewrite_sql
+ * @see http://drupal.org/node/224333#db_rewrite_sql
  */
 function coder_upgrade_upgrade_call_db_rewrite_sql_alter(&$node, &$reader) {
   // TODO This is not ready as the call to arrayitize() on a SELECT will

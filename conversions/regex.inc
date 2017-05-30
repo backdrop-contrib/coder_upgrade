@@ -4,52 +4,48 @@
  * Miscellaneous conversion routine file for the coder_upgrade module.
  * These routines upgrade text using simple regular expressions.
  *
- * The functions in this conversion routine file correspond to topics in the
- * category roadmap at http://backdrop.org/node/394070 that are marked with a
- * green check mark in the Upgrade column.
- *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
  * The upgrades to these items are documented at the following urls.
  *
  * System
- * http://backdrop.org/node/224333#moved_statistics_settings
+ * http://drupal.org/node/224333#moved_statistics_settings
  *
  *
  * Permissions and Access
- * http://backdrop.org/node/224333#moved_statistics_settings (DUP System)
- * http://backdrop.org/node/224333#php_permissions
+ * http://drupal.org/node/224333#moved_statistics_settings (DUP System)
+ * http://drupal.org/node/224333#php_permissions
  *
  *
  * Menu
- * http://backdrop.org/node/224333#admin_path_changes
+ * http://drupal.org/node/224333#admin_path_changes
  *
  *
  * Blocks
- * http://backdrop.org/node/224333#block_tables_renamed
- * http://backdrop.org/node/224333#custom_block
+ * http://drupal.org/node/224333#block_tables_renamed
+ * http://drupal.org/node/224333#custom_block
  *
  *
  * Input Sanitization and Input Formats
- * http://backdrop.org/node/224333#filter_urls
+ * http://drupal.org/node/224333#filter_urls
  *
  *
  * Taxonomy
- * http://backdrop.org/node/224333#taxonomy_tables
+ * http://drupal.org/node/224333#taxonomy_tables
  *
  *
  * Form API
- * http://backdrop.org/node/224333#fapi_changes
+ * http://drupal.org/node/224333#fapi_changes
  *
  *
  * File API
- * http://backdrop.org/node/224333#remove_FILE_STATUS_TEMPORARY
+ * http://drupal.org/node/224333#remove_FILE_STATUS_TEMPORARY
  *
  *
  * Miscellaneous
- * http://backdrop.org/node/224333#watchdog_emerg
+ * http://drupal.org/node/224333#watchdog_emerg
  *
  * @param string $file
  *   The text of the file to convert.
@@ -98,8 +94,8 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
 /**
  * Upgrades admin paths.
  *
- * http://backdrop.org/node/224333#admin_path_changes
- * http://backdrop.org/node/224333#clean_urls_search_paths
+ * http://drupal.org/node/224333#admin_path_changes
+ * http://drupal.org/node/224333#clean_urls_search_paths
  */
 function coder_upgrade_upgrade_admin_path_changes(&$from, &$to) {
   $path_conversions = array(
@@ -143,7 +139,7 @@ function coder_upgrade_upgrade_database_tables(&$from, &$to) {
     $to[] = '{' . $new_table . '}';
   }
 
-  // http://backdrop.org/node/224333#taxonomy_tables
+  // http://drupal.org/node/224333#taxonomy_tables
   // This expression format is more compact than above.
   $from[] = '@({|\'|")(term_data|term_hierarchy|term_node|term_relation|term_synonym|vocabulary)(}|\'|")@';
   $to[] = "$1taxonomy_$2$3";
@@ -157,7 +153,7 @@ function coder_upgrade_upgrade_database_tables(&$from, &$to) {
  * Alters the text of a code file using regular expressions.
  *
  * Module Info / Install
- * http://backdrop.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
+ * http://drupal.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
  *
  * @param string $file
  *   The text of the file to convert.

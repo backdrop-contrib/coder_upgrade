@@ -3,7 +3,7 @@
  * @file
  * Provides constants and utility functions.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /**
@@ -148,7 +148,7 @@ function coder_upgrade_path($type = '') {
  * Returns the local public directory path.
  *
  * Adapted from function removed from core on 2010-09-01
- * (see http://backdrop.org/cvs?commit=415020).
+ * (see http://drupal.org/cvs?commit=415020).
  *
  * @return string
  *   A string containing the directory path of a stream. FALSE is returned if

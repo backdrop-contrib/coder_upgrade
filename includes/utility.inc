@@ -3,7 +3,7 @@
  * @file
  * Provides constants and utility functions used during the conversion process.
  *
- * Copyright 2008-11 by Jim Berry ("solotandem", http://backdrop.org/user/240748)
+ * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
 /*
