@@ -223,10 +223,6 @@ function coder_upgrade_convert_dir($upgrades, $extensions, $item, $recursive = T
         continue;
       }
       $new_filename = $filename;
-      // Handle D6 conversion item #79.
-      if ($filename == 'po') {
-        $new_filename = 'translations';
-      }
       if ($recursive) {
         // TODO Fix this!!!
         $new_item = array(
