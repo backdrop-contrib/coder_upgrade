@@ -168,37 +168,3 @@ function file_stream_path($scheme = 'public') {
     return FALSE;
   }
 }
-
-/**
- * Checks for proper installation of required modules and library.
- *
- * @todo Remove this once everyone gets used to the library concept.
- * @deprecated No longer used.
- *
- * @return boolean
- *   TRUE if required modules and library are installed; FALSE otherwise.
- */
-function coder_upgrade_library_checks() {
-  $modules = system_list('module_enabled');
-  $messages = array();
-  if (isset($modules['grammar_parser'])) {
-    $messages[] = 'Grammar Parser should NOT be installed and enabled as a module.';
-    $messages[] = 'Grammar Parser should be installed as a library using a 2.x release of Libraries API module.';
-  }
-  if (isset($modules['libraries'])) {
-    if (!isset($modules['libraries']->info['version']) || substr($modules['libraries']->info['version'], 0, 6) != '7.x-2.') {
-      $messages[] = 'Coder Upgrade requires a 7.x-2.x release of the Libraries API module.';
-    }
-    if (function_exists('libraries_get_path') && libraries_get_path('grammar_parser') === FALSE) {
-      $messages[] = 'Grammar Parser should be installed as a library using a 2.x release of Libraries API module.';
-    }
-  }
-  else {
-    $messages[] = 'Coder Upgrade requires a 7.x-2.x release of the Libraries API module.';
-    $messages[] = 'Grammar Parser should be installed as a library using a 2.x release of Libraries API module.';
-  }
-  foreach ($messages as $message) {
-    backdrop_set_message(t($message), 'error');
-  }
-  return empty($messages);
-}
