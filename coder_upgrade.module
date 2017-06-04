@@ -100,7 +100,7 @@ function coder_upgrade_autoload_info() {
  * Implements hook_upgrade_upgrade_file_alter().
  */
 function coder_upgrade_upgrade_file_alter(&$reader) {
-  global $_coder_upgrade_module_name;
+  global $_coder_upgrade_module_name, $_coder_upgrade_filename;
   cdp("inside " . __FUNCTION__);
   $nodes = &$reader->getFunctions();
   $config_function_exists = FALSE;
@@ -117,7 +117,7 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
           break;
         }
       }
-      if ($build_config_function) {
+      if ($build_config_function && (strpos($_coder_upgrade_filename, '.module') !== FALSE)) {
         $function = $_coder_upgrade_module_name . "_config_info";
         if (!$config_function_exists) {
           coder_upgrade_build_config_function($node, $reader);
