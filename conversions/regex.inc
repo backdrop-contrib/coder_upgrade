@@ -71,8 +71,8 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = "BACKDROP";
 
   // rename Drupal links.
-  $from[] = "mothershiporg";
-  $to[] = "/drupal\.org/";
+  $from[] = "/mothershiporg/";
+  $to[] = "drupal.org";
 
   coder_upgrade_do_conversions($from, $to, $new);
   coder_upgrade_save_changes($cur, $new, $file, $hook);

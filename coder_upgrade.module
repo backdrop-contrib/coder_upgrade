@@ -103,6 +103,8 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
   global $_coder_upgrade_module_name;
   cdp("inside " . __FUNCTION__);
   $nodes = &$reader->getFunctions();
+  $config_function_exists = FALSE;
+
   foreach ($nodes as &$node) {
     $item = &$node->data;
     $body = &$item->body;
@@ -117,8 +119,9 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
       }
       if ($build_config_function) {
         $function = $_coder_upgrade_module_name . "_config_info";
-        if (!function_exists($function)) {
+        if (!$config_function_exists) {
           coder_upgrade_build_config_function($node, $reader);
+          $config_function_exists = TRUE;
         }
       }
       if (count($calls) > 1) {
