@@ -53,6 +53,27 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/format_username/";
   $to[] = "user_format_name";
 
+  // temporarily rename Drupal links so the other regexes dont create false 
+  // links.
+  $from[] = "/drupal\.org/";
+  $to[] = "mothershiporg";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/drupal/";
+  $to[] = "backdrop";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/Drupal/";
+  $to[] = "Backdrop";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/DRUPAL/";
+  $to[] = "BACKDROP";
+
+  // rename Drupal links.
+  $from[] = "mothershiporg";
+  $to[] = "/drupal\.org/";
+
   coder_upgrade_do_conversions($from, $to, $new);
   coder_upgrade_save_changes($cur, $new, $file, $hook);
 }

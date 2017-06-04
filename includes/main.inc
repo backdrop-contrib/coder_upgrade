@@ -276,10 +276,10 @@ function coder_upgrade_convert_file($oldname, $filename, $_coder_upgrade_replace
   $cur = file_get_contents($filename);
   $new = $cur;
 
-  // Apply regular expression routines.
-  coder_upgrade_apply_regex($filename, $new);
   // Apply parser routines.
   coder_upgrade_apply_parser($filename, $new);
+  // Apply regular expression routines.
+  coder_upgrade_apply_regex($filename, $new);
 
   // Write the new file.
   if ($new != $cur) {
