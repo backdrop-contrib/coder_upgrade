@@ -96,3 +96,33 @@ function coder_upgrade_autoload_info() {
   );
 }
 
+/**
+ * Implements hook_upgrade_upgrade_file_alter().
+ */
+function coder_upgrade_upgrade_file_alter(&$reader) {
+  global $_coder_upgrade_module_name;
+  cdp("inside " . __FUNCTION__);
+  $nodes = &$reader->getFunctions();
+  foreach ($nodes as &$node) {
+    $item = &$node->data;
+    $body = &$item->body;
+
+    if ($calls = $body->searchAll('PGPFunctionCall', 'name', 'value', 'config_get')) {
+      if (count($calls) > 1) {
+        // Create helper objects.
+        $editor = PGPEditor::getInstance();
+        // Insert config() call.
+        $statement = $editor->textToStatements('$config = config(\''. $_coder_upgrade_module_name . '.settings\')');
+        $body->insertFirst($statement->getElement(0));
+
+        foreach ($calls as &$call) {
+          if ($call->printParameter(0) == "'publishcontent.settings'") {
+            $call->name['value'] = '$config->get';
+            $call->deleteParameter();
+          }
+        }
+      }
+    }
+    // Todo same for config_set, config_clear.
+  }
+}

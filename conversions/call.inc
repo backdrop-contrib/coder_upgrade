@@ -10,132 +10,6 @@
 
 /**
  * The upgrades to these functions are documented at the following urls.
- *
- * Module Info / Install
- * http://drupal.org/node/224333#update_sql (OMITS the update hooks part)
- *
- *
- * System
- * http://drupal.org/node/224333#absolute_includes
- * http://drupal.org/node/224333#registry
- * http://drupal.org/node/224333#backdrop_set_session (REVERTED)
- * http://drupal.org/node/224333#time
- * http://drupal.org/node/224333#rebuild_functions
- * http://drupal.org/node/224333#backdrop_uninstall_modules
- * http://drupal.org/node/224333#module_implements_not_module_list
- * http://drupal.org/node/224333#backdrop_http_request_parameters
- * http://drupal.org/node/224333#system_get_module_data
- * http://drupal.org/node/224333#static_variable_api (NOT IN THIS FUNCTION)
- * http://drupal.org/node/224333#backdrop_set_html_head
- * http://drupal.org/node/224333#php_eval
- * http://drupal.org/node/224333#http_header_functions
- * http://drupal.org/node/224333#backdrop_set_content
- * http://drupal.org/node/224333#time_limit
- * http://drupal.org/node/224333#backdrop_set_header_renamed
- * http://drupal.org/node/224333#remove-backdrop-urlencode
- *
- *
- * Database
- * http://drupal.org/node/224333#schema_ret
- * #db_result (not documented)
- * http://drupal.org/node/224333#db_is_active
- *
- *
- * Menu
- * http://drupal.org/node/224333#comment_load (DUP Comments)
- * http://drupal.org/node/224333#admin_path_changes
- * http://drupal.org/node/224333#menu_tree_data
- *
- *
- * Blocks
- * http://drupal.org/node/224333#custom_block
- *
- *
- * Comments
- * http://drupal.org/node/224333#comment_load
- * http://drupal.org/node/224333#comment_validate_removed
- * http://drupal.org/node/224333#comment_node_url
- *
- *
- * Input Sanitization and Input Formats
- * http://drupal.org/node/224333#check_markup_params
- * http://drupal.org/node/224333#backdrop_set_title
- * http://drupal.org/node/224333#hook_filter_info (NOT IN THIS FUNCTION)
- * http://drupal.org/node/224333#filter_formats_parameters
- *
- *
- * Taxonomy
- * http://drupal.org/node/224333#taxonomy_get_tree
- * http://drupal.org/node/224333#taxonomy_crud
- * http://drupal.org/node/224333#taxonomy_form_all
- * http://drupal.org/node/224333#no-synonyms-taxonomy
- *
- *
- * Javascript
- * http://drupal.org/node/224333#backdrop_add_js_options
- * http://drupal.org/node/224333#backdrop_add_js_weight (Included with above)
- * http://drupal.org/node/224333#backdrop_add_js_external
- * http://drupal.org/node/224333#jquery_ui
- * http://drupal.org/node/224333#rename-backdrop-to-js
- *
- *
- * CSS
- * http://drupal.org/node/224333#backdrop_add_js_options (DUP Javascript)
- * http://drupal.org/node/224333#backdrop_add_css_inline
- * http://drupal.org/node/224333#backdrop_add_css_weight (Should have a DUP in Javascript)
- * http://drupal.org/node/224333#form_clean_id
- *
- *
- * Theming
- * http://drupal.org/node/224333#rebuild_functions (DUP System)
- * http://drupal.org/node/224333#theme_page
- * http://drupal.org/node/224333#theme_changes
- * http://drupal.org/node/224333#placeholder
- * http://drupal.org/node/224333#theme_pager
- * http://drupal.org/node/224333#theme_username
- *
- *
- * Form API
- * http://drupal.org/node/224333#backdrop_execute_backdrop_form_submit
- * http://drupal.org/node/224333#hook_forms_signature
- *
- *
- * File API
- * http://drupal.org/node/224333#file_scan_directory_array_itize
- * http://drupal.org/node/224333#file_scan_directory_nomask
- * http://drupal.org/node/224333#file_set_status
- * http://drupal.org/node/224333#preg_match
- * http://drupal.org/node/224333#file_scan_directory_property_names
- * http://drupal.org/node/224333#file_prepare_directory
- *
- *
- * User API
- * http://drupal.org/node/224333#user_cancel (ALSO in convert_functions)
- * http://drupal.org/node/224333#user_load_multiple
- * http://drupal.org/node/224333#user_authenticate
- *
- *
- * Node API
- * http://drupal.org/node/224333#node_load_multiple
- * http://drupal.org/node/224333#node_type_base (ALSO in convert_functions)
- * http://drupal.org/node/224333#node_invoke_nodeapi
- * http://drupal.org/node/224333#node_type_get_functions
- *
- *
- * Multi-lingual
- * http://drupal.org/node/224333#locale_context
- *
- *
- * Miscellaneous
- * http://drupal.org/node/224333#book_toc_parameters
- * http://drupal.org/node/224333#referer_uri
- * http://drupal.org/node/224333#backdrop_clone
- * http://drupal.org/node/224333#actions_synchronize
- * http://drupal.org/node/224333#url_is_external
- * http://drupal.org/node/224333#backdrop_valid_path
- * http://drupal.org/node/224333#backdrop_goto_params
- * http://drupal.org/node/224333#format_date
- * http://drupal.org/node/224333#url_query_parameter
  */
 
 /**
@@ -249,6 +123,144 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
     default:
       break;
   }
+}
+
+/**
+ * Implements hook_upgrade_call_variable_get_alter().
+ */
+function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DONE
+  // Create helper objects.
+  $editor = PGPEditor::getInstance();
+
+  // Get the function call object.
+  $item = &$node->data;
+
+  // Process function call.
+  $name = &$item->name;
+  global $_coder_upgrade_module_name, $_coder_upgrade_filename;
+  $variable = str_replace("'", '', $item->printParameter(0));
+
+  // Build a list of variables to later parse and build a config file.
+  // We also store a warning message if variable or value are not strings, since
+  // these will need to be manually corrected by the developer.
+
+  // Only store the variable in the module's config if it starts with the module
+  // name. This is necessary since we cannot know if otherwise named variables
+  // are core variables or other contrib variables.
+  if (strpos($variable, $_coder_upgrade_module_name) !== FALSE) { // todo change this to a check for core variables.
+    $config = config('coder_upgrade.' . $_coder_upgrade_module_name . '.settings');
+    $value = 'novalue';
+    // Find the path to the current file.
+    $old_dir = config_get('coder_upgrade.settings', 'coder_upgrade_dir_old');
+    $split = explode($old_dir, $_coder_upgrade_filename);
+    $path = $split[1];
+
+    // Account for dynamically generated variables with a $variable rather than
+    // a string, such as ('variable_' . $node->type).
+    if (strpos($variable, '$')) {
+      $variable = preg_replace('@[^a-zA-Z_]@', '*', $variable);
+      $value = "dynamic variable in file $path line $node->line";
+    }
+    elseif ($item->printParameter(1)) {
+      $value = str_replace("'", '', $item->printParameter(1));
+      if (preg_match('@[\.\s\$\[\]\#\>\(]@', $value)) {
+        $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
+      }
+    }
+    $config->set($variable, $value);
+    $config->save();
+
+    // Now replace the variable_get with config.
+    // Process function call.
+    $name['value'] = 'config_get';
+
+    $p1 = $item->printParameter(0);
+    $temp = $_coder_upgrade_module_name . '.settings';
+    $editor->setParameter($item, 0, "'" . $temp . "'");
+    $editor->setParameter($item, 1, $p1);
+  }
+  else {
+    module_load_include('inc', 'coder_upgrade', 'includes/variables');
+    $variable_data = coder_upgrade_drupal_variables($variable);
+    if ($variable_data) {
+      if ($variable_data['storage'] == 'to_config') {
+        $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
+        // Now replace the variable_get with config.
+        // Process function call.
+        $name['value'] = 'config_get';
+
+        $editor->setParameter($item, 0, "'" . $storage . "'");
+        $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
+      }
+      elseif ($variable_data['storage'] == 'to_settings') {
+        $name['value'] = 'settings_get';
+        $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
+      }
+      elseif ($variable_data['storage'] == 'to_states') {
+        $name['value'] = 'state_get';
+        $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
+      }
+      elseif ($variable_data['storage'] == 'removed') {
+        // This variable was removed in Backdrop without replacement.
+        $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
+        $item->insertStatementBefore($statement);
+      }
+      elseif ($variable_data['storage'] == 'unknown') {
+        // This variable is a known Drupal variable but we're not sure about it.
+        $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+        $item->insertStatementBefore($statement);
+      }
+    }
+    else {
+      // This variable is not a known Drupal core variable.
+      $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+      $item->insertStatementBefore($statement);
+    }
+  }
+}
+
+/**
+ * Implements hook_upgrade_call_variable_set_alter().
+ */
+function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // todo core variables!!
+  // Create helper objects.
+  $editor = PGPEditor::getInstance();
+
+  // Get the function call object.
+  $item = &$node->data;
+
+  // Process function call.
+  $name = &$item->name;
+  $name['value'] = 'config_set';
+
+  global $_coder_upgrade_module_name;
+  $p0 = $item->printParameter(0);
+  $p1 = $item->printParameter(1);
+  $temp = $_coder_upgrade_module_name . '.settings';
+  $editor->setParameter($item, 0, "'" . $temp . "'");
+  $editor->setParameter($item, 1, $p0);
+  $editor->setParameter($item, 2, $p1);
+}
+
+/**
+ * Implements hook_upgrade_call_variable_del_alter().
+ */
+function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) {
+  // Create helper objects.
+  $editor = PGPEditor::getInstance();
+
+  // Get the function call object.
+  $item = &$node->data;
+
+  // Process function call.
+  $name = &$item->name;
+  $name['value'] = 'config_clear';
+
+  global $_coder_upgrade_module_name;
+  $p0 = $item->printParameter(0);
+  $temp = $_coder_upgrade_module_name . '.settings';
+  $editor->setParameter($item, 0, "'" . $temp . "'");
+  $editor->setParameter($item, 1, $p0);
 }
 
 /**
@@ -2818,34 +2830,6 @@ function coder_upgrade_convert_user_load(&$item, &$operand, $is_parameter = TRUE
   }
 
   return FALSE;
-}
-
-/**
- * Implements hook_upgrade_call_variable_get_alter().
- */
-function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // (OMIT)
-  // Create helper objects.
-  $editor = PGPEditor::getInstance();
-
-  // Get the function call object.
-  $item = &$node->data;
-
-  // Process function call.
-  $name = &$item->name;
-}
-
-/**
- * Implements hook_upgrade_call_variable_set_alter().
- */
-function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // (OMIT)
-  // Create helper objects.
-  $editor = PGPEditor::getInstance();
-
-  // Get the function call object.
-  $item = &$node->data;
-
-  // Process function call.
-  $name = &$item->name;
 }
 
 /**

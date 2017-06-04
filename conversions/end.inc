@@ -17,7 +17,7 @@
  *   The name of the directory with the converted files.
  */
 function coder_upgrade_upgrade_end_alter($dirname) {
-  global $_coder_upgrade_dirname, $_coder_upgrade_class_files;
+  global $_coder_upgrade_dirname, $_coder_upgrade_class_files, $_coder_upgrade_module_name;
 
   if (empty($_coder_upgrade_class_files)) {
     return;
@@ -28,7 +28,28 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   $files = coder_upgrade_scan_directory_2($dirname, 'files');
   // In 6.x, add one hook_theme registry entry in each module.
   // In 7.x, add files entries to each .info file.
-  coder_upgrade_add_file_entries($dirname, $files);
+  coder_upgrade_add_file_entries($dirname, $files); // todo 
+  coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+}
+
+function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name) {
+  $config_names = config_get_names_with_prefix('coder_upgrade.' . $_coder_upgrade_module_name);
+  if (!empty($config_names)) {
+    $config = config($config_names[0]);
+    $name = str_replace('coder_upgrade.', '', $config->getName());
+    $data = array();
+    $data['_config_name'] = $name;
+    $data += $config->get();
+    $contents = backdrop_json_encode($data, TRUE);
+    // Create the config directory.
+    $dir = $dirname . '/config';
+    if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+      backdrop_set_message(st('The config directory at %directory could not be created.', array('%directory' => $dir)), 'error');
+    }
+    else {
+      $result = file_put_contents($dir . '/' . $name . '.json', $contents);
+    }
+  }
 }
 
 /**
