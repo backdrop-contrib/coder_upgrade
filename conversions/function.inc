@@ -122,6 +122,18 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   }
 }
 
+/**
+ * Implements hook_upgrade_hook_update_N_alter().
+ */
+function coder_upgrade_upgrade_hook_update_N_alter(&$node, &$reader) {
+  cdp("inside " . __FUNCTION__);
+  $editor = PGPEditor::getInstance();
+
+  $item = &$node->data;
+  $item->comment = $editor->commentToStatement("// TODO The old hook_update_N functions cannot be applied to Backdrop.");
+  $item->body->clear();
+}
+
 function coder_upgrade_convert_form_callback(&$node) {
   cdp("inside " . __FUNCTION__);
   $item = &$node->data;
@@ -556,14 +568,6 @@ function coder_upgrade_upgrade_hook_schema_alter(&$node, &$reader) {
 function coder_upgrade_upgrade_hook_theme_alter(&$node, &$reader) {
   // Changes: hook_theme_render_changes
   coder_upgrade_convert_return($node->data->body, 'theme', '', 1, 1);
-}
-
-/**
- * Implements hook_upgrade_hook_update_N_alter().
- */
-function coder_upgrade_upgrade_hook_update_N_alter(&$node, &$reader) {
-  // Changes: update_php, update_sql
-  coder_upgrade_convert_update_N($node);
 }
 
 /**
@@ -1252,51 +1256,6 @@ function coder_upgrade_convert_schema_callback(&$item /*&$node*/) {
   if ($parent->count() == 1) {
     // This is an example of changing a function call reference.
     $parent->setElement(0, $operand);
-  }
-}
-
-/**
- * Updates hook_update_N().
- *
- * Check hook_update_N for a Doxygen style comment.
- * Update hooks now return strings or throw exceptions.
- *
- * @todo These hooks do not need to carry over from one version to the next.
- *   So we could simply delete the hook or its body. For those inclined to keep
- *   these hooks, we can modify the return statement (if any) to conform to D7.
- * @param PGPNode $node
- *   A node object containing a PGPClass (or function) item.
- */
-function coder_upgrade_convert_update_N(&$node) {
-  cdp("inside " . __FUNCTION__);
-  // Changes: update_php, update_sql
-  $item = &$node->data;
-
-  $editor = PGPEditor::getInstance();
-
-  // Get the function body.
-  $body = &$item->body;
-
-  // Find return statement.
-  // find() only looks at statements in the list, while search() recurses through inner lists.
-  if (!($return = $body->search('PGPFunctionCall', 'name', 'value', 'return', FALSE, 'backward'))) { // if (!($return = $body->find(T_RETURN, 'reverse'))) {
-//    clp("ERROR: return statement not found in hook_update_N");
-//    $body->insertFirst($editor->commentToStatement($msg), 'comment');
-    return;
-  }
-  else {
-    // Strip inline comment delimiter tokens from the parameter.
-    $string = str_replace(array('/*', '*/'), '', $return->getParameter()->toString()); // $string = $return->getParameter()->stripComments()->toString();
-    // To use PGPList->insertListBefore() need the node of $return.
-//    $statement = $editor->textToStatements("// hook_update_N() no longer returns a \$ret array.\n//Instead, it should return nothing or a translated string to be displayed to the user indicating that the update ran successfully.\nSee http://drupal.org/node/224333#update_sql.");
-    $statement = $editor->commentToStatement("// hook_update_N() no longer returns a \$ret array. Instead, return ");
-    $return->insertStatementBefore($statement);
-    $statement = $editor->commentToStatement("// nothing or a translated string indicating the update ran successfully.");
-    $return->insertStatementBefore($statement);
-    $statement = $editor->commentToStatement("// See http://drupal.org/node/224333#update_sql.");
-    $return->insertStatementBefore($statement);
-    // Replace the return() operand with t().
-    $editor->setParameter($return, 0, "t('TODO Add a descriptive string here to show in the UI.') /* $string */");
   }
 }
 
