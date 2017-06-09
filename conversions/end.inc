@@ -29,6 +29,11 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   // In 6.x, add one hook_theme registry entry in each module.
   // In 7.x, add files entries to each .info file.
   coder_upgrade_add_file_entries($dirname, $files); // todo 
+
+  $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
+  if (file_exists($install_file)) {
+    coder_upgrade_install_file($install_file);
+  }
   coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
 }
 
@@ -36,6 +41,7 @@ function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name)
   $config_names = config_get_names_with_prefix('coder_upgrade.' . $_coder_upgrade_module_name);
   if (!empty($config_names)) {
     $config = config($config_names[0]);
+
     $name = str_replace('coder_upgrade.', '', $config->getName());
     $data = array();
     $data['_config_name'] = $name;
@@ -49,7 +55,190 @@ function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name)
     else {
       $result = file_put_contents($dir . '/' . $name . '.json', $contents);
     }
+    $config->delete();
   }
+}
+
+/**
+ * Applies grammar parser conversion routines to install file.
+ *
+ * @param string $install_file
+ *   The name of the install file to convert.
+ */
+function coder_upgrade_install_file($install_file) {
+  $cur = file_get_contents($install_file);
+  $new = $cur;
+
+  $config = config('coder_upgrade.settings');
+
+  // Create reader object.
+  $reader = PGPReader::getInstance();
+  coder_upgrade_memory_print('create reader for file ' . $install_file);
+  // Set array formatting preference.
+  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+  // Set debug output preference.
+  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
+  $reader->setSnippet($new);
+  coder_upgrade_memory_print('set snippet');
+  $reader->addTokenNames();
+  coder_upgrade_memory_print('add token names');
+  // Parse code file.
+  $reader->buildGrammar();
+  coder_upgrade_memory_print('build grammar');
+
+  global $_coder_upgrade_module_name;
+  $config_names = config_get_names_with_prefix('coder_upgrade.' . $_coder_upgrade_module_name);
+  if (!empty($config_names)) {
+    $config = config($config_names[0]);
+    $config_data = $config->get();
+
+    $nodes = &$reader->getFunctions();
+    if (!empty($nodes)) {
+      foreach ($nodes as &$node) {
+        $item = &$node->data;
+        $name = &$item->name;
+        if ($name == 'xxx') {
+          $dummy = $node;
+        }
+      }
+    }
+
+    // Create a hook_update_1000() implementation.
+    coder_upgrade_create_update_1000($reader, $nodes, $config_data);
+
+    // Create an hook_update_last_removed() implementation.
+    coder_upgrade_create_update_last_removed($reader, $nodes);
+
+    if ($dummy) {
+      $dummy->container->delete($dummy);
+    }
+  }
+
+  // Use writer to redo file.
+  $writer = PGPWriter::getInstance();
+  coder_upgrade_memory_print('create writer');
+  $new = $writer->toString($reader->getStatements());
+  coder_upgrade_memory_print('writer->toString');
+
+  // Write the new file.
+  if ($new != $cur) {
+    if (file_put_contents($install_file, $new) === FALSE) {
+      coder_upgrade_log_print('File could not be written');
+    }
+    coder_upgrade_log_print('Replaced the file');
+  }
+
+  // Free up memory.
+  $reader->reset();
+  coder_upgrade_memory_print('reset reader');
+}
+
+ 
+function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
+  global $_coder_upgrade_module_name;
+  // Use the editor to set the function parameters.
+  $editor = PGPEditor::getInstance();
+  $strings = array();
+  $delstrings = array();
+
+  $body = new PGPBody();
+
+  $string = "\$config = config('$_coder_upgrade_module_name.settings');";
+  $body_content = $editor->textToStatements($string)->getElement(0);
+  $body->insertLast($body_content);
+
+  foreach ($config_data as $key => $line) {
+    $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+    $body_content = $editor->textToStatements($string)->getElement(0);
+    $body->insertLast($body_content);
+  }
+
+  foreach ($config_data as $key => $line) {
+    $string = '  update_variable_del(\'' . $key . '\');';
+    $body_content = $editor->textToStatements($string)->getElement(0);
+    $body->insertLast($body_content);
+  }
+
+  // Set values for the new hook function.
+  $comment = array(
+    'type' => T_DOC_COMMENT,
+    'value' => "/**\n * Implements hook_update_N().\n */",
+  );
+  $modulename = $_coder_upgrade_module_name . '_update_1000';
+
+  $function = new PGPClass($modulename);
+  $function->comment = $comment;
+  $function->type = T_FUNCTION;
+  $function->parameters = new PGPList();
+
+
+  $function->body = $body;
+
+  $node = end($nodes);
+  $container = &$node->container;
+
+  // Insert the new function before the old function.
+  $container->insertAfter($node, $function, 'function');
+  // Insert a blank line.
+  $whitespace = array(
+    'type' => T_WHITESPACE,
+    'value' => 1,
+  );
+  $container->insertAfter($node, $whitespace, 'whitespace');
+}
+
+
+function coder_upgrade_create_update_last_removed(&$reader, &$nodes) {
+  global $_coder_upgrade_module_name;
+  $ns = array();
+  $last_removed = '';
+  if (!empty($nodes)) {
+    foreach ($nodes as &$node) {
+      $item = &$node->data;
+      $name = &$item->name;
+      if (preg_match('@[a-zA-Z_]+(update_)(\d+)$@', $name, $matches)) {
+        $ns[$matches[2]] = $node;
+      }
+    }
+    $last_removed = max(array_keys($ns));
+  }
+
+  // Set values for the new hook function.
+  $comment = array(
+    'type' => T_DOC_COMMENT,
+    'value' => "/**\n * Implements hook_update_last_removed().\n */",
+  );
+  $modulename = $_coder_upgrade_module_name . '_update_last_removed';
+
+  // Create the new hook function.
+  $function = new PGPClass($modulename);
+  $function->comment = $comment;
+  $function->type = T_FUNCTION;
+  $function->parameters = new PGPList();
+
+  // Use the editor to set the function parameters.
+  $editor = PGPEditor::getInstance();
+  //  $editor->setParameters($function, $parameters);
+
+  $string = "return $last_removed;\n";
+  cdp(print_r($string, 1));
+
+  // Copy the case (or if) block as the body of the function.
+  $function->body = $editor->textToStatements($string);
+  cdp(get_class($function->body));
+  cdp($editor->statementsToText($function->body));
+
+  $node = end($nodes);
+  $container = &$node->container;
+
+  // Insert the new function before the old function.
+  $container->insertAfter($node, $function, 'function');
+  // Insert a blank line.
+  $whitespace = array(
+    'type' => T_WHITESPACE,
+    'value' => 1,
+  );
+  $container->insertAfter($node, $whitespace, 'whitespace');
 }
 
 /**

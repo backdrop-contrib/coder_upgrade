@@ -158,7 +158,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
     // Account for dynamically generated variables with a $variable rather than
     // a string, such as ('variable_' . $node->type).
     if (strpos($variable, '$')) {
-      $variable = preg_replace('@[^a-zA-Z_]@', '*', $variable);
+      $variable = preg_replace('@[^a-zA-Z_]@', 'oo', $variable);
       $value = "dynamic variable in file $path line $node->line";
     }
     elseif ($item->printParameter(1)) {
