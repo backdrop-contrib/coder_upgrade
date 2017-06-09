@@ -103,6 +103,9 @@ function coder_upgrade_install_file($install_file) {
       }
     }
 
+    // If dynamic variables, create or update hook_install() implementation.
+    coder_upgrade_create_update_install($reader, $nodes, $config_data);
+
     // Create a hook_update_1000() implementation.
     coder_upgrade_create_update_1000($reader, $nodes, $config_data);
 
@@ -134,6 +137,84 @@ function coder_upgrade_install_file($install_file) {
 }
 
  
+function coder_upgrade_create_update_install(&$reader, &$nodes, $config_data) {
+  global $_coder_upgrade_module_name;
+  // Use the editor to set the function parameters.
+  $editor = PGPEditor::getInstance();
+  $strings = array();
+  $delstrings = array();
+
+  $line_matches = array();
+  foreach ($config_data as $key => $line) {
+    if (preg_match('/(dynamic variable in file )(.*)/', $line, $matches) || preg_match('/(dynamic value in file )(.*)/', $line, $matches)) {
+      $line_matches[] = $matches[2];
+    }
+  }
+
+  $install_function = NULL;
+  foreach ($nodes as &$node) {
+    $item = &$node->data;
+    $name = &$item->name;
+    if ($name == $_coder_upgrade_module_name . '_install') {
+      $install_function = &$node;
+      break;
+    }
+  }
+
+  if (!$install_function) {
+    $body = new PGPBody();
+
+    $string = "// Dynamically generated variable data was detected.";
+    $body_content = $editor->commentToStatement($string);
+    $body->insertLast($body_content);
+
+    foreach ($line_matches as $match) {
+      $body_content = $editor->commentToStatement($match);
+      $body->insertLast($body_content);
+    }
+
+    // Set values for the new hook function.
+    $comment = array(
+      'type' => T_DOC_COMMENT,
+      'value' => "/**\n * Implements hook_install().\n */",
+    );
+    $modulename = $_coder_upgrade_module_name . '_install';
+
+    $function = new PGPClass($modulename);
+    $function->comment = $comment;
+    $function->type = T_FUNCTION;
+    $function->parameters = new PGPList();
+
+
+    $function->body = $body;
+
+    $node = end($nodes);
+    $container = &$node->container;
+
+    // Insert the new function before the old function.
+    $container->insertAfter($node, $function, 'function');
+    // Insert a blank line.
+    $whitespace = array(
+      'type' => T_WHITESPACE,
+      'value' => 1,
+    );
+    $container->insertAfter($node, $whitespace, 'whitespace');
+  }
+  else {
+    $item = &$install_function->data;
+    $body = &$item->body;
+
+    $string = "// Dynamically generated variable data was detected on the following lines.";
+    $body_content = $editor->commentToStatement($string);
+    $body->insertLast($body_content);
+
+    foreach ($line_matches as $match) {
+      $body_content = $editor->commentToStatement($match);
+      $body->insertLast($body_content);
+    }
+  }
+}
+
 function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
   global $_coder_upgrade_module_name;
   // Use the editor to set the function parameters.
@@ -186,7 +267,6 @@ function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
   );
   $container->insertAfter($node, $whitespace, 'whitespace');
 }
-
 
 function coder_upgrade_create_update_last_removed(&$reader, &$nodes) {
   global $_coder_upgrade_module_name;
