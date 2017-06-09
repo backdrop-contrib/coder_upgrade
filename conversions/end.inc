@@ -24,17 +24,118 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   }
 
   $_coder_upgrade_dirname = $dirname;
-  // Get list of files.
-  $files = coder_upgrade_scan_directory_2($dirname, 'files');
-  // In 6.x, add one hook_theme registry entry in each module.
-  // In 7.x, add files entries to each .info file.
-  coder_upgrade_add_file_entries($dirname, $files); // todo 
 
+  // Create a hook_autoload_info() entry in the module file.
+  $classes = array();
+  foreach ($_coder_upgrade_class_files as $class_file_path) {
+    $relative_path = explode($dirname . '/', $class_file_path);
+    $classes[$relative_path[1]] = coder_upgrade_get_file_classes($class_file_path);
+  }
+  if (!empty($classes)) {
+    coder_upgrade_create_autoload($dirname, $classes);
+  }
+
+  // Perform changes on install files.
+  // Creates a hook_update_1000() implementation.
+  // Creates an hook_update_last_removed() implementation.
+  // Adds an entry to hook_install if there are dynamically created variables.
   $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
   if (file_exists($install_file)) {
     coder_upgrade_install_file($install_file);
   }
+
+  // Creates a config directory and file if there were variable to config 
+  // conversions.
   coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+}
+
+function coder_upgrade_create_autoload($dirname, $classes) {
+  $config = config('coder_upgrade.settings');
+  global $_coder_upgrade_module_name;
+
+  $module_file = $dirname . '/' . $_coder_upgrade_module_name . '.module';
+  if (file_exists($module_file)) {
+    $cur = file_get_contents($module_file);
+    $new = $cur;
+
+    // Create reader object.
+    $reader = PGPReader::getInstance();
+    coder_upgrade_memory_print('create reader for file ' . $module_file);
+    // Set array formatting preference.
+    $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+    // Set debug output preference.
+    $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
+    $reader->setSnippet($new);
+    coder_upgrade_memory_print('set snippet');
+    $reader->addTokenNames();
+    coder_upgrade_memory_print('add token names');
+    // Parse code file.
+    $reader->buildGrammar();
+    coder_upgrade_memory_print('build grammar');
+
+    $body = new PGPBody();
+
+    $strings[] = 'return array(';
+    foreach ($classes as $path => $class_nodes) {
+      foreach ($class_nodes as $class_node) {      
+        $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
+      }
+    }
+    $strings[] = ');';
+
+    // Use the editor to set the function parameters.
+    $editor = PGPEditor::getInstance();
+    //  $editor->setParameters($function, $parameters);
+    $body_content = $editor->textToStatements(implode("\n", $strings))->getElement();
+
+    $body->insertLast($body_content);
+
+    // Set values for the new hook function.
+    $comment = array(
+      'type' => T_DOC_COMMENT,
+      'value' => "/**\n * Implements hook_autoload_info().\n */",
+    );
+    $modulename = $_coder_upgrade_module_name . '_autoload_info';
+
+    $function = new PGPClass($modulename);
+    $function->comment = $comment;
+    $function->type = T_FUNCTION;
+    $function->parameters = new PGPList();
+
+
+    $function->body = $body;
+
+    $nodes = &$reader->getFunctions();
+    $node = end($nodes);
+    $container = &$node->container;
+
+    // Insert the new function before the old function.
+    $container->insertAfter($node, $function, 'function');
+    // Insert a blank line.
+    $whitespace = array(
+      'type' => T_WHITESPACE,
+      'value' => 1,
+    );
+    $container->insertAfter($node, $whitespace, 'whitespace');
+
+    // Use writer to redo file.
+    $writer = PGPWriter::getInstance();
+    coder_upgrade_memory_print('create writer');
+    $new = $writer->toString($reader->getStatements());
+    coder_upgrade_memory_print('writer->toString');
+
+    // Write the new file.
+    if ($new != $cur) {
+      if (file_put_contents($module_file, $new) === FALSE) {
+        coder_upgrade_log_print('File could not be written');
+      }
+      coder_upgrade_log_print('Replaced the file');
+    }
+
+    // Free up memory.
+    $reader->reset();
+    coder_upgrade_memory_print('reset reader');
+  }
 }
 
 function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name) {
@@ -322,125 +423,35 @@ function coder_upgrade_create_update_last_removed(&$reader, &$nodes) {
 }
 
 /**
- * Scans a directory and finds all files and/or directories beneath it.
+ * Returns declared classes in a file.
  *
- * @todo Move to .inc file in parent directory.
- *
- * @param string $dirname
- *   Directory path to scan.
- *
- * @return array
- *   Array of file and/or directory names.
+ * @param string $file
+ *   The name of the file to scan.
  */
-function coder_upgrade_scan_directory_2($dirname, $retrieve = 'dirs') {
-  $dirs = array();
-  if (!is_dir($dirname)) {
-    return $dirs;
+function coder_upgrade_get_file_classes($file) {
+  $contents = file_get_contents($file);
+
+  $config = config('coder_upgrade.settings');
+
+  // Create reader object.
+  $reader = PGPReader::getInstance();
+  coder_upgrade_memory_print('create reader for file ' . $file);
+  // Set array formatting preference.
+  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+  // Set debug output preference.
+  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
+  $reader->setSnippet($contents);
+  coder_upgrade_memory_print('set snippet');
+  $reader->addTokenNames();
+  coder_upgrade_memory_print('add token names');
+  // Parse code file.
+  $reader->buildGrammar();
+  coder_upgrade_memory_print('build grammar');
+
+  $nodes = &$reader->getClasses();
+
+  if (!empty($nodes)) {
+    return $nodes;
   }
-
-  static $ignore = array(/*'.', '..', '.bzr', '.git', '.svn',*/ 'CVS');
-  $files = scandir($dirname);
-  $dirname .= '/';
-
-  foreach ($files as $key => $file) {
-    $file_path = $dirname . $file;
-    if (substr(basename($file_path), 0, 1) == '.' || in_array(basename($file_path), $ignore)) {
-      // Ignore all hidden directories and CVS directory.
-      unset($files[$key]);
-    }
-    elseif (is_dir($file_path)) {
-      unset($files[$key]);
-      $files[$key]['dir'] = $file;
-      $files[$key]['entries'] = coder_upgrade_scan_directory_2($file_path, $retrieve);
-      $dirs[] = $file;
-    }
-  }
-  return $retrieve == 'dirs' ? $dirs : $files;
-}
-
-/**
- * Adds file entries to .info files.
- *
- * Module .info files must now specify all loadable code files explicitly.
- * http://drupal.org/node/224333#registry
- *
- * @param string $dirname
- *   Module directory path.
- * @param array $files
- *   Contents of directory $dirname.
- * @param array $items
- *   List of registry files.
- * @param string $path
- *   Subdirectory whose parent directory contains a module.
- */
-function coder_upgrade_add_file_entries($dirname = '', $files = array(), &$items = array(), $path = '') {
-  if (empty($files)) {
-    return;
-  }
-
-  global $_coder_upgrade_dirname, $_coder_upgrade_class_files;
-
-  // Extensions that indicate a module is present.
-  $extensions = array('info', 'module');
-  $info_file = '';
-
-  if ($path != 'new' && ($path != '' || $dirname != $_coder_upgrade_dirname)) {
-    // Scan subdirectory for .info file indicating presence of another module.
-    foreach ($files as $file) {
-      if (!is_array($file)) {
-        $extension = pathinfo($file, PATHINFO_EXTENSION);
-        if (in_array($extension, $extensions)) {
-          // This subdirectory contains a module - so recurse.
-          $dirname .= $path != '' ? '/' . $path : '';
-          $path = 'new';
-          $items2 = array();
-          coder_upgrade_add_file_entries($dirname, $files, $items2, $path);
-          return;
-        }
-      }
-    }
-  }
-  // Clear path if we are starting another module.
-  $path = $path == 'new' ? '' : $path;
-
-  // Create list of files for registry.
-  // TODO Allow for custom extensions!!!
-  $extensions = array('inc', 'install', 'module', 'php', 'profile', 'test', 'theme', 'upgrade');
-  $dirname .= $path != '' ? '/' . $path : '';
-  $path = $path != '' ? $path . '/' : $path;
-  foreach ($files as $file) {
-    if (is_array($file)) {
-      coder_upgrade_add_file_entries($dirname, $file['entries'], $items, $file['dir']);
-    }
-    else {
-      $extension = pathinfo($file, PATHINFO_EXTENSION);
-      if ($extension == 'php' && substr($file, -8) == '.tpl.php') {
-        // Exclude template files.
-      }
-      elseif (in_array($extension, $extensions) && in_array($dirname . '/' . $file, $_coder_upgrade_class_files)) {
-        $items[] = $dirname . '/' . $file;
-      }
-      elseif ($extension == 'info') {
-        // Save the name of the .info file.
-        $info_file = $dirname . '/' . $file;
-      }
-    }
-  }
-
-  if ($info_file != '') {
-    $new = file_get_contents($info_file);
-    // Remove any file entries from .info file.
-    $from = "/^\s*files\[\]\s*=.*?$/m";
-    $to = '';
-    $new = preg_replace($from, $to, $new);
-    // Add sorted entries to .info file.
-    $new .= "\n";
-    foreach ($items as $item) {
-      $item = str_replace($dirname . '/', '', $item);
-      $new .= "files[] = $item\n";
-    }
-    if (file_put_contents($info_file, $new) === FALSE) {
-      clp(t('File could not be written: @file', array('@file' => $info_file)));
-    }
-  }
+  return NULL;
 }
