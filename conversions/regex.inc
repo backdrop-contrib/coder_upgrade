@@ -156,7 +156,15 @@ function coder_upgrade_upgrade_regex_info_alter(&$file) {
 
   // Info file should specify core = 7.x.
   $from[] = '@^core\s+=\s+.*?$@m';
-  $to[] = 'backdrop = 1.x';
+  $to[] = "backdrop = 1.x\ntype = module";
+
+  // Remove packaging info.
+  $from[] = '@[\n\r](;\sInformation\sadded)(.+?)(datestamp\s=\s"\d+")[\n\r]@s';
+  $to[] = "";
+
+  // Remove files[] entries.
+  $from[] = '@files\[\]\s=\s(.+)[\r\n]*@m';
+  $to[] = "";
 
   coder_upgrade_do_conversions($from, $to, $new);
   coder_upgrade_save_changes($cur, $new, $file, $hook);
