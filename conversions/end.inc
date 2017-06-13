@@ -26,13 +26,14 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   $_coder_upgrade_dirname = $dirname;
 
   // Create a hook_autoload_info() entry in the module file.
-  $classes = array();
+  $classlist = array();
   foreach ($_coder_upgrade_class_files as $class_file_path) {
     $relative_path = explode($dirname . '/', $class_file_path);
-    $classes[$relative_path[1]] = coder_upgrade_get_file_classes($class_file_path);
+    $classlist[$relative_path[1]] = coder_upgrade_get_file_classes($class_file_path);
   }
-  if (!empty($classes)) {
-    coder_upgrade_create_autoload($dirname, $classes);
+  if (!empty($classlist)) {
+    coder_upgrade_create_autoload($dirname, $classlist);
+    coder_upgrade_create_test_info($dirname, $classlist);
   }
 
   // Perform changes on install files.
@@ -47,6 +48,44 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   // Creates a config directory and file if there were variable to config 
   // conversions.
   coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+}
+
+function coder_upgrade_create_test_info($dirname, $classlist) {
+  global $_coder_upgrade_module_name;
+  $classes = array();
+  foreach ($classlist as $path => $class_nodes) {
+    $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
+    if ($is_test_file) {
+      foreach ($class_nodes['classes'] as $class) {
+        $classes[$class->data->name]['path'] = $path;
+      }
+      foreach ($class_nodes['functions'] as $function) {
+        if ($function->data->name == 'getInfo') {
+          $body = $function->data->body;
+          $editor = PGPEditor::getInstance();
+          $nodes = $body->searchAll('PGPFunctionCall', 'name', 'value', 'return', TRUE);
+          $return = reset($nodes);
+          $string = $return->data->getParameter()->toString();
+          $array = eval("return $string;");
+          if (isset($function->container->parent->data->name)) {
+            $classes[$function->container->parent->data->name]['info'] = $array;
+          }
+        }
+      }
+    }
+  }
+  $test_file = '';
+  foreach ($classes as $classname => $info) {
+    $test_file .= "[$classname]\n";
+    $test_file .= 'name = ' . (isset($info['info']['name']) ? $info['info']['name'] : $classname) . "\n";;
+    $test_file .= 'description = ' . (isset($info['info']['description']) ? $info['info']['description'] : $classname) . "\n";;
+    $test_file .= 'group = ' . (isset($info['info']['group']) ? $info['info']['group'] : $_coder_upgrade_module_name) . "\n";;
+    $test_file .= 'file = ' . $info['path'] . "\n\n";;
+  }
+  $test_file_name = $dirname . '/' . $_coder_upgrade_module_name . '.tests.info';
+  if (file_put_contents($test_file_name, $test_file) === FALSE) {
+    coder_upgrade_log_print('Test info file could not be written');
+  }
 }
 
 function coder_upgrade_create_autoload($dirname, $classes) {
@@ -77,8 +116,11 @@ function coder_upgrade_create_autoload($dirname, $classes) {
 
     $strings[] = 'return array(';
     foreach ($classes as $path => $class_nodes) {
-      foreach ($class_nodes as $class_node) {      
-        $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
+      $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
+      if (!$is_test_file) {
+        foreach ($class_nodes['classes'] as $class_node) {      
+          $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
+        }
       }
     }
     $strings[] = ');';
@@ -213,7 +255,7 @@ function coder_upgrade_install_file($install_file) {
     // Create an hook_update_last_removed() implementation.
     coder_upgrade_create_update_last_removed($reader, $nodes);
 
-    if ($dummy) {
+    if (!empty($dummy)) {
       $dummy->container->delete($dummy);
     }
   }
@@ -448,10 +490,16 @@ function coder_upgrade_get_file_classes($file) {
   $reader->buildGrammar();
   coder_upgrade_memory_print('build grammar');
 
-  $nodes = &$reader->getClasses();
+  $classes = &$reader->getClasses();
+  $functions = &$reader->getFunctions();
 
-  if (!empty($nodes)) {
-    return $nodes;
+  // $classes doesnt seem to hold any information about contained functions so
+  // return both.
+  if (!empty($classes)) {
+    return array(
+      'classes' => $classes,
+      'functions' => $functions,
+    );
   }
   return NULL;
 }
