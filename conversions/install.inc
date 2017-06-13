@@ -8,13 +8,6 @@
  * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
-/**
- * The upgrades to these functions are documented at the following urls.
- *
- * Module Info / Install
- * http://drupal.org/node/224333#afile
- * http://drupal.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
- */
 
 /**
  * Implements hook_upgrade_parser_install_alter().

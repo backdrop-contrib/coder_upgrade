@@ -8,14 +8,6 @@
  */
 
 /**
- * The upgrades to these items are documented at
- * https://api.backdropcms.org/change-records
- *
- * @param string $file
- *   The text of the file to convert.
- */
-
-/**
  * Implements hook_upgrade_regex_alter().
  *
  * Upgrades text using simple regular expressions.
@@ -28,10 +20,6 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
 
   $from = array();
   $to = array();
-
-  coder_upgrade_upgrade_admin_path_changes($from, $to);
-  // TODO Intend to do all of these when converting db_query calls.
-  coder_upgrade_upgrade_database_tables($from, $to);
 
   // taxonomy_get_parents() has been renamed.
   $from[] = "/taxonomy_get_parents/";
@@ -109,29 +97,6 @@ function coder_upgrade_upgrade_admin_path_changes(&$from, &$to) {
     $from[] = "@(['\"])$old_path(/?.*?)(['\"])@";
     $to[] = "$1$new_path$2$1";
   }
-}
-
-/**
- * Upgrades database tables.
- */
-function coder_upgrade_upgrade_database_tables(&$from, &$to) {
-  $table_conversion = array(
-    'box' => 'custom_block', // TODO Is this an error?
-    'boxes' => 'block_custom',
-    'blocks' => 'block',
-    'blocks_roles' => 'block_role',
-  );
-  foreach ($table_conversion as $old_table => $new_table) {
-    $from[] = '/\{' . $old_table . '\}/i';
-    $to[] = '{' . $new_table . '}';
-  }
-
-  // http://drupal.org/node/224333#taxonomy_tables
-  // This expression format is more compact than above.
-  $from[] = '@({|\'|")(term_data|term_hierarchy|term_node|term_relation|term_synonym|vocabulary)(}|\'|")@';
-  $to[] = "$1taxonomy_$2$3";
-  $from[] = '@({|\'|")(vocabulary_node_type)s(}|\'|")@';
-  $to[] = "$1taxonomy_$2$3";
 }
 
 /**
