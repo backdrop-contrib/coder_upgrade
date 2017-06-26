@@ -213,14 +213,6 @@ function coder_upgrade_convert_dir($upgrades, $extensions, $item, $recursive = T
   coder_upgrade_module_name($dirname, $item);
   $_coder_upgrade_module_name = $item['module'] ? $item['module'] : $_coder_upgrade_module_name;
 
-  // If there are conversions of variables to config, we'll need to create
-  // an install file to add upgrade paths.
-  $installfile_name = $dirname . '/' . $_coder_upgrade_module_name . '.install';
-
-  if (!file_exists($installfile_name)) {
-    $result = file_put_contents($installfile_name, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */\n\nfunction xxx() {}");
-  }
-
   // Loop on files.
   $filenames = scandir($dirname . '/');
   foreach ($filenames as $filename) {

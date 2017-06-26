@@ -40,14 +40,19 @@ function coder_upgrade_upgrade_end_alter($dirname) {
   // Creates a hook_update_1000() implementation.
   // Creates an hook_update_last_removed() implementation.
   // Adds an entry to hook_install if there are dynamically created variables.
-  $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
-  if (file_exists($install_file)) {
+  global $_coder_upgrade_module_name;
+  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
+  if (!empty($config_names)) {
+    $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
+    if (!file_exists($install_file)) {
+      $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */\n\nfunction xxx() {}");
+    }
     coder_upgrade_install_file($install_file);
-  }
 
-  // Creates a config directory and file if there were variable to config 
-  // conversions.
-  coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+    // Creates a config directory and file if there were variable to config 
+    // conversions.
+    coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+  }
 }
 
 function coder_upgrade_create_test_info($dirname, $classlist) {
@@ -181,11 +186,11 @@ function coder_upgrade_create_autoload($dirname, $classes) {
 }
 
 function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name) {
-  $config_names = config_get_names_with_prefix('coder_upgrade.' . $_coder_upgrade_module_name);
+  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
   if (!empty($config_names)) {
     $config = config($config_names[0]);
 
-    $name = str_replace('coder_upgrade.', '', $config->getName());
+    $name = str_replace('coder_upgrade_tmp.', '', $config->getName());
     $data = array();
     $data['_config_name'] = $name;
     $data += $config->get();
@@ -230,7 +235,7 @@ function coder_upgrade_install_file($install_file) {
   coder_upgrade_memory_print('build grammar');
 
   global $_coder_upgrade_module_name;
-  $config_names = config_get_names_with_prefix('coder_upgrade.' . $_coder_upgrade_module_name);
+  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
   if (!empty($config_names)) {
     $config = config($config_names[0]);
     $config_data = $config->get();
