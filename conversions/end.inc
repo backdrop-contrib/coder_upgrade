@@ -36,22 +36,25 @@ function coder_upgrade_upgrade_end_alter($dirname) {
     coder_upgrade_create_test_info($dirname, $classlist);
   }
 
-  // Perform changes on install files.
-  // Creates a hook_update_1000() implementation.
-  // Creates an hook_update_last_removed() implementation.
-  // Adds an entry to hook_install if there are dynamically created variables.
   global $_coder_upgrade_module_name;
-  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
-  if (!empty($config_names)) {
+  $config = config('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
+  if (!empty($config)) {
+
+    // Create an install file.
     $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
     if (!file_exists($install_file)) {
       $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */\n\nfunction xxx() {}");
     }
-    coder_upgrade_install_file($install_file);
+
+    // Perform changes on install files.
+    // Creates a hook_update_1000() implementation.
+    // Creates an hook_update_last_removed() implementation.
+    // Adds an entry to hook_install if there are dynamically created variables.
+    coder_upgrade_install_file($install_file, $config);
 
     // Creates a config directory and file if there were variable to config 
     // conversions.
-    coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name); // todo 
+    coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name, $config); // todo 
   }
 }
 
@@ -185,26 +188,21 @@ function coder_upgrade_create_autoload($dirname, $classes) {
   }
 }
 
-function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name) {
-  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
-  if (!empty($config_names)) {
-    $config = config($config_names[0]);
-
-    $name = str_replace('coder_upgrade_tmp.', '', $config->getName());
-    $data = array();
-    $data['_config_name'] = $name;
-    $data += $config->get();
-    $contents = backdrop_json_encode($data, TRUE);
-    // Create the config directory.
-    $dir = $dirname . '/config';
-    if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-      backdrop_set_message(st('The config directory at %directory could not be created.', array('%directory' => $dir)), 'error');
-    }
-    else {
-      $result = file_put_contents($dir . '/' . $name . '.json', $contents);
-    }
-    $config->delete();
+function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name, $config) {
+  $name = str_replace('coder_upgrade_tmp.', '', $config->getName());
+  $data = array();
+  $data['_config_name'] = $name;
+  $data += $config->get();
+  $contents = backdrop_json_encode($data, TRUE);
+  // Create the config directory.
+  $dir = $dirname . '/config';
+  if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+    backdrop_set_message(st('The config directory at %directory could not be created.', array('%directory' => $dir)), 'error');
   }
+  else {
+    $result = file_put_contents($dir . '/' . $name . '.json', $contents);
+  }
+  $config->delete();
 }
 
 /**
@@ -213,19 +211,19 @@ function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name)
  * @param string $install_file
  *   The name of the install file to convert.
  */
-function coder_upgrade_install_file($install_file) {
+function coder_upgrade_install_file($install_file, $config) {
   $cur = file_get_contents($install_file);
   $new = $cur;
 
-  $config = config('coder_upgrade.settings');
+  $settings = config('coder_upgrade.settings');
 
   // Create reader object.
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $install_file);
   // Set array formatting preference.
-  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+  $reader->setPreserveArrayFormat($settings->get('coder_upgrade_preserve_array_format'));
   // Set debug output preference.
-  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
+  $reader->setDebug($settings->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
   coder_upgrade_memory_print('set snippet');
   $reader->addTokenNames();
@@ -234,35 +232,30 @@ function coder_upgrade_install_file($install_file) {
   $reader->buildGrammar();
   coder_upgrade_memory_print('build grammar');
 
-  global $_coder_upgrade_module_name;
-  $config_names = config_get_names_with_prefix('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
-  if (!empty($config_names)) {
-    $config = config($config_names[0]);
-    $config_data = $config->get();
-
-    $nodes = &$reader->getFunctions();
-    if (!empty($nodes)) {
-      foreach ($nodes as &$node) {
-        $item = &$node->data;
-        $name = &$item->name;
-        if ($name == 'xxx') {
-          $dummy = $node;
-        }
+  $nodes = &$reader->getFunctions();
+  if (!empty($nodes)) {
+    foreach ($nodes as &$node) {
+      $item = &$node->data;
+      $name = &$item->name;
+      if ($name == 'xxx') {
+        $dummy = $node;
       }
     }
+  }
 
-    // If dynamic variables, create or update hook_install() implementation.
-    coder_upgrade_create_update_install($reader, $nodes, $config_data);
+  $config_data = $config->get();
 
-    // Create a hook_update_1000() implementation.
-    coder_upgrade_create_update_1000($reader, $nodes, $config_data);
+  // If dynamic variables, create or update hook_install() implementation.
+  coder_upgrade_create_update_install($reader, $nodes, $config_data);
 
-    // Create an hook_update_last_removed() implementation.
-    coder_upgrade_create_update_last_removed($reader, $nodes);
+  // Create a hook_update_1000() implementation.
+  coder_upgrade_create_update_1000($reader, $nodes, $config_data);
 
-    if (!empty($dummy)) {
-      $dummy->container->delete($dummy);
-    }
+  // Create an hook_update_last_removed() implementation.
+  coder_upgrade_create_update_last_removed($reader, $nodes);
+
+  if (!empty($dummy)) {
+    $dummy->container->delete($dummy);
   }
 
   // Use writer to redo file.
