@@ -25,21 +25,6 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
   // Process function call.
 //  $name = &$item->name;
 
-  switch ($name) {
-    case 'block_box_save':
-      $item->name['value'] = str_replace('box', 'custom_block', $item->name['value']);
-      break;
-
-    case 'db_add_field':
-      $item->deleteParameter();
-
-    case 'taxonomy_get_synonym_root':
-      coder_upgrade_convert_taxonomy_synonyms($item);
-      break;
-
-    default:
-      break;
-  }
 }
 
 /**

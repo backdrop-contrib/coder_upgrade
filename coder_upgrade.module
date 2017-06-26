@@ -109,7 +109,7 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
     $item = &$node->data;
     $body = &$item->body;
 
-    if ($calls = $body->searchAll('PGPFunctionCall', 'name', 'value', 'config_get')) {
+    if (!empty($body) && $calls = $body->searchAll('PGPFunctionCall', 'name', 'value', 'config_get')) {
       $build_config_function = FALSE;
       foreach ($calls as &$call) {
         if ($call->printParameter(0) == "'" .$_coder_upgrade_module_name . ".settings'") {
