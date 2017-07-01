@@ -553,6 +553,38 @@ function coder_upgrade_module_name($dirname, &$item) {
 }
 
 /**
+ * Builds an array of candidates for modules and submodules.
+ *
+ * @param string $dirname
+ *   A string of the directory name.
+ */
+function coder_upgrade_module_files($dirname) {
+  // Extensions that indicate a module is present.
+  $extensions = array('module');
+
+  static $item = array();
+
+  $path = $dirname . '/';
+  $files = scandir($path);
+  foreach ($files as $file) {
+    if ($file == '.' || $file == '..') {
+      continue;
+    }
+    $file_path = $path . $file;
+    if (!is_dir($file_path)) {
+      if (in_array(pathinfo($file_path, PATHINFO_EXTENSION), $extensions)) {
+        $name = pathinfo($file_path, PATHINFO_FILENAME);
+        $item[$name] = $path;
+      }
+    }
+    else {
+      coder_upgrade_module_files($file_path);
+    }
+  }
+  return $item;
+}
+
+/**
  * Makes a patch file of the conversion routine changes.
  *
  * @param array $item

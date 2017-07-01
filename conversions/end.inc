@@ -19,47 +19,51 @@
 function coder_upgrade_upgrade_end_alter($dirname) {
   global $_coder_upgrade_dirname, $_coder_upgrade_class_files, $_coder_upgrade_module_name;
 
-  if (empty($_coder_upgrade_class_files)) {
-    return;
-  }
-
   $_coder_upgrade_dirname = $dirname;
 
-  // Create a hook_autoload_info() entry in the module file.
-  $classlist = array();
-  foreach ($_coder_upgrade_class_files as $class_file_path) {
-    $relative_path = explode($dirname . '/', $class_file_path);
-    $classlist[$relative_path[1]] = coder_upgrade_get_file_classes($class_file_path);
-  }
-  if (!empty($classlist)) {
-    coder_upgrade_create_autoload($dirname, $classlist);
-    coder_upgrade_create_test_info($dirname, $classlist);
-  }
+  $modules = coder_upgrade_module_files($dirname);
+  $_coder_upgrade_class_files_sorted = _coder_upgrade_sort_files_by_modules($_coder_upgrade_class_files, $modules);
 
-  global $_coder_upgrade_module_name;
-  $config = config('coder_upgrade_tmp.' . $_coder_upgrade_module_name);
-  if (!empty($config)) {
-
-    // Create an install file.
-    $install_file = $dirname . '/' . $_coder_upgrade_module_name . '.install';
-    if (!file_exists($install_file)) {
-      $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */\n\nfunction xxx() {}");
+  foreach ($modules as $module_name => $module_path) {
+    // Create a hook_autoload_info() entry in the module file.
+    $classlist = array();
+    foreach ($_coder_upgrade_class_files_sorted as $class_file_path => $class_module_path) {
+      if ($module_path == $class_module_path) {
+        $relative_path = explode($module_path, $class_file_path);
+        $classlist[$relative_path[1]] = coder_upgrade_get_file_classes($class_file_path);
+      }
+    }
+    if (!empty($classlist)) {
+      coder_upgrade_create_autoload($module_name, $module_path, $classlist);
+      coder_upgrade_create_test_info($module_name, $module_path, $classlist);
     }
 
-    // Perform changes on install files.
-    // Creates a hook_update_1000() implementation.
-    // Creates an hook_update_last_removed() implementation.
-    // Adds an entry to hook_install if there are dynamically created variables.
-    coder_upgrade_install_file($install_file, $config);
+    $config = config('coder_upgrade_tmp.' . $module_name . '.settings');
+    if (!empty($config)) {
+      // Create an install file.
+      $install_file = $module_path . $module_name . '.install';
+      if (!file_exists($install_file)) {
+        // Create an install file.
+        $install_file = $module_path . $item['module'] . '.install';
+        if (!file_exists($install_file)) {
+          $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $module_name module.\n *\n */\n\nfunction xxx() {}");
+        }
+      }
 
-    // Creates a config directory and file if there were variable to config 
-    // conversions.
-    coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name, $config); // todo 
+      // Perform changes on install files.
+      // Creates a hook_update_1000() implementation.
+      // Creates an hook_update_last_removed() implementation.
+      // Adds an entry to hook_install if there are dynamically created variables.
+      coder_upgrade_install_file($install_file, $config);
+
+      // Creates a config directory and file if there were variable to config 
+      // conversions.
+      coder_upgrade_build_config_files($module_path, $module_name, $config); // todo 
+    }
   }
 }
 
-function coder_upgrade_create_test_info($dirname, $classlist) {
-  global $_coder_upgrade_module_name;
+function coder_upgrade_create_test_info($module_name, $module_path, $classlist) {
   $classes = array();
   foreach ($classlist as $path => $class_nodes) {
     $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
@@ -87,20 +91,19 @@ function coder_upgrade_create_test_info($dirname, $classlist) {
     $test_file .= "[$classname]\n";
     $test_file .= 'name = ' . (isset($info['info']['name']) ? $info['info']['name'] : $classname) . "\n";;
     $test_file .= 'description = ' . (isset($info['info']['description']) ? $info['info']['description'] : $classname) . "\n";;
-    $test_file .= 'group = ' . (isset($info['info']['group']) ? $info['info']['group'] : $_coder_upgrade_module_name) . "\n";;
+    $test_file .= 'group = ' . (isset($info['info']['group']) ? $info['info']['group'] : $module_name) . "\n";;
     $test_file .= 'file = ' . $info['path'] . "\n\n";;
   }
-  $test_file_name = $dirname . '/' . $_coder_upgrade_module_name . '.tests.info';
+  $test_file_name = $module_path . $module_name . '.tests.info';
   if (file_put_contents($test_file_name, $test_file) === FALSE) {
     coder_upgrade_log_print('Test info file could not be written');
   }
 }
 
-function coder_upgrade_create_autoload($dirname, $classes) {
+function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
   $config = config('coder_upgrade.settings');
-  global $_coder_upgrade_module_name;
 
-  $module_file = $dirname . '/' . $_coder_upgrade_module_name . '.module';
+  $module_file = $module_path . $module_name . '.module';
   if (file_exists($module_file)) {
     $cur = file_get_contents($module_file);
     $new = $cur;
@@ -145,7 +148,7 @@ function coder_upgrade_create_autoload($dirname, $classes) {
       'type' => T_DOC_COMMENT,
       'value' => "/**\n * Implements hook_autoload_info().\n */",
     );
-    $modulename = $_coder_upgrade_module_name . '_autoload_info';
+    $modulename = $module_name . '_autoload_info';
 
     $function = new PGPClass($modulename);
     $function->comment = $comment;
@@ -188,21 +191,21 @@ function coder_upgrade_create_autoload($dirname, $classes) {
   }
 }
 
-function coder_upgrade_build_config_files($dirname, $_coder_upgrade_module_name, $config) {
+function coder_upgrade_build_config_files($module_path, $module_name, $config) {
   $name = str_replace('coder_upgrade_tmp.', '', $config->getName());
   $data = array();
   $data['_config_name'] = $name;
   $data += $config->get();
   $contents = backdrop_json_encode($data, TRUE);
   // Create the config directory.
-  $dir = $dirname . '/config';
+  $dir = $module_path . 'config';
   if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
     backdrop_set_message(st('The config directory at %directory could not be created.', array('%directory' => $dir)), 'error');
   }
   else {
     $result = file_put_contents($dir . '/' . $name . '.json', $contents);
   }
-  $config->delete();
+  //$config->delete();
 }
 
 /**
@@ -500,4 +503,41 @@ function coder_upgrade_get_file_classes($file) {
     );
   }
   return NULL;
+}
+
+
+/**
+ * Sorts an array of files by path.
+ *
+ * @param string $files
+ *   The array of the file to sort.
+ * @param string $modules
+ *   An array of paths to each module or submodule in a directory.
+ */
+function _coder_upgrade_sort_files_by_modules($files, $modules) {
+  // We have here an array of files with classes in them, and an array of paths
+  // to directories with a ".module' file. We assume the latter are likely to be
+  // sub-modules of the currently converting project item. We can't do a simple
+  // strpos() to find which module directory a class file belongs to because 
+  // for a file "dira/dirb/file.file", strpos() would match both dira/ and 
+  // dira/dirb/.
+  // So we sort the module directories by depth, check each file to see if it
+  // belongs there, then remove the file from the search so it won't match a 
+  // shallower directory.
+  uasort ($modules , function ($a, $b) {
+    $deptha = substr_count($a, '/');
+    $depthb = substr_count($b, '/');
+    return $deptha < $depthb;
+    }
+  );
+  $sorted = array();
+  foreach ($modules as $module) {
+    foreach ($files as $index => $file) {
+      if (strpos($file, $module) !== FALSE) {
+        $sorted[$file] = $module;
+        unset($files[$index]);
+      }
+    }
+  }
+  return $sorted;
 }
