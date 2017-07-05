@@ -54,7 +54,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
       // Creates a hook_update_1000() implementation.
       // Creates an hook_update_last_removed() implementation.
       // Adds an entry to hook_install if there are dynamically created variables.
-      coder_upgrade_install_file($install_file, $config);
+      coder_upgrade_install_file($module_name, $install_file, $config);
 
       // Creates a config directory and file if there were variable to config 
       // conversions.
@@ -214,7 +214,7 @@ function coder_upgrade_build_config_files($module_path, $module_name, $config) {
  * @param string $install_file
  *   The name of the install file to convert.
  */
-function coder_upgrade_install_file($install_file, $config) {
+function coder_upgrade_install_file($module_name, $install_file, $config) {
   $cur = file_get_contents($install_file);
   $new = $cur;
 
@@ -249,13 +249,13 @@ function coder_upgrade_install_file($install_file, $config) {
   $config_data = $config->get();
 
   // If dynamic variables, create or update hook_install() implementation.
-  coder_upgrade_create_update_install($reader, $nodes, $config_data);
+  coder_upgrade_create_update_install($module_name, $reader, $nodes, $config_data);
 
   // Create a hook_update_1000() implementation.
-  coder_upgrade_create_update_1000($reader, $nodes, $config_data);
+  coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data);
 
   // Create an hook_update_last_removed() implementation.
-  coder_upgrade_create_update_last_removed($reader, $nodes);
+  coder_upgrade_create_update_last_removed($module_name, $reader, $nodes);
 
   if (!empty($dummy)) {
     $dummy->container->delete($dummy);
@@ -281,8 +281,7 @@ function coder_upgrade_install_file($install_file, $config) {
 }
 
  
-function coder_upgrade_create_update_install(&$reader, &$nodes, $config_data) {
-  global $_coder_upgrade_module_name;
+function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $config_data) {
   // Use the editor to set the function parameters.
   $editor = PGPEditor::getInstance();
   $strings = array();
@@ -299,7 +298,7 @@ function coder_upgrade_create_update_install(&$reader, &$nodes, $config_data) {
   foreach ($nodes as &$node) {
     $item = &$node->data;
     $name = &$item->name;
-    if ($name == $_coder_upgrade_module_name . '_install') {
+    if ($name == $module_name . '_install') {
       $install_function = &$node;
       break;
     }
@@ -322,7 +321,7 @@ function coder_upgrade_create_update_install(&$reader, &$nodes, $config_data) {
       'type' => T_DOC_COMMENT,
       'value' => "/**\n * Implements hook_install().\n */",
     );
-    $modulename = $_coder_upgrade_module_name . '_install';
+    $modulename = $module_name . '_install';
 
     $function = new PGPClass($modulename);
     $function->comment = $comment;
@@ -359,8 +358,7 @@ function coder_upgrade_create_update_install(&$reader, &$nodes, $config_data) {
   }
 }
 
-function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
-  global $_coder_upgrade_module_name;
+function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $config_data) {
   // Use the editor to set the function parameters.
   $editor = PGPEditor::getInstance();
   $strings = array();
@@ -368,7 +366,7 @@ function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
 
   $body = new PGPBody();
 
-  $string = "\$config = config('$_coder_upgrade_module_name.settings');";
+  $string = "\$config = config('$module_name .settings');";
   $body_content = $editor->textToStatements($string)->getElement(0);
   $body->insertLast($body_content);
 
@@ -389,7 +387,7 @@ function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
     'type' => T_DOC_COMMENT,
     'value' => "/**\n * Implements hook_update_N().\n */",
   );
-  $modulename = $_coder_upgrade_module_name . '_update_1000';
+  $modulename = $module_name . '_update_1000';
 
   $function = new PGPClass($modulename);
   $function->comment = $comment;
@@ -412,8 +410,7 @@ function coder_upgrade_create_update_1000(&$reader, &$nodes, $config_data) {
   $container->insertAfter($node, $whitespace, 'whitespace');
 }
 
-function coder_upgrade_create_update_last_removed(&$reader, &$nodes) {
-  global $_coder_upgrade_module_name;
+function coder_upgrade_create_update_last_removed($module_name, &$reader, &$nodes) {
   $ns = array();
   $last_removed = '';
   if (!empty($nodes)) {
@@ -432,7 +429,7 @@ function coder_upgrade_create_update_last_removed(&$reader, &$nodes) {
     'type' => T_DOC_COMMENT,
     'value' => "/**\n * Implements hook_update_last_removed().\n */",
   );
-  $modulename = $_coder_upgrade_module_name . '_update_last_removed';
+  $modulename = $module_name . '_update_last_removed';
 
   // Create the new hook function.
   $function = new PGPClass($modulename);
