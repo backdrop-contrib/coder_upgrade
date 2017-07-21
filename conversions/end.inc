@@ -366,7 +366,7 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
 
   $body = new PGPBody();
 
-  $string = "\$config = config('$module_name .settings');";
+  $string = "\$config = config('$module_name.settings');";
   $body_content = $editor->textToStatements($string)->getElement(0);
   $body->insertLast($body_content);
 
