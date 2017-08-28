@@ -44,7 +44,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
       $install_file = $module_path . $module_name . '.install';
       if (!file_exists($install_file)) {
         // Create an install file.
-        $install_file = $module_path . $item['module'] . '.install';
+        $install_file = $module_path . $module_name . '.install';
         if (!file_exists($install_file)) {
           $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $module_name module.\n *\n */\n\nfunction xxx() {}");
         }
