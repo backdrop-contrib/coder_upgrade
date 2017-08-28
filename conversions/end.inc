@@ -421,7 +421,9 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
         $ns[$matches[2]] = $node;
       }
     }
-    $last_removed = max(array_keys($ns));
+    if ($last_removed != '') {
+      $last_removed = max(array_keys($ns));
+    }
   }
 
   // Set values for the new hook function.
