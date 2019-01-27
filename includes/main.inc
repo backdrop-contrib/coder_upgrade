@@ -211,7 +211,7 @@ function coder_upgrade_convert_dir($upgrades, $extensions, $item, $recursive = T
 
   // Determine module name.
   coder_upgrade_module_name($dirname, $item);
-  $_coder_upgrade_module_name = $item['module'] ? $item['module'] : $_coder_upgrade_module_name;
+  $_coder_upgrade_module_name = $item['name'] ? $item['name'] : $_coder_upgrade_module_name;
 
   // Loop on files.
   $filenames = scandir($dirname . '/');

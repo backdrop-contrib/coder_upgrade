@@ -39,15 +39,11 @@ function coder_upgrade_upgrade_end_alter($dirname) {
     }
 
     $config = config('coder_upgrade_tmp.' . $module_name . '.settings');
-    if (!empty($config)) {
+    if (!empty($config->get())) {
       // Create an install file.
       $install_file = $module_path . $module_name . '.install';
       if (!file_exists($install_file)) {
-        // Create an install file.
-        $install_file = $module_path . $item['module'] . '.install';
-        if (!file_exists($install_file)) {
-          $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $module_name module.\n *\n */\n\nfunction xxx() {}");
-        }
+        $result = file_put_contents($install_file, "<?php\n/**\n * @file\n * Install, update and uninstall functions for the $module_name module.\n *\n */\n\nfunction xxx() {}");
       }
 
       // Perform changes on install files.
@@ -421,45 +417,47 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
         $ns[$matches[2]] = $node;
       }
     }
-    $last_removed = max(array_keys($ns));
+    if (!empty($ns)) {
+      $last_removed = max(array_keys($ns));
+
+      // Set values for the new hook function.
+      $comment = array(
+        'type' => T_DOC_COMMENT,
+        'value' => "/**\n * Implements hook_update_last_removed().\n */",
+      );
+      $modulename = $module_name . '_update_last_removed';
+
+      // Create the new hook function.
+      $function = new PGPClass($modulename);
+      $function->comment = $comment;
+      $function->type = T_FUNCTION;
+      $function->parameters = new PGPList();
+
+      // Use the editor to set the function parameters.
+      $editor = PGPEditor::getInstance();
+      //  $editor->setParameters($function, $parameters);
+
+      $string = "return $last_removed;\n";
+      cdp(print_r($string, 1));
+
+      // Copy the case (or if) block as the body of the function.
+      $function->body = $editor->textToStatements($string);
+      cdp(get_class($function->body));
+      cdp($editor->statementsToText($function->body));
+
+      $node = end($nodes);
+      $container = &$node->container;
+
+      // Insert the new function before the old function.
+      $container->insertAfter($node, $function, 'function');
+      // Insert a blank line.
+      $whitespace = array(
+        'type' => T_WHITESPACE,
+        'value' => 1,
+      );
+      $container->insertAfter($node, $whitespace, 'whitespace');
+    }
   }
-
-  // Set values for the new hook function.
-  $comment = array(
-    'type' => T_DOC_COMMENT,
-    'value' => "/**\n * Implements hook_update_last_removed().\n */",
-  );
-  $modulename = $module_name . '_update_last_removed';
-
-  // Create the new hook function.
-  $function = new PGPClass($modulename);
-  $function->comment = $comment;
-  $function->type = T_FUNCTION;
-  $function->parameters = new PGPList();
-
-  // Use the editor to set the function parameters.
-  $editor = PGPEditor::getInstance();
-  //  $editor->setParameters($function, $parameters);
-
-  $string = "return $last_removed;\n";
-  cdp(print_r($string, 1));
-
-  // Copy the case (or if) block as the body of the function.
-  $function->body = $editor->textToStatements($string);
-  cdp(get_class($function->body));
-  cdp($editor->statementsToText($function->body));
-
-  $node = end($nodes);
-  $container = &$node->container;
-
-  // Insert the new function before the old function.
-  $container->insertAfter($node, $function, 'function');
-  // Insert a blank line.
-  $whitespace = array(
-    'type' => T_WHITESPACE,
-    'value' => 1,
-  );
-  $container->insertAfter($node, $whitespace, 'whitespace');
 }
 
 /**
