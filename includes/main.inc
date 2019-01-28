@@ -274,12 +274,16 @@ function coder_upgrade_convert_file($oldname, $filename, $_coder_upgrade_replace
     return FALSE;
   }
 
+  $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
   // Read the file and copy the contents.
   $cur = file_get_contents($filename);
   $new = $cur;
 
   // Apply parser routines.
-  coder_upgrade_apply_parser($filename, $new);
+  if ($extension != 'js') {
+    coder_upgrade_apply_parser($filename, $new);
+  }
   // Apply regular expression routines.
   coder_upgrade_apply_regex($filename, $new);
 
@@ -303,9 +307,18 @@ function coder_upgrade_convert_file($oldname, $filename, $_coder_upgrade_replace
  */
 function coder_upgrade_apply_regex($filename, &$new) {
   // Categorize certain files.
-  $is_info_file = pathinfo($filename, PATHINFO_EXTENSION) == 'info';
-  $is_install_file = pathinfo($filename, PATHINFO_EXTENSION) == 'install';
+  $extension = pathinfo($filename, PATHINFO_EXTENSION);
+  $is_js_file = $extension == 'js';
+  $is_info_file = $extension == 'info';
+  $is_install_file = $extension == 'install';
 
+  if ($is_js_file) {
+    // Apply regular expression conversion routines for info file.
+    coder_upgrade_log_print("Calling hook_upgrade_regex_js_alter");
+    backdrop_alter('upgrade_regex_js', $new);
+    coder_upgrade_log_print("Completed hook_upgrade_regex_js_alter");
+    return;
+  }
   if ($is_info_file) {
     // Apply regular expression conversion routines for info file.
     coder_upgrade_log_print("Calling hook_upgrade_regex_info_alter");

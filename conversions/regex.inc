@@ -67,6 +67,45 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
 }
 
 /**
+ * Implements hook_upgrade_regex_js_alter().
+ *
+ * Upgrades js files using simple regular expressions.
+ */
+function coder_upgrade_upgrade_regex_js_alter(&$file) {
+  cdp("inside " . __FUNCTION__);
+  $hook = 'regex_simple_changes';
+  $cur = $file;
+  $new = $cur;
+
+  $from = array();
+  $to = array();
+
+  // temporarily rename Drupal links so the other regexes dont create false 
+  // links.
+  $from[] = "/drupal\.org/";
+  $to[] = "mothershiporg";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/drupal/";
+  $to[] = "backdrop";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/Drupal/";
+  $to[] = "Backdrop";
+
+  // change Drupal to Backdrop throughtout.
+  $from[] = "/DRUPAL/";
+  $to[] = "BACKDROP";
+
+  // rename Drupal links.
+  $from[] = "/mothershiporg/";
+  $to[] = "drupal.org";
+
+  coder_upgrade_do_conversions($from, $to, $new);
+  coder_upgrade_save_changes($cur, $new, $file, $hook);
+}
+
+/**
  * Upgrades admin paths.
  *
  * http://drupal.org/node/224333#admin_path_changes
