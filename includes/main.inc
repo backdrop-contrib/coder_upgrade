@@ -69,8 +69,9 @@ function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) 
 
   // Loop on items.
   foreach ($items as $item) {
-    $_coder_upgrade_module_name = '';
-//    $_coder_upgrade_dirname = $item['old_dir'];
+    // Set the module name so the <convert_begin_alter> functions have this.
+    coder_upgrade_module_name($item['old_dir'], $item);
+    $_coder_upgrade_module_name = !empty($item['module']) ? $item['module'] : '';
 
     if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') === FALSE) {
       // Process the directory before conversion routines are applied.
@@ -211,7 +212,8 @@ function coder_upgrade_convert_dir($upgrades, $extensions, $item, $recursive = T
 
   // Determine module name.
   coder_upgrade_module_name($dirname, $item);
-  $_coder_upgrade_module_name = $item['name'] ? $item['name'] : $_coder_upgrade_module_name;
+  $_coder_upgrade_module_name = !empty($item['module']) ? $item['module'] : $_coder_upgrade_module_name;
+  $_coder_upgrade_module_parent_name = $_coder_upgrade_module_name;
 
   // Loop on files.
   $filenames = scandir($dirname . '/');
@@ -232,7 +234,7 @@ function coder_upgrade_convert_dir($upgrades, $extensions, $item, $recursive = T
         );
         coder_upgrade_convert_dir($upgrades, $extensions, $new_item, $recursive);
         // Reset the module name.
-        $_coder_upgrade_module_name = $item['module'];
+        $_coder_upgrade_module_name = $_coder_upgrade_module_parent_name;
       }
     }
     elseif (in_array($extension = pathinfo($filename, PATHINFO_EXTENSION), array_keys($extensions))) {
