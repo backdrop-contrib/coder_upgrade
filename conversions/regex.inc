@@ -13,6 +13,8 @@
  * Upgrades text using simple regular expressions.
  */
 function coder_upgrade_upgrade_regex_alter(&$file) {
+  global $_coder_upgrade_module_name;
+  $name=$_coder_upgrade_module_name;
   cdp("inside " . __FUNCTION__);
   $hook = 'regex_simple_changes';
   $cur = $file;
@@ -41,10 +43,50 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/format_username/";
   $to[] = "user_format_name";
 
+  // theme_html_tag() has been renamed.
+  $from[] = "/theme_html_tag/";
+  $to[] = "theme_head_tag";
+
+  // hook_page_build() has been replaced: https://api.backdropcms.org/change-records/new-layout-module-implements-drag-drop-model-building-layouts
+  $from[] = "/".$name."_page_build/";
+  $to[] = $name."_preprocess_page";
+
+  // hook_library() has been renamed.
+  $from[] = "/".$name."_library/";
+  $to[] = $name."_library_info";
+
+  // hook_library_alter() has been renamed.
+  $from[] = "/".$name."_library_alter/";
+  $to[] = $name."_library_info_alter";
+
+  // replace special sorting function: https://api.backdropcms.org/change-records/generic-sorting-function-replace-implementations-uasort
+  $from[] = '/uasort\(\$items, *'."'element_sort'\)/";
+  $to[] = 'backdrop_sort($items, array("#weight"))';
+
+  // replace special sorting function 2
+  $from[] = '/uasort\(\$items, *'."'element_sort_title'\)/";
+  $to[] = 'backdrop_sort($items, array("#title" => SORT_STRING))';
+
+  // replace special sorting function 3
+  $from[] = '/uasort\(\$items, *'."'drupal_sort'\)/";
+  $to[] = 'backdrop_sort($items)';
+
+  // replace special sorting function 4
+  $from[] = '/uasort\(\$items, *'."'drupal_sort_title'\)/";
+  $to[] = 'backdrop_sort($items, array("title" => SORT_STRING))';
+
+  // replace special sorting function 5
+  $from[] = '/uasort\(\$items, *'."'admin_bar_element_sort'\)/";
+  $to[] = 'backdrop_sort($items, array("#weight" => SORT_NUMERIC, "#title" => SORT_STRING))';
+
   // temporarily rename Drupal links so the other regexes dont create false 
   // links.
   $from[] = "/drupal\.org/";
   $to[] = "mothershiporg";
+
+  // change 'Drupal 7' to 'Backdrop CMS' throughtout.
+  $from[] = "/Drupal 7/";
+  $to[] = "Backdrop CMS";
 
   // change Drupal to Backdrop throughtout.
   $from[] = "/drupal/";
