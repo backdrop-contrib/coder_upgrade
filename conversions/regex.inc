@@ -14,7 +14,7 @@
  */
 function coder_upgrade_upgrade_regex_alter(&$file) {
   global $_coder_upgrade_module_name;
-  $name=$_coder_upgrade_module_name;
+  $name = $_coder_upgrade_module_name;
   cdp("inside " . __FUNCTION__);
   $hook = 'regex_simple_changes';
   $cur = $file;
