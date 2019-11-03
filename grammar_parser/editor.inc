@@ -306,7 +306,7 @@ class PGPEditor extends PGPParser {
                 $this->debugPrint($statement);
                 return $class;
               }
-              continue;
+              break;
           }
           // Omit break and process special statements below.
 
@@ -315,7 +315,7 @@ class PGPEditor extends PGPParser {
           switch ($type) {
             case T_INTERFACE:
             case T_CLASS:
-              continue;
+              break;
 
             case T_FUNCTION:
               if ($statement['name'] == $value) {
@@ -324,7 +324,7 @@ class PGPEditor extends PGPParser {
                 $this->debugPrint("return class from inside T_FUNCTION");
                 return $class; // Inconsistent type class vs. array???
               }
-              continue;
+              break;
 
 //            default:
 //              $class = new PGPFunction();
@@ -349,14 +349,14 @@ class PGPEditor extends PGPParser {
               elseif ($found = $class->find($type, $value, $statement['parameters'])) {
                 return $found;
               }
-              continue;
+              break;
 
             default:
               $class = new PGPFunction();
               if ($found = $class->find($type, $value, $statement['parameters'])) {
                 return $found;
               }
-              continue;
+              break;
           }
 //          break; // This prevents entering next case block!!!
 
