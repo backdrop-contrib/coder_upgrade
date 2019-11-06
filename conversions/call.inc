@@ -51,7 +51,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
   // are core variables or other contrib variables.
   if (strpos($variable, $_coder_upgrade_module_name) !== FALSE) { // todo change this to a check for core variables.
     $config = config('coder_upgrade_tmp.' . $_coder_upgrade_module_name . '.settings');
-    $value = 'novalue';
+    $value = '';
     // Find the path to the current file.
     $old_dir = config_get('coder_upgrade.settings', 'coder_upgrade_dir_old');
     $split = explode($old_dir, $_coder_upgrade_filename);
