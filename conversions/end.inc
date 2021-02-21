@@ -52,9 +52,9 @@ function coder_upgrade_upgrade_end_alter($dirname) {
       // Adds an entry to hook_install if there are dynamically created variables.
       coder_upgrade_install_file($module_name, $install_file, $config);
 
-      // Creates a config directory and file if there were variable to config 
+      // Creates a config directory and file if there were variable to config
       // conversions.
-      coder_upgrade_build_config_files($module_path, $module_name, $config); // todo 
+      coder_upgrade_build_config_files($module_path, $module_name, $config); // todo
     }
   }
 }
@@ -125,7 +125,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     foreach ($classes as $path => $class_nodes) {
       $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
       if (!$is_test_file) {
-        foreach ($class_nodes['classes'] as $class_node) {      
+        foreach ($class_nodes['classes'] as $class_node) {
           $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
         }
       }
@@ -161,11 +161,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     // Insert the new function before the old function.
     $container->insertAfter($node, $function, 'function');
     // Insert a blank line.
-    $whitespace = array(
-      'type' => T_WHITESPACE,
-      'value' => 1,
-    );
-    $container->insertAfter($node, $whitespace, 'whitespace');
+    $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
 
     // Use writer to redo file.
     $writer = PGPWriter::getInstance();
@@ -276,7 +272,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   coder_upgrade_memory_print('reset reader');
 }
 
- 
+
 function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $config_data) {
   // Use the editor to set the function parameters.
   $editor = PGPEditor::getInstance();
@@ -333,11 +329,7 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
     // Insert the new function before the old function.
     $container->insertAfter($node, $function, 'function');
     // Insert a blank line.
-    $whitespace = array(
-      'type' => T_WHITESPACE,
-      'value' => 1,
-    );
-    $container->insertAfter($node, $whitespace, 'whitespace');
+    $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
   }
   else {
     $item = &$install_function->data;
@@ -372,6 +364,12 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
     $body->insertLast($body_content);
   }
 
+  $string = "\$config->save();";
+  $body_content = $editor->textToStatements($string)->getElement(0);
+  $body->insertLast($body_content);
+
+  $body->insertLast(CODER_UPGRADE_WHITESPACE, 'whitespace');
+
   foreach ($config_data as $key => $line) {
     $string = '  update_variable_del(\'' . $key . '\');';
     $body_content = $editor->textToStatements($string)->getElement(0);
@@ -399,11 +397,7 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   // Insert the new function before the old function.
   $container->insertAfter($node, $function, 'function');
   // Insert a blank line.
-  $whitespace = array(
-    'type' => T_WHITESPACE,
-    'value' => 1,
-  );
-  $container->insertAfter($node, $whitespace, 'whitespace');
+  $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
 }
 
 function coder_upgrade_create_update_last_removed($module_name, &$reader, &$nodes) {
@@ -451,11 +445,7 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
       // Insert the new function before the old function.
       $container->insertAfter($node, $function, 'function');
       // Insert a blank line.
-      $whitespace = array(
-        'type' => T_WHITESPACE,
-        'value' => 1,
-      );
-      $container->insertAfter($node, $whitespace, 'whitespace');
+      $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
     }
   }
 }
@@ -489,7 +479,7 @@ function coder_upgrade_get_file_classes($file) {
   $classes = &$reader->getClasses();
   $functions = &$reader->getFunctions();
 
-  // $classes doesnt seem to hold any information about contained functions so
+  // $classes doesn't seem to hold any information about contained functions so
   // return both.
   if (!empty($classes)) {
     return array(
@@ -513,11 +503,11 @@ function _coder_upgrade_sort_files_by_modules($files, $modules) {
   // We have here an array of files with classes in them, and an array of paths
   // to directories with a ".module' file. We assume the latter are likely to be
   // sub-modules of the currently converting project item. We can't do a simple
-  // strpos() to find which module directory a class file belongs to because 
-  // for a file "dira/dirb/file.file", strpos() would match both dira/ and 
+  // strpos() to find which module directory a class file belongs to because
+  // for a file "dira/dirb/file.file", strpos() would match both dira/ and
   // dira/dirb/.
   // So we sort the module directories by depth, check each file to see if it
-  // belongs there, then remove the file from the search so it won't match a 
+  // belongs there, then remove the file from the search so it won't match a
   // shallower directory.
   uasort ($modules , function ($a, $b) {
     $deptha = substr_count($a, '/');

@@ -269,11 +269,7 @@ function coder_upgrade_op_to_hook($node, $case_node, $hook, $parameters) {
   // Insert the new function before the old function.
   $container->insertBefore($node, $function, 'function');
   // Insert a blank line.
-  $whitespace = array(
-    'type' => T_WHITESPACE,
-    'value' => 1,
-  );
-  $container->insertBefore($node, $whitespace, 'whitespace');
+  $container->insertBefore($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
 }
 
 /**
