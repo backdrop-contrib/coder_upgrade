@@ -150,7 +150,7 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
 }
 
 function coder_upgrade_build_config_function($node, $reader) {
-  global $_coder_upgrade_module_name;
+  global $_coder_upgrade_module_name, $_coder_upgrade_module_human_name;
   $editor = PGPEditor::getInstance();
 
   // Set values for the new hook function.
@@ -167,7 +167,7 @@ function coder_upgrade_build_config_function($node, $reader) {
   $function->parameters = new PGPList();
 
   $strings[] = '$prefixes[\'' . $_coder_upgrade_module_name . '.settings\'] = array(';
-  $strings[] = "  'label' => t('<Module name> settings'),";
+  $strings[] = "  'label' => t('{$_coder_upgrade_module_human_name} settings'),";
   $strings[] = "  'group' => t('Configuration'),";
   $strings[] = ');';
   $strings[] = 'return $prefixes;';

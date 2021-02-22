@@ -27,7 +27,7 @@
  */
 function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) {
   // Declare global variables.
-  global $_coder_upgrade_log, $_coder_upgrade_debug, $_coder_upgrade_module_name, $_coder_upgrade_replace_files, $_coder_upgrade_class_files;
+  global $_coder_upgrade_log, $_coder_upgrade_debug, $_coder_upgrade_module_name, $_coder_upgrade_module_human_name, $_coder_upgrade_replace_files, $_coder_upgrade_class_files;
 //  global $_coder_upgrade_dirname; // Not used.
 
   // Check lists in case this function is called apart from form submit.
@@ -72,6 +72,7 @@ function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) 
     // Set the module name so the <convert_begin_alter> functions have this.
     coder_upgrade_module_name($item['old_dir'], $item);
     $_coder_upgrade_module_name = !empty($item['module']) ? $item['module'] : '';
+    $_coder_upgrade_module_human_name = !empty($item['module_human_name']) ? $item['module_human_name'] : '';
 
     if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') === FALSE) {
       // Process the directory before conversion routines are applied.
@@ -539,9 +540,6 @@ function coder_upgrade_convert_functions(&$reader) {
  *   Array of a directory containing the files to convert.
  */
 function coder_upgrade_module_name($dirname, &$item) {
-  // Extensions that indicate a module is present.
-  $extensions = array('info', 'module');
-
   /*
    * Set the module name in case there is no module in the directory (e.g. po
    * or translations).
@@ -559,12 +557,39 @@ function coder_upgrade_module_name($dirname, &$item) {
   foreach ($files as $file) {
     $file_path = $path . $file;
     if (!is_dir($file_path)) {
-      if (in_array(pathinfo($file_path, PATHINFO_EXTENSION), $extensions)) {
+      $pathinfo = pathinfo($file_path, PATHINFO_EXTENSION);
+      if ($pathinfo == 'info') {
         $item['module'] = pathinfo($file_path, PATHINFO_FILENAME);
+        $item['module_human_name'] = _coder_upgrade_module_human_name($file_path);
         break;
+      }
+      elseif ($pathinfo == 'module') {
+        $item['module'] = pathinfo($file_path, PATHINFO_FILENAME);
+        // Don't break because we might still be looking for the human name
       }
     }
   }
+}
+
+/**
+ * Get the human name of the module from its .info file.
+ */
+function _coder_upgrade_module_human_name($file_path) {
+  $file = fopen($file_path, "r");
+  if ($file) {
+    $contents = fread($file, filesize($file_path));
+    fclose($file);
+    if ($contents) {
+      $lines = explode("\n", $contents);
+      foreach ($lines as $line) {
+        $parts = explode('=', $line);
+        if (count($parts) == 2 && trim($parts[0]) == 'name') {
+          return trim($parts[1]);
+        }
+      }
+    }
+  }
+  return '';
 }
 
 /**
