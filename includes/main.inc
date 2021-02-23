@@ -557,39 +557,19 @@ function coder_upgrade_module_name($dirname, &$item) {
   foreach ($files as $file) {
     $file_path = $path . $file;
     if (!is_dir($file_path)) {
-      $pathinfo = pathinfo($file_path, PATHINFO_EXTENSION);
-      if ($pathinfo == 'info') {
+      $extension = pathinfo($file_path, PATHINFO_EXTENSION);
+      if ($extension == 'info') {
         $item['module'] = pathinfo($file_path, PATHINFO_FILENAME);
-        $item['module_human_name'] = _coder_upgrade_module_human_name($file_path);
+        $info = backdrop_parse_info_file($file_path);
+        $item['module_human_name'] = $info['name'];
         break;
       }
-      elseif ($pathinfo == 'module') {
+      elseif ($extension == 'module') {
         $item['module'] = pathinfo($file_path, PATHINFO_FILENAME);
         // Don't break because we might still be looking for the human name
       }
     }
   }
-}
-
-/**
- * Get the human name of the module from its .info file.
- */
-function _coder_upgrade_module_human_name($file_path) {
-  $file = fopen($file_path, "r");
-  if ($file) {
-    $contents = fread($file, filesize($file_path));
-    fclose($file);
-    if ($contents) {
-      $lines = explode("\n", $contents);
-      foreach ($lines as $line) {
-        $parts = explode('=', $line);
-        if (count($parts) == 2 && trim($parts[0]) == 'name') {
-          return trim($parts[1]);
-        }
-      }
-    }
-  }
-  return '';
 }
 
 /**
