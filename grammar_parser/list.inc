@@ -2305,7 +2305,7 @@ class PGPString extends PGPExpression {
 
         case 'open':
         case 'close':
-          $string .= isset($data['value']) ? $data['value'] : $data;
+          $string .= $data['value'];
           break;
 
         case 'operand':
