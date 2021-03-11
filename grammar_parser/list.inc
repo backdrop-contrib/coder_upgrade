@@ -2304,8 +2304,11 @@ class PGPString extends PGPExpression {
           break;
 
         case 'open':
-        case 'close':
           $string .= $data['value'];
+          break;
+
+        case 'close':
+          $string .= $data;
           break;
 
         case 'operand':
