@@ -206,6 +206,12 @@ class PGPReader extends PGPParser {
    * @var unknown_type
    */
   private $buildFunctionCall = FALSE; // TODO This is the same name as a function - change this.
+  /**
+   * Whether the current expression is part of a variable.
+   *
+   * @var boolean
+   */
+  private $buildVariable = FALSE;
 
   /**
    * Class constructor.
@@ -1356,6 +1362,7 @@ class PGPReader extends PGPParser {
           }
           break;
 
+        case T_CLASS:
         case T_STRING:
           // T_STRING can be function call or name after an object operator.
           // After an object operator, it could have indices inside '[]'.
@@ -1440,6 +1447,7 @@ class PGPReader extends PGPParser {
             $this->functionCalls[] = &$node/*->data*/;
           }
           else {
+            $this->buildVariable = TRUE;
             // Create object.
             $component = new PGPOperand();
             // Unary and indirect are handled differently than reference only
@@ -1469,6 +1477,7 @@ class PGPReader extends PGPParser {
             $returnTokens2 = array_merge($return_tokens, $this->assignReturnTokens(), $this->operatorReturnTokens());
             // Need to merge the two expressions.
             $component = $this->buildExpression($returnTokens2, $component);
+            $this->buildVariable = FALSE;
             $this->debugPrint("component");
             $this->debugPrint($component);
             if ($this->buildFunctionCall) {
@@ -1565,14 +1574,21 @@ class PGPReader extends PGPParser {
 
         case '[':
 //        case '{':
-          $isLeftParenPartOfExpr = TRUE;
-          $this->debugPrint("LEFT  lbrackets = $lbrackets <=> rbrackets = $rbrackets in $expressions next token value = " . $this->nextTokenValue());
-          // '{}' braces may delimit character positions in strings (deprecated
-          // in PHP 5.3 or 6.0). They may also delimit an expression.
-          // The return tokens on a variable include the right bracket. So we
-          // need to test the next character here for '->' or '[' and continue.
-          $lbrackets++; // TODO Use $lbraces for '{'
-          $node->setData('index', $this->buildExpression(array(']'/*, '}'*/)));
+          if ($isLeftParenPartOfExpr && !$this->buildVariable) {
+            // This left bracket indicates the start of a "short syntax" array
+            // introduced in PHP 5.4.
+            $this->debugPrint('hitting left square bracket in buildExpression');
+            prev($this->tokens);
+            $node->setData('operand', $this->buildArray(TRUE));
+          }
+          else {
+            $isLeftParenPartOfExpr = TRUE;
+            $this->debugPrint("LEFT  lbrackets = $lbrackets <=> rbrackets = $rbrackets in $expressions next token value = " . $this->nextTokenValue());
+            // The return tokens on a variable include the right bracket. So we
+            // need to test the next character here for '->' or '[' and continue.
+            $lbrackets++;
+            $node->setData('index', $this->buildExpression(array(']'/*, '}'*/)));
+          }
           break;
 
         case ']':
@@ -1955,19 +1971,21 @@ class PGPReader extends PGPParser {
   /**
    * Builds an array expression.
    *
-   * @param array $return_tokens
-   *   An array of tokens marking the end of the expression.
+   * @param boolean $short_syntax
+   *   (optional) Whether the short syntax was found in tokens.
+   *
    * @return array
    *   An array of the expression.
    */
-  private function buildArray($return_tokens = array(')')) {
+  private function buildArray($short_syntax = FALSE) {
     $this->debugPrint(__FUNCTION__);
 
     // Create object.
     $expression = new PGPArray();
-    $expression->type = $this->tokenType();
+    $expression->type = $short_syntax ? T_ARRAY : $this->tokenType();
     $expression->multiline = FALSE;
     $expression->original = FALSE;
+    $expression->short_syntax = $short_syntax;
     $expression->count = 0;
     $expression->values = new PGPList();
 
@@ -2010,13 +2028,11 @@ class PGPReader extends PGPParser {
 //          break;
 
         case ')':
+        case ']': // PHP 5.4 syntax
           $this->debugPrint("while buildArray lparens = $lparens rparens = $rparens");
           $rparens++;
-          // TODO Why not just add the rparens??? We handle it in PGPWriter.
-          // TODO Is this condition check necessary? Should it be TRUE always?
-          if ($rparens < $lparens) {
-            $expression->values->insertLast($this->tokenType(), 'rparens');
-          }
+          $expression->values->insertLast($this->tokenType(), 'rparens');
+
           if ($rparens == $lparens) {
             $this->debugPrint("Hitting ) in while buildArray");
             $expression->multiline = $this->setMultiline($original, $assigns, $values, $in_function_or_call);
@@ -2112,6 +2128,7 @@ class PGPReader extends PGPParser {
           break;
 
         case '(':
+        case '[': // PHP 5.4 syntax
           if ($lparens == 0) {
             // This is the left parenthesis following 'array'.
             $lparens++;

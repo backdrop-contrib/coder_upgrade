@@ -2667,7 +2667,7 @@ class PGPArray extends PGPBase {
 
     $add_space = 0;
     $space = ''; // Never used; it is calculated on each while iteration
-    $string = 'array';
+    $string = !$this->short_syntax ? 'array' : '';
 
     $current = $expression->values->first();
     while ($current->next != NULL) {
@@ -2739,8 +2739,8 @@ class PGPArray extends PGPBase {
           break;
 
         case 'rparens':
-          $rparens++;
-          $string .= $element;
+          $rparens_element = $element;
+
           break;
 
         case 'whitespace':
@@ -2776,7 +2776,7 @@ class PGPArray extends PGPBase {
     }
     $this->debugPrint("$string");
     if ($lparens > $rparens) {
-      $string .= ')';
+      $string .= $rparens_element;
     }
     $this->debugPrint("$string");
     return $string;
