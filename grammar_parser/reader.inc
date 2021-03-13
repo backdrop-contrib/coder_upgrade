@@ -1538,7 +1538,7 @@ class PGPReader extends PGPParser {
         case T_ARRAY:
           if ($this->nextRealToken() == '(') {
             $this->debugPrint("isMultiline = $this->isMultiline");
-            $node->setData('operand', $this->buildArray(array(')', ';')));
+            $node->setData('operand', $this->buildArray());
           }
           else {
             $node->setData('operand', $this->cleanToken());
