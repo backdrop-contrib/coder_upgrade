@@ -1771,6 +1771,16 @@ class PGPReader extends PGPParser {
           break;
 */
         case '?':
+          if ($this->nextRealToken() == T_STRING) {
+            // Nullable types.
+            $node->setData('operator2', $this->tokenValue());
+          }
+          else {
+            $this->isInlineIf = $this->tokenValue() == '?';
+            $isLeftParenPartOfExpr = TRUE;
+            $node->setData('operator', $this->tokenValue());
+          }
+          break;
         case ':':
           $this->isInlineIf = $this->tokenValue() == '?';
           $isLeftParenPartOfExpr = TRUE;
