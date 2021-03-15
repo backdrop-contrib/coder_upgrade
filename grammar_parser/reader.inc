@@ -1753,6 +1753,11 @@ class PGPReader extends PGPParser {
             $node->setData('operator2', $this->tokenValue());
           }
           break;
+
+        case T_COALESCE:
+          $isLeftParenPartOfExpr = TRUE;
+          $node->setData('operator', $this->tokenValue());
+          break;
 /*
         case '?':
           $this->isInlineIf = TRUE;
@@ -3524,6 +3529,7 @@ class PGPReader extends PGPParser {
       '<',
       '?', // Add these two special delimiters.
       ':',
+      T_COALESCE,
       ';', // Catchall if we see end of statement.
     );
   }
