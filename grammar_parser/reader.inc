@@ -1822,6 +1822,23 @@ class PGPReader extends PGPParser {
           $node->setData('operand', $this->buildList());
           break;
 
+        case T_PUBLIC:
+        case T_PRIVATE:
+        case T_PROTECTED:
+        case T_STATIC:
+        case T_ABSTRACT:
+        case T_FINAL:
+          if ($this->nextTokenValue() == '::') {
+            $node->setData('operand', $this->tokenValue());
+          }
+          break;
+
+        case T_CLASS:
+          if ($this->previousTokenValue() == '::') {
+            $node->setData('operand', $this->tokenValue());
+          }
+          break;
+
         case T_CLASS_C:
 //        case T_DIR: (Added in PHP 5.3.0.)
         case T_FILE:
