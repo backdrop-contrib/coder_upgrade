@@ -5,7 +5,7 @@
  *
  * Developer module that assists a contributed module with version upgrade from
  * the Drupal 7.x to Backdrop 1.x core API. The module creates new code files by
- * modifying existing code files in accordance with the core API changes. The 
+ * modifying existing code files in accordance with the core API changes. The
  * initial Backdrop version would be a straight port of features from the Drupal
  * version.
  *
@@ -14,6 +14,11 @@
  *
  * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
+
+/**
+ * Defines an array used to insert blank lines into created code.
+ */
+define('CODER_UPGRADE_WHITESPACE', array('type' => T_WHITESPACE, 'value' => 1 ));
 
 if (function_exists('t')) {
   // This code is being executed inside a process running Backdrop.
@@ -145,7 +150,7 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
 }
 
 function coder_upgrade_build_config_function($node, $reader) {
-  global $_coder_upgrade_module_name;
+  global $_coder_upgrade_module_name, $_coder_upgrade_module_human_name;
   $editor = PGPEditor::getInstance();
 
   // Set values for the new hook function.
@@ -162,16 +167,12 @@ function coder_upgrade_build_config_function($node, $reader) {
   $function->parameters = new PGPList();
 
   $strings[] = '$prefixes[\'' . $_coder_upgrade_module_name . '.settings\'] = array(';
-  $strings[] = "  'label' => t('Module name settings'),";
+  $strings[] = "  'label' => t('{$_coder_upgrade_module_human_name} settings'),";
   $strings[] = "  'group' => t('Configuration'),";
   $strings[] = ');';
   $strings[] = 'return $prefixes;';
 
-  $body_content = $editor->textToStatements(implode("\n", $strings))->getElement();
-
-  $body = new PGPBody();
-  $body->insertLast($body_content);
-  $function->body = $body;
+  $function->body = $editor->textToStatements(implode("\n", $strings));
 
   // Get the statement list the function node is part of.
   $container = &$node->container;
@@ -179,9 +180,5 @@ function coder_upgrade_build_config_function($node, $reader) {
   // Insert the new function before the old function.
   $container->insertBefore($node, $function, 'function');
   // Insert a blank line.
-  $whitespace = array(
-    'type' => T_WHITESPACE,
-    'value' => 1,
-  );
-  $container->insertBefore($node, $whitespace, 'whitespace');
+  $container->insertBefore($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
 }
