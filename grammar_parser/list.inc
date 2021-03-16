@@ -1793,6 +1793,11 @@ class PGPBody extends PGPList {
           $strings[] = $indent . $statement->toString() . ";";
           break;
 
+        case T_NAMESPACE:
+        case T_USE:
+          $strings[] = $statement->toString($indent);
+          break;
+
         case T_INLINE_HTML:
           // 2009-06-13 Inline html
           $strings[] = $current->statementValue('value');
@@ -1943,6 +1948,10 @@ class PGPExpression extends PGPList {
           $string .= $data;
           // Set space to zero for next item.
           $add_space = -1;
+          break;
+
+        case 'modifier': // PGPExpression on a PGPUse statement body block
+          $string .= $space . $data;
           break;
 
         // For a variable expression.
