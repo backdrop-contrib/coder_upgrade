@@ -281,6 +281,10 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
 
   $line_matches = array();
   foreach ($config_data as $key => $line) {
+    if ($line == array()) {
+      // Catch initialization with empty array.
+      continue;
+    }
     if (preg_match('/(dynamic variable in file )(.*)/', $line, $matches) || preg_match('/(dynamic value in file )(.*)/', $line, $matches)) {
       $line_matches[] = $matches[2];
     }
@@ -359,7 +363,13 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   $body->insertLast($body_content);
 
   foreach ($config_data as $key => $line) {
-    $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+    // Catch initialization with empty array.
+    if ($line == array()) {
+      $string = "  \$config->set('$key', update_variable_get('$key', array()));";
+    }
+    else {
+      $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+    }
     $body_content = $editor->textToStatements($string)->getElement(0);
     $body->insertLast($body_content);
   }
