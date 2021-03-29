@@ -359,7 +359,13 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   $body->insertLast($body_content);
 
   foreach ($config_data as $key => $line) {
-    $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+    if (is_bool($line)) {
+      $line = $line ? 'TRUE' : 'FALSE';
+      $string = "  \$config->set('$key', update_variable_get('$key', $line));";
+    }
+    else {
+      $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+    }
     $body_content = $editor->textToStatements($string)->getElement(0);
     $body->insertLast($body_content);
   }
