@@ -55,6 +55,7 @@ Current Maintainers
 -------------------
 
 - Docwilmot (https://github.com/docwilmot
+- Robert J. Lang ([bugfolder](http://github.com/bugfolder))
 
 Credits
 -------
