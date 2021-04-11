@@ -366,6 +366,7 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
     if ($line == array()) {
       // Check initialization with empty array.
       $string = "  \$config->set('$key', update_variable_get('$key', array()));";
+    }
     elseif (is_bool($line)) {
       // Check initialization with a Boolean variable
       $line = $line ? 'TRUE' : 'FALSE';
