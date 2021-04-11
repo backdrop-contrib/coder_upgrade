@@ -65,7 +65,11 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
     }
     elseif ($item->printParameter(1)) {
       $value = str_replace("'", '', $item->printParameter(1));
-      if (preg_match('@[\.\s\$\[\]\#\>\(]@', $value)) {
+      // Catch initialization with empty array.
+      if ($value == 'array()') {
+        $value = array();
+      }
+      elseif (preg_match('@[\.\s\$\[\]\#\>\(]@', $value)) {
         $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
       }
     }
