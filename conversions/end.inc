@@ -184,7 +184,8 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
 }
 
 function coder_upgrade_build_config_files($module_path, $module_name, $config) {
-  $name = str_replace('coder_upgrade_tmp.', '', $config->getName());
+  $tmp_name = $config->getName();
+  $name = str_replace('coder_upgrade_tmp.', '', $tmp_name);
   $data = array();
   $data['_config_name'] = $name;
   $data += $config->get();
@@ -197,7 +198,8 @@ function coder_upgrade_build_config_files($module_path, $module_name, $config) {
   else {
     $result = file_put_contents($dir . '/' . $name . '.json', $contents);
   }
-  //$config->delete();
+  $config = config($tmp_name);
+  $config->delete();
 }
 
 /**
