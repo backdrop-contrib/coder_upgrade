@@ -73,6 +73,16 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
         $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
       }
     }
+
+    // Boolean initial values need to be stored as Booleans, not strings.
+    $value_uc = strtoupper($value);
+    if ($value_uc == 'TRUE') {
+      $value = TRUE;
+    }
+    elseif ($value_uc == 'FALSE') {
+      $value = FALSE;
+    }
+
     $config->set($variable, $value);
     $config->save();
 

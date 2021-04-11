@@ -186,6 +186,12 @@ class PGPWriter extends PGPParser {
       case T_DEFINE:
         return 'constant'; // For API documentation purposes, at least.
 
+      case T_NAMESPACE:
+        return 'namespace';
+
+      case T_USE:
+        return 'use';
+
       default:
         return 'UNKNOWN-TYPE';
     }

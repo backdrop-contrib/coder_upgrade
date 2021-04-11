@@ -3284,3 +3284,388 @@ class PGPArray extends PGPBase {
     return $items;
   }
 }
+
+/**
+ * Grammar Parser namespace statement class.
+ *
+ * The order of the members is important so as to be able to use a foreach
+ * statement to print the object.
+ */
+class PGPNamespace extends PGPBase {
+
+  /**
+   * Documentation block comment.
+   *
+   * @var string
+   */
+  public $comment;
+
+  /**
+   * Statement type.
+   *
+   * @var integer
+   */
+  public $type;
+
+  /**
+   * Namespace name.
+   *
+   * @var PGPExpression
+   */
+  public $name;
+
+  /**
+   * Alias name (applies to use statement).
+   *
+   * @var string
+   * @deprecated
+   */
+  public $alias;
+
+  /**
+   * List of body statements (applies to namespace statement).
+   *
+   * @var PGPBody
+   */
+  public $body;
+
+  public function __construct() {
+    parent::__construct();
+
+    $this->type = 0;
+  }
+
+  /**
+   * Returns the text of a namespace statement.
+   *
+   * @param string $indent
+   *   (optional) Line indent string.
+   * @param string $prepend
+   *   (optional) String of comments and whitespace to prepend to statement.
+   *
+   * @return string
+   *   The text of the expression.
+   *
+   * @todo Convert code to new format.
+   */
+  public function toString($indent = '', $prepend = '') {
+    $this->debugPrint(__METHOD__);
+
+    $expression = $this; // @todo Why use this variable name now?
+
+    $strings = array();
+    $header = $indent . $prepend;
+
+    // Assemble comment and block header.
+    $add_space = 1; // Set this to one in this routine.
+    foreach ($expression as $key => $element) {
+      $this->debugPrint(__METHOD__ . " key = $key");
+      if ($key == 'body') {
+        break;
+      }
+      $space = $add_space ? ' ' : '';
+      switch ($key) {
+        case 'comment':
+          if (!empty($element)) {
+            $strings[] = PGPWriter::printComment($this->settings(), $element, $indent);
+          }
+          break;
+
+        case 'type':
+          $type = PGPWriter::statementTypeToString($element);
+          $header .= /*$space .*/ $type;
+          $add_space = 1;
+          break;
+
+        case 'name':
+          $header .= $space . $element->toString();
+          break;
+
+        case 'alias':
+          // @deprecated
+          if (is_object($element) && !$element->isEmpty()) {
+            $header .= $space . 'as' . $space . $element->toString();
+          }
+          break;
+      }
+      if ($add_space <= 0) {
+        $add_space++;
+      }
+    }
+    // Add block body.
+    $space = $add_space ? ' ' : '';
+    if (!isset($expression->body)) {
+      // Namespace code need not be wrapped in braces.
+      $header .= ';';
+      $strings[] = $header;
+    }
+    elseif ($expression->body->isEmpty()) {
+      // No namespace code.
+      $header .= $expression->bodyComment ? $space . '{' . $space . $expression->bodyComment . "\n" . $indent . '}' : $space . '{ }';
+      $strings[] = $header;
+    }
+    else {
+//      $header .= ' {';
+      // Add body comment (i.e. a comment following the block beginning token).
+      $header .= $expression->bodyComment ? $space . '{' . $space . $expression->bodyComment : $space . '{';
+      $strings[] = $header;
+      $strings[] = $expression->body->toString();
+      $strings[] = $indent . '}';
+    }
+
+    $delimiter = "\n";
+    return implode($delimiter, $strings);
+  }
+}
+
+/**
+ * Grammar Parser use statement class.
+ *
+ * The order of the members is important so as to be able to use a foreach
+ * statement to print the object.
+ */
+class PGPUse extends PGPBase {
+
+  /**
+   * Documentation block comment.
+   *
+   * @var string
+   * @todo Either implement or remove.
+   */
+  public $comment;
+
+  /**
+   * Statement type.
+   *
+   * @var integer
+   */
+  public $type;
+
+  /**
+   * Class names and (optional) aliases.
+   *
+   * @var PGPList
+   */
+  public $values;
+
+  public function __construct() {
+    parent::__construct();
+
+    $this->type = 0;
+  }
+
+  /**
+   * Returns the text of an use statement.
+   *
+   * @param string $indent
+   *   (optional) Line indent string.
+   * @param string $prepend
+   *   (optional) String of comments and whitespace to prepend to statement.
+   *
+   * @return string
+   *   The text of the expression.
+   */
+  public function toString($indent = '', $prepend = '') {
+    $this->debugPrint(__METHOD__);
+
+    $expression = $this; // @todo Why use this variable name now?
+
+    $add_space = 0;
+    $string = $indent . $prepend;
+    foreach ($expression as $key => $element) {
+      $this->debugPrint("inside $key");
+      $space = $add_space ? ' ' : '';
+      switch ($key) {
+        case 'type':
+          if (!$expression->nouse) {
+            $type = PGPWriter::statementTypeToString($element);
+            $string .= /*$space .*/ $type;
+            $add_space = -1;
+          }
+          break;
+
+        case 'values':
+          // Add list of use items.
+          if (is_object($element)) {
+            // @todo Enhance PGPList::toString() to be able to use next line.
+//             $string .= $space . $element->toString();
+            $string .= $space . $expression->valuesToString();
+          }
+          break;
+
+        case 'body':
+          // @todo Copied from PGPClass; all may not apply.
+          if ($expression->nobraces) {
+            // This case should not occur on interface, class, or function.
+            // Allow for no braces with an empty body.
+            $open_brace = $close_brace = '';
+          }
+          else {
+            // Include body comment following the block beginning token.
+            $space2 = '';
+            $open_brace = isset($expression->bodyComment) && $expression->bodyComment ? '{' . $space2 . $expression->bodyComment : '{';
+            if (TRUE || !is_object($expression->name)) {
+              // Indent closing brace on anonymous function.
+              $indent = PGPWriter::getIndent($this->settings());
+            }
+            $close_brace = "\n" . $indent . '}';
+          }
+
+          $string .= $space . $open_brace;
+          if (isset($element) && !$element->isEmpty()) {
+            $string .= PGPWriter::getDelimiter($this->settings());
+            $string .= $element->toString();
+          }
+          $string .= $close_brace;
+          break;
+      }
+      if ($add_space <= 0) {
+        $add_space++;
+      }
+    }
+    $string .= isset($expression->semicolon) && $expression->semicolon ? ';' : '';
+    return $string;
+  }
+
+  /**
+   * Returns the text of an use statement.
+   *
+   * @return string
+   *   The text of the use items.
+   *
+   * @todo Enhance PGPList::toString() so it will handle this.
+   */
+  public function valuesToString() {
+    $this->debugPrint(__METHOD__);
+
+    $add_space = 1;
+    $string = '';
+    $current = $this->values->first();
+    while ($current->next != NULL) {
+      $key = $current->type;
+      $element = $current->data;
+
+      $this->debugPrint(__METHOD__ . " key = $key");
+      $space = $add_space ? ' ' : '';
+      switch ($key) {
+        case 'name':
+          $string .= $space . $element->toString();
+          break;
+
+        case 'alias':
+          $string .= $space . $element->toString();
+          break;
+
+        case 'operator':
+          $string .= $space . $element;
+          break;
+
+        case 'comma':
+          $separator = '';
+          $string .= $separator . $element;
+          break;
+      }
+      if ($add_space <= 0) {
+        $add_space++;
+      }
+
+      $current = $current->next;
+    }
+    return $string;
+  }
+
+  /**
+   * Returns an associative array of classes or methods keyed by alias.
+   *
+   * If the 'instead of' mappings are requested, then the array is keyed by the
+   * instead value.
+   *
+   * @param string $group
+   *   (optional) The group of class or method items to return. Either 'alias',
+   *   'instead', or blank to return all.
+   * @param string $include_modifier
+   *   (optional) Whether to include the scope modifier in the alias. (Not used)
+   *
+   * @return array
+   *   An array of the classes keyed by alias.
+   */
+  public function valuesToArray($group = '', $include_modifier = FALSE) {
+    $this->debugPrint(__METHOD__);
+
+    $bucket = 'alias';
+    $return = array();
+    if ($this->values instanceof PGPList) {
+      $last_is_name = FALSE;
+      $current = $this->values->first();
+      while ($current->next != NULL) {
+        $type = $current->type;
+        if ($type == 'name') {
+          if ($last_is_name) {
+            // Use class name as the alias.
+            $alias = $name_expression->findNode('operand', 'backward')->toString();
+            $name = $name_expression->toString();
+            $return[$bucket][$alias] = $name;
+          }
+          $name_expression = $current->data->stripComments();
+          $last_is_name = TRUE;
+        }
+        elseif ($type == 'operator') {
+          $bucket = $current->data == 'as' ? 'alias' : 'instead'; // @todo Use type as is?
+        }
+        elseif ($type == 'alias') {
+          $alias = $current->data->stripComments()->toString();
+          $last_is_name = FALSE;
+          if (isset($name_expression)) {
+            $name = $name_expression->toString();
+            $return[$bucket][$alias] = $name;
+            $name_expression = NULL;
+            $bucket = 'alias';
+          }
+        }
+        $current = &$current->next;
+      }
+      if ($last_is_name) {
+        // Use class name as the alias.
+        $alias = $name_expression->findNode('operand', 'backward')->toString();
+        $name = $name_expression->toString();
+        $return[$bucket][$alias] = $name;
+      }
+    }
+    return isset($return[$group]) ? $return[$group] : $return;
+  }
+
+  /**
+   * Returns an associative array of classes or methods keyed by alias.
+   *
+   * If the 'instead of' mappings are requested, then the array is keyed by the
+   * instead value.
+   *
+   * @param string $group
+   *   (optional) The group of class or method items to return. Either 'alias',
+   *   'instead', or blank to return all.
+   * @param string $include_modifier
+   *   (optional) Whether to include the scope modifier in the alias. (Not used)
+   *
+   * @return array
+   *   An array of the classes keyed by alias.
+   */
+  public function bodyValuesToArray($group = '', $include_modifier = FALSE) {
+    $this->debugPrint(__METHOD__);
+
+    $return = array();
+    $current = $this->body->first();
+    while ($current->next != NULL) {
+      $statement = $current->data;
+      $type = is_object($statement) ? $statement->type : $statement['type'];
+      switch ($type) {
+        case T_USE:
+          $new = $statement->valuesToArray();
+          $return = array_merge_recursive($return, $statement->valuesToArray());
+          break;
+      }
+      $current = $current->next;
+    }
+
+    return isset($return[$group]) ? $return[$group] : $return;
+  }
+}

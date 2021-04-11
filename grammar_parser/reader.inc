@@ -748,6 +748,43 @@ class PGPReader extends PGPParser {
           $node->data = $this->buildList();
           break;
 
+        case T_NAMESPACE:
+          if ($this->nextRealToken() == T_NS_SEPARATOR) {
+            // This is not a namespace declaration, but an assignment or
+            // function call statement (assuming a namespace declaration does
+            // not begin with a back slash, although lint allows it).
+            // Should not be an assignment as namespace syntax does not include
+            // variables, nor assignments to constants.
+            // To determine which requires a big token lookahead.
+            prev($this->tokens);
+            $node->data = $this->buildAssignment($modifiers);
+            break;
+          }
+          $node->data = $this->buildNamespace();
+          break;
+
+        case T_USE:
+          $node->data = $this->buildUse();
+          break;
+          // @see http://www.php.net/manual/en/language.namespaces.definitionmultiple.php
+          // Can be surrounded by brackets, global namespace has no name.
+          // @see http://www.php.net/manual/en/language.namespaces.basics.php
+          // Statement may begin with a back slash.
+          // Seems like it would make sense to concatenate the namespace as a single item.
+          // Add another item to function call being the namespace along with name.
+          $node->data = $this->buildFunctionCall();
+          $this->functionCalls[] = &$node;
+          break;
+
+        case T_NS_SEPARATOR:
+          // @todo If the expression starts with the separator, then it seems to
+          // be limited to being a function call.
+          prev($this->tokens);
+          $node->data = $this->buildAssignment($modifiers);
+          $this->functionCalls[] = &$node;
+          break;
+
+
         case T_ISSET: // 2010-02-23 Added.
           prev($this->tokens);
           $node->data = $this->buildAssignment($modifiers);
@@ -1776,7 +1813,7 @@ class PGPReader extends PGPParser {
           break;
 */
         case '?':
-          if ($this->nextRealToken() == T_STRING) {
+          if ($this->nextRealToken() == T_STRING || $this->nextRealToken() == T_ARRAY) {
             // Nullable types.
             $node->setData('operator2', $this->tokenValue());
           }
@@ -1822,6 +1859,23 @@ class PGPReader extends PGPParser {
           $node->setData('operand', $this->buildList());
           break;
 
+        case T_PUBLIC:
+        case T_PRIVATE:
+        case T_PROTECTED:
+        case T_STATIC:
+        case T_ABSTRACT:
+        case T_FINAL:
+          if ($this->nextTokenValue() == '::') {
+            $node->setData('operand', $this->tokenValue());
+          }
+          break;
+
+        case T_CLASS:
+          if ($this->previousTokenValue() == '::') {
+            $node->setData('operand', $this->tokenValue());
+          }
+          break;
+
         case T_CLASS_C:
 //        case T_DIR: (Added in PHP 5.3.0.)
         case T_FILE:
@@ -1839,6 +1893,24 @@ class PGPReader extends PGPParser {
 //        case T_END_HEREDOC:
 //          $node->setData('operand', $this->tokenValue());
 //          break;
+
+        case T_NAMESPACE:
+          $node->setData('operator3', $this->tokenValue());
+          break;
+
+        case T_NS_SEPARATOR:
+          // @todo If the expression starts with the separator, then add a leading space.
+          if ($this->previousTokenType() == T_WHITESPACE) {
+            $node->setData('operator3', $this->tokenValue());
+          }
+          else {
+            $node->setData('operator2', $this->tokenValue());
+          }
+          break;
+
+        case T_NS_C:
+          $node->setData('operand', $this->tokenValue());
+          break;
 
         default:
 //          prev($this->tokens); // This would be the ';' character???
@@ -2201,7 +2273,7 @@ class PGPReader extends PGPParser {
             $expression->values->insertLast($temp, 'value');
             $temp = NULL;
           }
-          elseif ($type == ')') {
+          elseif ($type == ')' || $type == ']') {
             /*
              * The last item in the value expression can be an expression
              * (e.g. inlineelse) in which case we need to look inside the
@@ -2833,6 +2905,178 @@ class PGPReader extends PGPParser {
     $block->warning = 'unexpected end of file in ' . __METHOD__ . '(' . __LINE__ . ')';
     $block->extra = $this->cleanToken();
     return $block;
+  }
+
+  /**
+   * Builds a namespace [or use] statement.
+   *
+   * @return PGPNamespace
+   *   An object of the statement.
+   */
+  private function buildNamespace() {
+    $this->debugPrint(__FUNCTION__);
+
+    // Create object.
+    $expression = new PGPNamespace();
+    $expression->comment = $this->comment;
+    $expression->type = $this->tokenType();
+
+    // Global items.
+    $this->comment = array();
+
+    // Local items.
+    $alias = 0;
+
+    while (next($this->tokens) !== FALSE) {
+      $this->debugPrint('while buildNamespace');
+      $this->printToken();
+      switch ($this->tokenType()) {
+        case T_STRING:
+        case T_NS_SEPARATOR:
+          // @deprecated this entire case block.
+          if ($alias) {
+            // @deprecated
+            $expression->alias = $this->tokenValue();
+          }
+          else {
+            // @todo May the name begin with a back slash?
+            // Only namespace statement may have a body.
+            prev($this->tokens);
+            $expression->name = $this->buildExpression(array(';', '{', T_AS));
+          }
+          break;
+
+        case T_AS:
+          // @deprecated this entire case block.
+          $alias++;
+          $expression->alias = $this->buildExpression(array(';'));
+          break;
+
+        case '{':
+          if ($expression->type == T_USE) {
+            $expression->warning = 'unexpected syntax in ' . __METHOD__ . '(' . __LINE__ . ')';
+            break;
+          }
+          $expression->bodyComment = $this->buildBodyComment();
+          $expression->body = $this->buildBody();
+          break;
+
+        case '}':
+          return $expression;
+          break;
+
+        case ';':
+          return $expression;
+          break;
+
+        default:
+          if (!$alias) {
+            // @todo May the name begin with a back slash?
+            // Only namespace statement may have a body.
+            prev($this->tokens);
+            $expression->name = $this->buildExpression(array(';', '{', T_AS));
+          }
+          else {
+            $expression->warning = 'unexpected syntax in ' . __METHOD__ . '(' . __LINE__ . ')';
+            $expression->extra = $this->cleanToken();
+            return $expression;
+          }
+          break;
+      }
+    }
+    $expression->warning = 'unexpected end of file in ' . __METHOD__ . '(' . __LINE__ . ')';
+    $expression->extra = $this->cleanToken();
+    return $expression;
+  }
+
+  /**
+   * Builds a use statement.
+   *
+   * @return PGPUse
+   *   An object of the statement.
+   */
+  private function buildUse($in_body = FALSE) {
+    $this->debugPrint(__FUNCTION__);
+
+    // Create object.
+    $expression = new PGPUse();
+    $expression->comment = $this->comment;
+    $expression->type = $in_body ? T_USE : $this->tokenType(); // @todo Will this ever not be T_USE?
+    $expression->semicolon = TRUE;
+    $expression->nobraces = 1;
+    $expression->nouse = $in_body; // Means to not print 'use' at beginning.
+    $expression->values = new PGPList();
+
+    // Global items.
+    $this->comment = array();
+
+    // Local items.
+    $is_alias = FALSE;
+
+    while (next($this->tokens) !== FALSE) {
+      $this->debugPrint('while buildUse');
+      $this->printToken();
+      switch ($this->tokenType()) {
+        case ',':
+          $type = $is_alias ? 'alias' : 'name';
+          $expression->values->insertLast($temp, $type);
+          $is_alias = FALSE;
+          $temp = NULL; // Necessary?
+          $expression->values->insertLast($this->tokenValue(), 'comma');
+          $temp = $this->buildExpression(array(',', T_AS, T_INSTEADOF, ';', '{'));
+          break;
+
+        case T_AS:
+        case T_INSTEADOF:
+          // @todo Only allowed outside of class or trait.
+          $is_alias = TRUE;
+          $expression->values->insertLast($temp, 'name');
+          $temp = NULL; // Necessary?
+          $expression->values->insertLast($this->tokenValue(), 'operator');
+          $temp = $this->buildExpression(array(',', T_AS, T_INSTEADOF, ';', '{'));
+          break;
+
+        case ';':
+          $type = $is_alias ? 'alias' : 'name';
+          $expression->values->insertLast($temp, $type);
+          $expression->semicolon = TRUE;
+          return $expression;
+          break;
+
+        case '{':
+          // @todo Only allowed inside of class or trait.
+          $type = $is_alias ? 'alias' : 'name';
+          $expression->values->insertLast($temp, $type);
+          // Build body.
+          $this->inUseBody = TRUE;
+          $expression->nobraces = 0;
+          $expression->semicolon = FALSE;
+          $expression->bodyComment = $this->buildBodyComment();
+          $expression->body = $this->buildBody();
+          $this->inUseBody = FALSE;
+          break;
+
+        case '}':
+          return $expression;
+          break;
+
+        default:
+          if ($expression->values->isEmpty()) {
+            prev($this->tokens);
+            $temp = $this->buildExpression(array(',', T_AS, T_INSTEADOF, ';', '{'));
+          }
+          else {
+            // @todo Unreachable code.
+            $expression->warning = 'unexpected syntax in ' . __METHOD__ . '(' . __LINE__ . ')';
+            $expression->extra = $this->cleanToken();
+            return $expression;
+          }
+          break;
+      }
+    }
+    $expression->warning = 'unexpected end of file in ' . __METHOD__ . '(' . __LINE__ . ')';
+    $expression->extra = $this->cleanToken();
+    return $expression;
   }
 
   /**
