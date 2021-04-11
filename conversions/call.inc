@@ -57,30 +57,51 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
     $split = explode($old_dir, $_coder_upgrade_filename);
     $path = $split[1];
 
-    // Account for dynamically generated variables with a $variable rather than
-    // a string, such as ('variable_' . $node->type).
     if (strpos($variable, '$')) {
+      // Account for dynamically generated variables that include a $variable
+      // rather than a string, such as ('variable_' . $node->type).
       $variable = preg_replace('@[^a-zA-Z_]@', '', $variable);
-      $value = "dynamic variable in file $path line $node->line";
+      $value = 'dynamic variable in file ' . $path . ' line ' . $node->line;
     }
-    elseif ($item->printParameter(1)) {
-      $value = str_replace("'", '', $item->printParameter(1));
+    else {
+      $raw_value = $item->printParameter(1);
+      $value_uc = strtoupper($raw_value);
+
       // Catch initialization with empty array.
-      if ($value == 'array()') {
+      if ($raw_value == 'array()') {
         $value = array();
       }
+
+      // Catch Booleans, which should be stored as Booleans, not strings.
+      elseif ($value_uc == 'TRUE') {
+        $value = TRUE;
+      }
+      elseif ($value_uc == 'FALSE') {
+        $value = FALSE;
+      }
+
+      // Any special characters in the variable, it's beyond our handling, so
+      // just insert the warning.
       elseif (preg_match('@[\.\s\$\[\]\#\>\(]@', $value)) {
         $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
       }
-    }
 
-    // Boolean initial values need to be stored as Booleans, not strings.
-    $value_uc = strtoupper($value);
-    if ($value_uc == 'TRUE') {
-      $value = TRUE;
-    }
-    elseif ($value_uc == 'FALSE') {
-      $value = FALSE;
+      // If what's left starts and ends with either single or double quotes then
+      // it's an ordinary string.
+      else {
+        $len = strlen($raw_value);
+        $first = substr($raw_value, 0, 1);
+        $last = substr($raw_value, -1);
+        $sq_delimited = $first == "'" && $last == "'";
+        $dq_delimited = $first == '"' && $last == '"';
+        if ($len >= 2 && ($sq_delimited || $dq_delimited)) {
+          $value = substr($raw_value, 1, $len - 2);
+        }
+        else {
+          // something is amiss! Insert the warning.
+          $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
+        }
+      }
     }
 
     $config->set($variable, $value);
