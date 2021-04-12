@@ -64,7 +64,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
       $value = 'dynamic variable in file ' . $path . ' line ' . $node->line;
     }
     else {
-      $raw_value = $item->printParameter(1);
+      $raw_value = trim($item->printParameter(1));  // Remove extra whitespace
       $value_uc = strtoupper($raw_value);
 
       // Catch initialization with empty array.
@@ -98,8 +98,11 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
           $value = substr($raw_value, 1, $len - 2);
         }
         else {
+          // It's a numeric expression, so use it directly.
+          $value = $raw_value;
+
           // something is amiss! Insert the warning.
-          $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
+          //$value = 'dynamic value in file ' . $path . ' line ' . $node->line;
         }
       }
     }
