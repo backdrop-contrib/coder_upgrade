@@ -100,9 +100,6 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
         else {
           // It's a numeric expression, so use it directly.
           $value = $raw_value;
-
-          // something is amiss! Insert the warning.
-          //$value = 'dynamic value in file ' . $path . ' line ' . $node->line;
         }
       }
     }
