@@ -144,9 +144,9 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
       'type' => T_DOC_COMMENT,
       'value' => "/**\n * Implements hook_autoload_info().\n */",
     );
-    $modulename = $module_name . '_autoload_info';
+    $function_name = $module_name . '_autoload_info';
 
-    $function = new PGPClass($modulename);
+    $function = new PGPClass($function_name);
     $function->comment = $comment;
     $function->type = T_FUNCTION;
     $function->parameters = new PGPList();
@@ -319,9 +319,9 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
       'type' => T_DOC_COMMENT,
       'value' => "/**\n * Implements hook_install().\n */",
     );
-    $modulename = $module_name . '_install';
+    $function_name = $module_name . '_install';
 
-    $function = new PGPClass($modulename);
+    $function = new PGPClass($function_name);
     $function->comment = $comment;
     $function->type = T_FUNCTION;
     $function->parameters = new PGPList();
@@ -396,11 +396,11 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   // Set values for the new hook function.
   $comment = array(
     'type' => T_DOC_COMMENT,
-    'value' => "/**\n * Implements hook_update_N().\n */",
+    'value' => "/**\n * Migrate {$module_name} variables to config.\n */",
   );
-  $modulename = $module_name . '_update_1000';
+  $function_name = $module_name . '_update_1000';
 
-  $function = new PGPClass($modulename);
+  $function = new PGPClass($function_name);
   $function->comment = $comment;
   $function->type = T_FUNCTION;
   $function->parameters = new PGPList();
@@ -436,10 +436,10 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
         'type' => T_DOC_COMMENT,
         'value' => "/**\n * Implements hook_update_last_removed().\n */",
       );
-      $modulename = $module_name . '_update_last_removed';
+      $function_name = $module_name . '_update_last_removed';
 
       // Create the new hook function.
-      $function = new PGPClass($modulename);
+      $function = new PGPClass($function_name);
       $function->comment = $comment;
       $function->type = T_FUNCTION;
       $function->parameters = new PGPList();
