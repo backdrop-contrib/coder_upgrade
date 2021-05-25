@@ -82,7 +82,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
 
       // Any special characters in the variable, it's beyond our handling, so
       // just insert the warning.
-      elseif (preg_match('@[\.\s\$\[\]\#\>\(]@', $value)) {
+      elseif (!preg_match('@^\'[^\']*\'$@', $raw_value) && preg_match('@[\.\s\$\[\]\#\>\(]@', $raw_value)) {
         $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
       }
 
