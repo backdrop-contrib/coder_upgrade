@@ -38,9 +38,8 @@ To convert modules:
 
 1. Place the unpacked Drupal 7 module in the `old` directory.
 2. Visit `admin/config/development/coder-upgrade`, select the Directories tab,
-and check the box next to the module you wish to convert. Click the Convert
-files button.
-3. The Drupal 7 code will be converted, then copied to the `new` directory.
+and check the box next to the module you wish to convert. 
+3. Click the Convert Files button. The Drupal 7 code will be converted, then copied to the `new` directory.
 4. In addition to the converted module in the `new` directory, a patch that converts the old module will be placed in the `patch` directory.
 
 Details
@@ -88,15 +87,15 @@ There are no dependencies. Unlike the Drupal version, the Grammar Parser Library
 
 Developers
 ----------
-In the event of issues with the upgrade routines, debug output may be enabled on
-the settings page of this module. This information is very verbose; it is recommended to enable this only with
+In the event you encounter issues with the upgrade routines, debug output may be enabled on
+the settings page of this module. This information is quite verbose; it is recommended to enable this only with
 smaller files that include the code causing an issue.
 
 Current Maintainers
 -------------------
 
 - [Docwilmot](https://github.com/docwilmot)
-- [Robert J. Lang (bugfolder)]([bugfolder](http://github.com/bugfolder))
+- [Robert J. Lang (bugfolder)](http://github.com/bugfolder)
 
 Credits
 -------
