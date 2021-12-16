@@ -548,7 +548,7 @@ function coder_upgrade_directory_list() {
 /**
  * Returns list of contributed modules.
  *
- * @param null $core
+ * @param bool $core
  *   Indicates whether to return core modules regardless of settings variable.
  * @param integer $status
  *   Indicates status of modules to return.
@@ -566,7 +566,7 @@ function coder_upgrade_module_list($core = NULL, $status = -1) {
           REPLACE(filename, CONCAT('/', name, '.', type), '') AS directory
           FROM {system}
           WHERE type = 'module'
-          AND filename $like 'modules/%'
+          AND filename $like 'core/%'
           $where
           ORDER BY directory, name";
   $default_value = 0;
