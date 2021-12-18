@@ -88,7 +88,6 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/Drupal 7/";
   $to[] = "Backdrop CMS";
 
-  // change Drupal to Backdrop throughtout.
   $from[] = "/drupal/";
   $to[] = "backdrop";
 
