@@ -52,7 +52,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = $name . "_preprocess_page";
 
   // hook_library() has been renamed.
-  $from[] = "/".$name."_library/";
+  $from[] = "/" . $name . "_library/";
   $to[] = $name."_library_info";
 
   // hook_library_alter() has been renamed.
