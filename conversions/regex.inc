@@ -48,7 +48,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = "theme_head_tag";
 
   // hook_page_build() has been replaced: https://api.backdropcms.org/change-records/new-layout-module-implements-drag-drop-model-building-layouts
-  $from[] = "/".$name."_page_build/";
+  $from[] = "/" . $name . "_page_build/";
   $to[] = $name . "_preprocess_page";
 
   // hook_library() has been renamed.
