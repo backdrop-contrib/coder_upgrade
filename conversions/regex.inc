@@ -72,7 +72,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = 'backdrop_sort($items)';
 
   // replace special sorting function 4
-  $from[] = '/uasort\(\$items, *'."'drupal_sort_title'\)/";
+  $from[] = '/uasort\(\$items, *' . "'drupal_sort_title'\)/";
   $to[] = 'backdrop_sort($items, array("title" => SORT_STRING))';
 
   // replace special sorting function 5
