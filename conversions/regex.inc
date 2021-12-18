@@ -84,7 +84,6 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/drupal\.org/";
   $to[] = "mothershiporg";
 
-  $to[] = "Backdrop CMS";
 
   $from[] = "/drupal/";
   $to[] = "backdrop";
