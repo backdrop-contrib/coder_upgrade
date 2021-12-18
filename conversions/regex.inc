@@ -76,7 +76,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = 'backdrop_sort($items, array("title" => SORT_STRING))';
 
   // replace special sorting function 5
-  $from[] = '/uasort\(\$items, *'."'admin_bar_element_sort'\)/";
+  $from[] = '/uasort\(\$items, *' . "'admin_bar_element_sort'\)/";
   $to[] = 'backdrop_sort($items, array("#weight" => SORT_NUMERIC, "#title" => SORT_STRING))';
 
   // temporarily rename Drupal links so the other regexes dont create false 
