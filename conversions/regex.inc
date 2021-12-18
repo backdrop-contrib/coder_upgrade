@@ -53,7 +53,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
 
   // hook_library() has been renamed.
   $from[] = "/" . $name . "_library/";
-  $to[] = $name."_library_info";
+  $to[] = $name . "_library_info";
 
   // hook_library_alter() has been renamed.
   $from[] = "/".$name."_library_alter/";
