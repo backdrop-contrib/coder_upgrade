@@ -41,7 +41,31 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = "/format_username/";
   $to[] = "user_format_name";
 
-  // temporarily rename Drupal links so the other regexes dont create false 
+  // theme_html_tag() has been renamed.
+  $from[] = "/theme_html_tag/";
+  $to[] = "theme_head_tag";
+
+  // replace special sorting function: https://api.backdropcms.org/change-records/generic-sorting-function-replace-implementations-uasort
+   $from[] = '/uasort\(\$items, *' . "'element_sort'\)/";
+   $to[] = 'backdrop_sort($items, array("#weight"))';
+
+   // replace special sorting function 2
+   $from[] = '/uasort\(\$items, *' . "'element_sort_title'\)/";
+   $to[] = 'backdrop_sort($items, array("#title" => SORT_STRING))';
+
+   // replace special sorting function 3
+   $from[] = '/uasort\(\$items, *' . "'drupal_sort'\)/";
+   $to[] = 'backdrop_sort($items)';
+
+   // replace special sorting function 4
+   $from[] = '/uasort\(\$items, *' . "'drupal_sort_title'\)/";
+   $to[] = 'backdrop_sort($items, array("title" => SORT_STRING))';
+
+   // replace special sorting function 5
+   $from[] = '/uasort\(\$items, *' . "'admin_bar_element_sort'\)/";
+   $to[] = 'backdrop_sort($items, array("#weight" => SORT_NUMERIC, "#title" => SORT_STRING))';
+
+  // temporarily rename Drupal links so the other regexes don't create false
   // links.
   $from[] = "/drupal\.org/";
   $to[] = "mothershiporg";
@@ -80,7 +104,7 @@ function coder_upgrade_upgrade_regex_js_alter(&$file) {
   $from = array();
   $to = array();
 
-  // temporarily rename Drupal links so the other regexes dont create false 
+  // temporarily rename Drupal links so the other regexes dont create false
   // links.
   $from[] = "/drupal\.org/";
   $to[] = "mothershiporg";
