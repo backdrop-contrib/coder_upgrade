@@ -1002,7 +1002,7 @@ function coder_upgrade_callback_functions(&$node, &$reader) {
    * the key in the switch statement. In some cases (e.g. hook_update_N), some
    * additional manipulation and testing needs to be done.
    */
-  if (strpos($name, $_coder_upgrade_module_name) !== 0) {
+  if (strpos($name, $_coder_upgrade_module_name) !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0) {
     clp("Ignoring function '$name' as its name does not begin with the module name");
     return;
   }
