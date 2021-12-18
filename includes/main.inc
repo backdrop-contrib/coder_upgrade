@@ -490,10 +490,10 @@ function coder_upgrade_convert_functions(&$reader) {
     /*
      * If the function name does not begin with the module name, then ignore it.
      * This assumes such a function would be an instance of an API hook defined
-     * by the contributed module but implemented on behalf of another module. For
-     * this use case, the contributed module would define upgrade routines to
-     * allow other contributed modules that implement said API to upgrade their
-     * code.
+     * by the contributed module but implemented on behalf of another module.
+     * For this use case, the contributed module would define upgrade routines
+     * to allow other contributed modules that implement said API to upgrade
+     * their code.
      *
      * Example: the Views module defines hooks and implements them on behalf of
      * core modules.
@@ -502,7 +502,7 @@ function coder_upgrade_convert_functions(&$reader) {
      * a switch statement. In some cases (e.g. hook_update_N), some additional
      * manipulation and checking needs to be done.
      */
-    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
+    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
       clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
       continue;
     }
@@ -523,7 +523,7 @@ function coder_upgrade_convert_functions(&$reader) {
     if (!isset($item) || !is_object($item) || !($item instanceof PGPClass) || $item->type != T_FUNCTION) {
       continue;
     }
-    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
+    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
       clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
       continue;
     }
