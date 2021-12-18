@@ -79,7 +79,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $from[] = '/uasort\(\$items, *' . "'admin_bar_element_sort'\)/";
   $to[] = 'backdrop_sort($items, array("#weight" => SORT_NUMERIC, "#title" => SORT_STRING))';
 
-  // temporarily rename Drupal links so the other regexes dont create false 
+  // temporarily rename Drupal links so the other regexes don't create false 
   // links.
   $from[] = "/drupal\.org/";
   $to[] = "mothershiporg";
