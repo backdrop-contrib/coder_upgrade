@@ -57,7 +57,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
 
   // hook_library_alter() has been renamed.
   $from[] = "/" . $name . "_library_alter/";
-  $to[] = $name."_library_info_alter";
+  $to[] = $name . "_library_info_alter";
 
   // replace special sorting function: https://api.backdropcms.org/change-records/generic-sorting-function-replace-implementations-uasort
   $from[] = '/uasort\(\$items, *'."'element_sort'\)/";
