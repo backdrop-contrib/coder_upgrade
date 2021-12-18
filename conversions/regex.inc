@@ -168,7 +168,7 @@ function coder_upgrade_upgrade_regex_info_alter(&$file) {
   $to[] = "";
 
   // Remove files[] entries - Backdrop uses hook_autoload_info() instead.
-  $from[] = '@files\[\]\s?=?\s(.+)[\r\n]*@m';
+  $from[] = '@files\[\]\s?=\s?(.+)[\r\n]*@m';
   $to[] = "";
 
   coder_upgrade_do_conversions($from, $to, $new);
