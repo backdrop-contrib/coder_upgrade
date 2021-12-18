@@ -64,7 +64,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = 'backdrop_sort($items, array("#weight"))';
 
   // replace special sorting function 2
-  $from[] = '/uasort\(\$items, *'."'element_sort_title'\)/";
+  $from[] = '/uasort\(\$items, *' . "'element_sort_title'\)/";
   $to[] = 'backdrop_sort($items, array("#title" => SORT_STRING))';
 
   // replace special sorting function 3
