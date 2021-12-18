@@ -141,13 +141,10 @@ function coder_upgrade_upgrade_admin_path_changes(&$from, &$to) {
 /**
  * Implements hook_upgrade_regex_info_alter().
  *
- * Alters the text of a code file using regular expressions.
- *
- * Module Info / Install
- * http://drupal.org/node/224333#info_core_7 (this anchor does not exist on the chronological page)
+ * Alters the content of a code file using regular expressions.
  *
  * @param string $file
- *   The text of the file to convert.
+ *   The content of the file to be converted.
  */
 function coder_upgrade_upgrade_regex_info_alter(&$file) {
   cdp("inside " . __FUNCTION__);
@@ -159,15 +156,19 @@ function coder_upgrade_upgrade_regex_info_alter(&$file) {
   $to = array();
 
   // Info file should specify core = 7.x.
-  $from[] = '@^core\s+=\s+.*?$@m';
+  $from[] = '@^core\s?=\s?.*?$@m';
+  // Replace the "core = 7.x" line with "backdrop = 1.x", and add a line for the
+  // project type.
+  // @todo: We are assuming .info file can only belong to a D7 module here, but
+  // it can also be a theme. See: https://github.com/backdrop-contrib/coder_upgrade/issues/63
   $to[] = "backdrop = 1.x\ntype = module";
 
   // Remove packaging info.
-  $from[] = '@[\n\r](;\sInformation\sadded)(.+?)(datestamp\s=\s"\d+")[\n\r]@s';
+  $from[] = '@[\n\r](;\sInformation\sadded)(.+?)(datestamp\s?=\s?"\d+")[\n\r]@s';
   $to[] = "";
 
-  // Remove files[] entries.
-  $from[] = '@files\[\]\s=\s(.+)[\r\n]*@m';
+  // Remove files[] entries - Backdrop uses hook_autoload_info() instead.
+  $from[] = '@files\[\]\s?=?\s(.+)[\r\n]*@m';
   $to[] = "";
 
   coder_upgrade_do_conversions($from, $to, $new);
