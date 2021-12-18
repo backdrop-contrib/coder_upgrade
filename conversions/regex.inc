@@ -60,7 +60,7 @@ function coder_upgrade_upgrade_regex_alter(&$file) {
   $to[] = $name . "_library_info_alter";
 
   // replace special sorting function: https://api.backdropcms.org/change-records/generic-sorting-function-replace-implementations-uasort
-  $from[] = '/uasort\(\$items, *'."'element_sort'\)/";
+  $from[] = '/uasort\(\$items, *' . "'element_sort'\)/";
   $to[] = 'backdrop_sort($items, array("#weight"))';
 
   // replace special sorting function 2
