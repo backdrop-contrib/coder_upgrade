@@ -14,6 +14,8 @@
  */
 function coder_upgrade_upgrade_regex_alter(&$file) {
   cdp("inside " . __FUNCTION__);
+  global $_coder_upgrade_module_name;
+  $name = $_coder_upgrade_module_name;
   $hook = 'regex_simple_changes';
   $cur = $file;
   $new = $cur;
