@@ -435,7 +435,7 @@ function coder_upgrade_conversions_form_defaults($form_state) {
     'js' => TRUE,
 //    'php' => FALSE,
 //    'profile' => FALSE,
-//    'test' => FALSE,
+    'test' => TRUE,
 //    'theme' => FALSE,
   );
 
