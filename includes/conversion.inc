@@ -559,7 +559,14 @@ function coder_upgrade_directory_list() {
 function coder_upgrade_module_list($core = NULL, $status = -1) {
   $test = is_null($core) ? config_get('coder_upgrade.settings', 'coder_upgrade_upgrade_core') : $core;
   $like = $test ? 'LIKE' : 'NOT LIKE';
-  $where = $status == -1 ? '' : 'AND status = :status';
+  if ($status == -1) {
+    $where = '';
+    $args = array();
+  }
+  else {
+    $where = 'AND status = :status';
+    $args = array(':status' => $status);
+  }
 
   // Faster to query DB than to rescan files using _system_get_module_data().
   $sql = "SELECT name, filename, type, status, info,
@@ -570,7 +577,7 @@ function coder_upgrade_module_list($core = NULL, $status = -1) {
           $where
           ORDER BY directory, name";
   $default_value = 0;
-  $results = db_query($sql, array(':status' => $status));
+  $results = db_query($sql, $args);
   $rows = array();
   foreach ($results as $module) {
     $info = unserialize($module->info);
