@@ -529,7 +529,7 @@ function _coder_upgrade_sort_files_by_modules($files, $modules) {
   uasort ($modules , function ($a, $b) {
     $deptha = substr_count($a, '/');
     $depthb = substr_count($b, '/');
-    return $deptha < $depthb;
+    return ($deptha < $depthb) ? 1 : 0;
     }
   );
   $sorted = array();

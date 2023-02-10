@@ -104,7 +104,7 @@ class PGPParser {
 
   public function __construct() {
     @set_error_handler(array($this, 'errorHandler'));
-    @set_exception_handler(array($this, 'exception_handler'));
+    @set_exception_handler(array($this, 'exceptionHandler'));
 
     $this->initValues();
   }
@@ -395,6 +395,7 @@ class PGPParser {
         E_USER_WARNING => 'User warning',
         E_USER_NOTICE => 'User notice',
         E_RECOVERABLE_ERROR => 'Recoverable error',
+        E_DEPRECATED => 'Deprecated',
       );
 
       $backtrace = debug_backtrace();
