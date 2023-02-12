@@ -122,7 +122,7 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
         $reader = PGPReader::getInstance();
         coder_upgrade_memory_print('create reader for file ' . $filename);
         $reader->setSnippet($cur);
-//         $reader->addTokenNames(); // @todo This is unnecessary.
+//         // $reader->addTokenNames(); // @todo This is unnecessary.
         if (FALSE) {
           $reader->buildGrammar();
           coder_upgrade_memory_print('build grammar');

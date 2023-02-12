@@ -367,7 +367,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
   coder_upgrade_memory_print('set snippet');
-  $reader->addTokenNames();
+  // // $reader->addTokenNames();
   coder_upgrade_memory_print('add token names');
   // Parse code file.
   $reader->buildGrammar();

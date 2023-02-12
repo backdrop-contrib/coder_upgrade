@@ -113,7 +113,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
     $reader->setSnippet($new);
     coder_upgrade_memory_print('set snippet');
-    $reader->addTokenNames();
+    // $reader->addTokenNames();
     coder_upgrade_memory_print('add token names');
     // Parse code file.
     $reader->buildGrammar();
@@ -223,7 +223,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   $reader->setDebug($settings->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
   coder_upgrade_memory_print('set snippet');
-  $reader->addTokenNames();
+  // $reader->addTokenNames();
   coder_upgrade_memory_print('add token names');
   // Parse code file.
   $reader->buildGrammar();
@@ -487,7 +487,7 @@ function coder_upgrade_get_file_classes($file) {
   $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($contents);
   coder_upgrade_memory_print('set snippet');
-  $reader->addTokenNames();
+  // $reader->addTokenNames();
   coder_upgrade_memory_print('add token names');
   // Parse code file.
   $reader->buildGrammar();
@@ -529,7 +529,7 @@ function _coder_upgrade_sort_files_by_modules($files, $modules) {
   uasort ($modules , function ($a, $b) {
     $deptha = substr_count($a, '/');
     $depthb = substr_count($b, '/');
-    return $deptha < $depthb;
+    return ($deptha < $depthb) ? 1 : 0;
     }
   );
   $sorted = array();
