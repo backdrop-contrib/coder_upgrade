@@ -21,7 +21,7 @@
  *   $source = file_get_contents($filename);
  *   $reader = new PGPReader($source);
  *   // Optionally, add token names for readability of the array elements.
- *   $reader->addTokenNames();
+ *   // $reader->addTokenNames();
  *   $reader->buildGrammar();
  *   $grammar = $reader->getStatements();
  *   // Do something with $grammar.
