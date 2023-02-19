@@ -65,7 +65,7 @@ function coder_upgrade_create_test_info($module_name, $module_path, $classlist) 
     $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
     if ($is_test_file) {
       foreach ($class_nodes['classes'] as $class) {
-        $classes[$class->data->name]['path'] = $path;
+        $classes[$class->data->name->toString()]['path'] = $path;
       }
       foreach ($class_nodes['functions'] as $function) {
         if ($function->data->name == 'getInfo') {
@@ -108,7 +108,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $reader = PGPReader::getInstance();
     coder_upgrade_memory_print('create reader for file ' . $module_file);
     // Set array formatting preference.
-    $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+    // $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
     // Set debug output preference.
     $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
     $reader->setSnippet($new);
@@ -126,7 +126,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
       $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
       if (!$is_test_file) {
         foreach ($class_nodes['classes'] as $class_node) {
-          $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
+          $strings[] = "'" . $class_node->data->name->toString() . "' => '" . $path . "',";
         }
       }
     }
@@ -165,6 +165,8 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
 
     // Use writer to redo file.
     $writer = PGPWriter::getInstance();
+    //dpm($writer);
+    //dpm($reader->getStatements()->toString());
     coder_upgrade_memory_print('create writer');
     $new = $writer->toString($reader->getStatements());
     coder_upgrade_memory_print('writer->toString');
@@ -178,7 +180,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     }
 
     // Free up memory.
-    $reader->reset();
+    // $reader->reset(); gp2.2
     coder_upgrade_memory_print('reset reader');
   }
 }
@@ -218,7 +220,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $install_file);
   // Set array formatting preference.
-  $reader->setPreserveArrayFormat($settings->get('coder_upgrade_preserve_array_format'));
+  // $reader->setPreserveArrayFormat($settings->get('coder_upgrade_preserve_array_format'));
   // Set debug output preference.
   $reader->setDebug($settings->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
@@ -482,7 +484,7 @@ function coder_upgrade_get_file_classes($file) {
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $file);
   // Set array formatting preference.
-  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+  // $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format')); pg2.2
   // Set debug output preference.
   $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($contents);

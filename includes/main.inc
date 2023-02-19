@@ -387,7 +387,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   // Apply parser conversion routines for hook functions.
   coder_upgrade_log_print("Calling hook_upgrade_hook_alter");
   coder_upgrade_convert_functions($reader);
-/*   coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
+  coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
   coder_upgrade_memory_print('apply hook function conversions');
 
   // Apply parser conversion routines for the file.
@@ -395,7 +395,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   backdrop_alter('upgrade_file', $reader);
   coder_upgrade_log_print("Completed hook_upgrade_file_alter");
   coder_upgrade_memory_print('apply file conversions');
-
+/* 
   if ($is_install_file) {
     // Apply parser conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_parser_install_alter");

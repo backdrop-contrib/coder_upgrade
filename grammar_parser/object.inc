@@ -2550,7 +2550,9 @@ class PGPClass extends PGPBase {
 
         case 'type':
           $type = PGPWriter::statementTypeToString($element);
-          $space = !$block->modifiers->isEmpty() ? PGPWriter::getWhitespace($this->settings()) : '';
+          // @todo: modiified for Coder Upgrade gp2.2.
+          // $space = !$block->modifiers->isEmpty() ? PGPWriter::getWhitespace($this->settings()) : '';
+          $space = (!empty($block->modifiers) && !$block->modifiers->isEmpty()) ? PGPWriter::getWhitespace($this->settings()) : '';
           $string .= $space . $type;
           $add_space = 1;
           break;
