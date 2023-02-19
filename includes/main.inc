@@ -362,7 +362,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $filename);
   // Set array formatting preference.
-  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
+  // $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
   // Set debug output preference.
   $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
   $reader->setSnippet($new);
@@ -387,7 +387,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   // Apply parser conversion routines for hook functions.
   coder_upgrade_log_print("Calling hook_upgrade_hook_alter");
   coder_upgrade_convert_functions($reader);
-  coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
+/*   coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
   coder_upgrade_memory_print('apply hook function conversions');
 
   // Apply parser conversion routines for the file.
@@ -413,7 +413,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   // Free up memory.
   $reader->reset();
   coder_upgrade_memory_print('reset reader');
-}
+ */}
 
 /**
  * Upgrades function calls using grammar parser.
@@ -478,7 +478,8 @@ function coder_upgrade_convert_functions(&$reader) {
       continue;
     }
 
-    $name = &$item->name;
+    // $name = &$item->name->toString(); gp2.2
+    $name = $item->name->toString();
     cdp("name = $name");
 
     // Convert theme_xxx function calls.

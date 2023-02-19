@@ -20,7 +20,7 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   // Changes: implementation_hook_comment
   if ($item->comment) {
     // Update document comment for hook implementations.
-    $item->comment = preg_replace('@\*\s+[iI]mplement.*?(hook_.*?)(\(\)|)(\.|)$@m', "* Implements $1().", $item->comment);
+    $item->comment = preg_replace('@\*\s+[iI]mplement.*?(hook_.*?)\(\)(\.|)$@m', "* Implements $1().", $item->comment);
   }
   else {
     // Add a document comment.
@@ -28,9 +28,10 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   }
 
   global $_coder_upgrade_theme_registry;
-  cdp($node->data->name);
-  if (strpos($node->data->name, 'theme_') === 0) {
-    $theme_name = substr($node->data->name, strpos($node->data->name, "theme_") + 6);
+  $name = $node->data->name->toString();
+  cdp($name);
+  if (strpos($name, 'theme_') === 0) {
+    $theme_name = substr($name, strpos($name, "theme_") + 6);
     if (!isset($_coder_upgrade_theme_registry[$theme_name])) {
       $msg = 'TODO: Should this theme ' . $theme_name . ' be declared in hook_theme()?';
       clp($msg);
