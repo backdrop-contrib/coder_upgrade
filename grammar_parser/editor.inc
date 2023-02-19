@@ -9,7 +9,7 @@
  */
 
 /*
- * TODO
+ * @todo
  *
  * Questions
  * - we need easy ways to traverse the array and find the element to be manipulated.
@@ -52,7 +52,7 @@
  */
 class PGPEditor extends PGPParser {
 
-  /*
+  /**
    * Singleton instance of this class.
    */
   private static $editor;
@@ -218,15 +218,16 @@ class PGPEditor extends PGPParser {
    *   Name of function to search for.
    * @param string $return
    *   String indicating what to return: node or data.
+   *
    * @return mixed
-   *   Function object if found, or NULL.
+   *   Function object if found, or FALSE.
    */
   function &findFunction($functions = array(), $name = '', $return = 'data') {
     foreach ($functions as &$function) {
       if (!($function->data instanceof PGPClass)) {
         continue;
       }
-      if ($function->data->name == $name) {
+      if ($function->data->printName() == $name) {
         if ($return == 'node') {
           return $function;
         }
@@ -237,7 +238,7 @@ class PGPEditor extends PGPParser {
         break;
       }
     }
-    $result = NULL;
+    $result = FALSE;
     return $result;
   }
 
@@ -250,6 +251,7 @@ class PGPEditor extends PGPParser {
    *   The name to search for.
    * @param PGPList $statements
    *   A list of statements to search.
+   *
    * @return ?
    *
    * @todo Add a parameter indicating return_type = array or object
@@ -306,7 +308,7 @@ class PGPEditor extends PGPParser {
                 $this->debugPrint($statement);
                 return $class;
               }
-              break;
+              continue;
           }
           // Omit break and process special statements below.
 
@@ -315,7 +317,7 @@ class PGPEditor extends PGPParser {
           switch ($type) {
             case T_INTERFACE:
             case T_CLASS:
-              break;
+              continue;
 
             case T_FUNCTION:
               if ($statement['name'] == $value) {
@@ -324,7 +326,7 @@ class PGPEditor extends PGPParser {
                 $this->debugPrint("return class from inside T_FUNCTION");
                 return $class; // Inconsistent type class vs. array???
               }
-              break;
+              continue;
 
 //            default:
 //              $class = new PGPFunction();
@@ -349,14 +351,14 @@ class PGPEditor extends PGPParser {
               elseif ($found = $class->find($type, $value, $statement['parameters'])) {
                 return $found;
               }
-              break;
+              continue;
 
             default:
               $class = new PGPFunction();
               if ($found = $class->find($type, $value, $statement['parameters'])) {
                 return $found;
               }
-              break;
+              continue;
           }
 //          break; // This prevents entering next case block!!!
 
@@ -371,7 +373,7 @@ class PGPEditor extends PGPParser {
   }
 
   /**
-   * TODO Move this to PGPFunction class.
+   * @todo Move this to PGPFunction class.
    * Use with traverseCallback on type=T_FUNCTION; have the callback routine
    * call this function.
    *
@@ -386,7 +388,7 @@ class PGPEditor extends PGPParser {
         $this->functionBodyDeleteAll($statement['body']);
       }
       elseif ($statement['type'] == T_FUNCTION) {
-        // TODO Does unset cause us to free memory?
+        // @todo Does unset cause us to free memory?
         $this->debugPrint("functionBodyDeleteAll " . $statement['name']);
         // Remove comment from statement.
         $temp = $statement;
@@ -403,16 +405,17 @@ class PGPEditor extends PGPParser {
   /**
    * Returns an interface, class or function signature.
    *
-   * TODO This is now deprecated; remove after api module is patched.
+   * @todo This is now deprecated; remove after api module is patched.
    *
    * @param PGPClass $statement
    *   A grammar object of the statement block.
+   *
    * @return string
    *   A string of the function signature.
    */
   public function functionGetSignature($statement) {
-    if (!in_array($statement->type, array(T_INTERFACE, T_CLASS, T_FUNCTION))) {
-      return 'Expected statement type of: interface, class, or function';
+    if (!in_array($statement->type, array(T_INTERFACE, T_CLASS, T_TRAIT, T_FUNCTION))) {
+      return 'Expected statement type of: interface, class, trait, or function';
     }
 
     return $statement->signature();
@@ -423,8 +426,9 @@ class PGPEditor extends PGPParser {
    *
    * @todo Make comment inclusion a parameter.
    *
-   * @param mixed $statements
+   * @param PGPList|PPNode $statements
    *   A node or a list of the statement block.
+   *
    * @return string
    *   A string of the statement block.
    */
@@ -454,7 +458,8 @@ class PGPEditor extends PGPParser {
    * Returns a grammar array for a comment.
    *
    * @param string $snippet
-   *   A comment string.
+   *   (optional) A comment string.
+   *
    * @return array
    *   A grammar array of the comment.
    */
@@ -475,11 +480,12 @@ class PGPEditor extends PGPParser {
    * a statement block. The snippet should not include PHP open or close tags.
    *
    * @param string $snippet
-   *   A string of text to parse.
+   *   (optional) A string of text to parse.
+   *
    * @return PGPExpression
    *   A grammar object of the expression.
    */
-  public function expressionToStatement($snippet = '') {
+  public function textToExpression($snippet = '') {
     $this->debugPrint(__METHOD__);
     $this->debugPrint($snippet);
 
@@ -487,9 +493,30 @@ class PGPEditor extends PGPParser {
     $snippet = "<?php\n" . $snippet . ";";
     $this->getReader()->buildSnippet($snippet);
     $statements = $this->getReader()->getStatements();
+    if ($this->getReader()->getPreserveWhitespace() || $this->getReader()->getPreserveWhitespaceLikeOriginal() || $this->getReader()->getPreserveNewLine()) {
+      $first = $statements->get(0);
+      if ($first->type == 'whitespace' && is_array($first->data)) {
+        if (isset($first->data['lines'])) {
+          // Remove superfluous newline.
+          $statements->delete($first);
+        }
+        elseif (isset($first->data['value']) && strpos($first->data['value'], "\n") !== FALSE) {
+          // Remove superfluous newline.
+          $statements->delete($first);
+        }
+      }
+    }
 //    $statements->printArray();
 //    $this->debugPrint($statements);
     return $statements;
+  }
+
+  /**
+   * @deprecated
+   * Left for backwards compatibility.
+   */
+  public function expressionToStatement($snippet = '') {
+    return $this->textToExpression($snippet);
   }
 
   /**
@@ -499,7 +526,8 @@ class PGPEditor extends PGPParser {
    * block. The snippet should not include PHP open or close tags.
    *
    * @param string $snippet
-   *   A string of text to parse.
+   *   (optional) A string of text to parse.
+   *
    * @return PGPList
    *   A list of grammar statements.
    */
@@ -511,7 +539,6 @@ class PGPEditor extends PGPParser {
     $this->getReader()->buildGrammar($snippet);
     $statements = $this->getReader()->getStatements();
     $statements->delete($statements->get(0));
-//    cdp($statements->printList());
 //    $this->debugPrint($statements);
     return $statements;
   }
@@ -520,9 +547,10 @@ class PGPEditor extends PGPParser {
    * Returns the primary operand of a statement.
    *
    * @param PGPBase $statement
-   *   A grammar object of the statement block.
+   *   A grammar object of the statement.
+   *
    * @return string
-   *   A string of the statement block.
+   *   The primary operand of the statement.
    */
   public function statementOperandToText($statement) {
     if (!$statement) {
@@ -531,8 +559,9 @@ class PGPEditor extends PGPParser {
     switch ($statement->type) {
       case T_INTERFACE:
       case T_CLASS:
+      case T_TRAIT:
       case T_FUNCTION:
-        return $statement->name;
+        return $statement->printName();
         break;
 
       case T_COMMENT:
@@ -548,7 +577,7 @@ class PGPEditor extends PGPParser {
       case T_GLOBAL:
       case T_VAR:
       case T_ASSIGNMENT: // Handles a class property
-        // TODO Write the expression here instead of function calls?
+        // @todo Write the expression here instead of function calls?
         return $this->globalToString($statement);
         break;
 
@@ -563,7 +592,8 @@ class PGPEditor extends PGPParser {
    * Returns comment string stripped of comment delimiters.
    *
    * @param array $statement
-   *   An array of the statement block.
+   *   (optional) An array of the statement.
+   *
    * @return string
    *   A string of the statement.
    */
@@ -598,13 +628,13 @@ class PGPEditor extends PGPParser {
    *
    * @param PGPFunctionCall $statement
    *   A grammar object of the statement.
+   *
    * @return string
    *   A string of the operand.
    */
   public function defineToString($statement) {
     if (is_object($statement) && get_class($statement) == 'PGPFunctionCall' && $statement->type == T_DEFINE) {
-      $x_define = $statement->getParameter()->toString(); // Eclipse chokes on the variable named define???
-      return str_replace(array('"', "'"), array('', ''), $x_define);
+      return str_replace(array('"', "'"), array('', ''), $statement->printParameter());
     }
     return '';
   }
@@ -614,14 +644,13 @@ class PGPEditor extends PGPParser {
    *
    * @param PGPAssignment $statement
    *   A grammar object of the statement.
+   *
    * @return string
    *   A string of the operand.
    */
   public function globalToString($statement) {
     if (is_object($statement) && get_class($statement) == 'PGPAssignment' && in_array($statement->type, array(T_CONST, T_GLOBAL, T_VAR, T_ASSIGNMENT))) {
-      $assign_variable = $statement->values->getElement()->getElement()->toString();
-      $this->debugPrint("assign_variable = $assign_variable in " . __FUNCTION__);
-      return str_replace(array('"', "'"), array('', ''), $assign_variable);
+      return str_replace(array('"', "'"), array('', ''), $statement->printOperand());
     }
     return '';
   }
@@ -631,6 +660,7 @@ class PGPEditor extends PGPParser {
    *
    * @param PGPBase $statement
    *   A grammar object of the statement.
+   *
    * @return string
    *   The statement type string.
    */
@@ -644,10 +674,10 @@ class PGPEditor extends PGPParser {
   /**
    * Replaces statement parameters with the grammar equivalent of snippets.
    *
-   * @param PGPFunctionCall $statement
+   * @param PGPClass|PGPFunctionCall $statement
    *   A function call statement object.
    * @param string $snippets
-   *   An array of text strings to parse.
+   *   (optional) An array of text strings to parse.
    */
   public function setParameters(&$statement, $snippets = array()) {
     if (!in_array(get_class($statement), array('PGPClass', 'PGPFunctionCall'))) {
@@ -666,43 +696,43 @@ class PGPEditor extends PGPParser {
   /**
    * Sets a statement parameter to the grammar equivalent of snippet.
    *
-   * @param PGPBase $statement
+   * @param PGPClass|PGPFunctionCall $statement
    *   The interface, class. function, or function call statement object.
    * @param integer $index
-   *   The index in the parameter array.
+   *   (optional) The index in the parameter array.
    * @param string $snippet
-   *   A string of text to parse.
+   *   (optional) A string of text to parse.
    */
   public function setParameter(&$statement, $index = 0, $snippet = '') {
     $this->debugPrint(__METHOD__);
 
     if (in_array(get_class($statement), array('PGPClass', 'PGPFunctionCall'))) {
-      $statement->setParameter($index, $this->expressionToStatement($snippet));
+      $statement->setParameter($index, $this->textToExpression($snippet));
     }
   }
 
   /**
    * Inserts a snippet as the statement parameter at a specified index.
    *
-   * @param PGPBase $statement
+   * @param PGPClass|PGPFunctionCall $statement
    *   The interface, class. function, or function call statement object.
    * @param integer $index
-   *   The index in the parameter array.
+   *   (optional) The index in the parameter array.
    * @param string $snippet
-   *   A string of text to parse.
+   *   (optional) A string of text to parse.
    */
   public function insertParameter(&$statement, $index = 0, $snippet = '') {
     $this->debugPrint(__METHOD__);
 
     if (in_array(get_class($statement), array('PGPClass', 'PGPFunctionCall'))) {
-      $statement->insertParameter($index, $this->expressionToStatement($snippet));
+      $statement->insertParameter($index, $this->textToExpression($snippet));
     }
   }
 
   /**
    * Array-itizes the parameters of an object, removing any default values.
    *
-   * @param object $item
+   * @param PGPClass|PGPFunctionCall $item
    *   A PGPClass or PGPFunctionCall object.
    * @param integer $first
    *   The index of the first parameter to include in the array.
@@ -711,11 +741,12 @@ class PGPEditor extends PGPParser {
    *   The associative keys of the new parameter array.
    * @param array $defaults
    *   The respective default values.
+   *
    * @return string
    *   A string of the parameter array.
    */
   public function arrayitize(&$item, $first, $keys, $defaults) {
-    $count = $item->parameters->count();
+    $count = $item->parameterCount();
     $string = 'array()';
     $strings = array();
     for ($index = $count - 1; $index >= $first; $index--) {
@@ -729,12 +760,6 @@ class PGPEditor extends PGPParser {
         $item->deleteParameter($index);
       }
       $string = 'array(' . implode(', ', array_reverse($strings)) . ')';
-      if (isset($params)) {
-        coder_upgrade_debug_print('params');
-        coder_upgrade_debug_print(print_r($params, 1));
-      }
-      coder_upgrade_debug_print('string');
-      coder_upgrade_debug_print($string);
     }
     return $string;
   }
@@ -742,7 +767,7 @@ class PGPEditor extends PGPParser {
   /**
    * Removes default parameters from right to left.
    *
-   * @param object $item
+   * @param PGPClass|PGPFunctionCall $item
    *   A PGPClass or PGPFunctionCall object.
    * @param integer $first
    *   The index of the first parameter to include in the array.
@@ -751,14 +776,14 @@ class PGPEditor extends PGPParser {
    *   The respective default values.
    */
   public function removeDefaults(&$item, $first, $defaults) {
-    $count = $item->parameters->count();
+    $count = $item->parameterCount();
     for ($index = $count - 1; $index >= $first; $index--) {
       if ($count == $index + 1) {
         $value = $item->printParameter($index);
         $index2 = $index - $first;
         if ((is_array($defaults[$index2]) && in_array($value, $defaults[$index2])) || (!is_array($defaults[$index2]) && $value == $defaults[$index2])) {
           $item->deleteParameter($index);
-          $count = $item->parameters->count();
+          $count = $item->parameterCount();
         }
       }
     }

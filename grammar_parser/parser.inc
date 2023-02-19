@@ -9,6 +9,11 @@
  */
 
 /**
+ * The current API version.
+ */
+const GRAMMAR_PARSER_VERSION = '2.1';
+
+/**
  * Grammar Parser base class.
  *
  * This class provides members and routines shared by its extended classes.
@@ -16,7 +21,7 @@
  * This parent class holds references to arrays of:
  * - tokens,
  * - statements,
- * - interfaces, classes, and functions,
+ * - interfaces, classes, traits, and functions,
  * - function calls,
  * - constants, globals, and comments.
  *
@@ -61,6 +66,13 @@ class PGPParser {
   protected $classes = array();
 
   /**
+   * Array of traits included in grammar statements.
+   *
+   * @var array
+   */
+  protected $traits = array();
+
+  /**
    * Array of functions included in grammar statements.
    *
    * @var array
@@ -73,6 +85,13 @@ class PGPParser {
    * @var array
    */
   protected $functionCalls = array();
+
+  /**
+   * Array of function call names included in grammar statements.
+   *
+   * @var array
+   */
+  protected $functionCallNames = array();
 
   /**
    * Array of defines (non-class constants) included in grammar statements.
@@ -121,6 +140,8 @@ class PGPParser {
     $this->defineConstant('T_ASSIGNMENT', 602);
     $this->defineConstant('T_SPECIAL_STRING', 604);
     $this->defineConstant('T_DEFINE', 606);
+    $this->defineConstant('T_LABEL', 607);
+    $this->defineConstant('T_BODY', 608);
 
     // Mask T_ML_COMMENT (PHP4) as T_COMMENT (PHP5).
     if (!defined('T_ML_COMMENT')) {
@@ -159,8 +180,8 @@ class PGPParser {
   /**
    * Returns list of grammar statements.
    *
-   * @return PGPBody (or PGPExpression)
-   *   A list of statements.
+   * @return PGPBody|PGPExpression
+   *   A list of statements or an expression.
    */
   public function &getStatements() {
     return $this->statements;
@@ -169,8 +190,8 @@ class PGPParser {
   /**
    * Sets the list of grammar statements.
    *
-   * @param PGPBody (or PGPExpression) $statements
-   *   A list of grammar statements.
+   * @param PGPBody|PGPExpression $statements
+   *   (optional) A list of grammar statements or a grammar expression.
    */
   public function setStatements(&$statements = NULL) {
     $this->statements = &$statements;
@@ -197,6 +218,16 @@ class PGPParser {
   }
 
   /**
+   * Returns array of traits included in grammar statements.
+   *
+   * @return array
+   *   An array of statements.
+   */
+  public function &getTraits() {
+    return $this->traits;
+  }
+
+  /**
    * Returns array of functions included in grammar statements.
    *
    * @return array
@@ -214,6 +245,16 @@ class PGPParser {
    */
   public function &getFunctionCalls() {
     return $this->functionCalls;
+  }
+
+  /**
+   * Returns array of function call names included in grammar statements.
+   *
+   * @return array
+   *   An array of names.
+   */
+  public function &getFunctionCallNames() {
+    return $this->functionCallNames;
   }
 
   /**
@@ -250,7 +291,7 @@ class PGPParser {
    * Sets the debug flag used with debug printing.
    *
    * @param boolean $debug
-   *   Indicates whether to print debug information.
+   *   (optional) Indicates whether to print debug information.
    */
   public function setDebug($debug = FALSE) {
     $this->debug = $debug;
@@ -261,6 +302,7 @@ class PGPParser {
    *
    * @param integer $token
    *   The token in question.
+   *
    * @return string
    *   The token name.
    */
@@ -281,6 +323,12 @@ class PGPParser {
       case T_DEFINE:
         return 'T_DEFINE';
 
+      case T_LABEL:
+        return 'T_LABEL';
+
+      case T_BODY:
+        return 'T_BODY';
+
       default:
         return token_name($token);
     }
@@ -290,9 +338,11 @@ class PGPParser {
    * Prints debug information if debug flag is on.
    *
    * @param mixed $text
-   *   A string or array to print.
+   *   An object, array, or string to print.
+   * @param string $description
+   *   A description of the text to print.
    */
-  protected function debugPrint($text) {
+  protected function debugPrint($text, $description = '') {
     static $path = '';
 
     if (!$this->debug) {
@@ -301,14 +351,47 @@ class PGPParser {
     if (!$path) {
       $path = $this->debugPath();
     }
+
+    if ($description) {
+      $description .= ' ==>'; // Use two '=' so easier to find in file.
+      $this->pathPrint($path, $description);
+    }
+    $this->pathPrint($path, $text);
+  }
+
+  /**
+   * Prints debug information regardless of debug flag.
+   *
+   * @param mixed $text
+   *   An object, array, or string to print.
+   */
+  protected function debugPrint2($text, $description = '') {
+    $debug = $this->debug;
+    $this->debug = TRUE;
+    $this->debugPrint($text, $description);
+    $this->debug = $debug;
+  }
+
+  /**
+   * Prints information to a file.
+   *
+   * @param string $path
+   *   File path.
+   * @param mixed $text
+   *   An object, array, or string to print.
+   */
+  function pathPrint($path, $text) {
     if ($text instanceof PGPList) {
       file_put_contents($path, $text->print_r(), FILE_APPEND);
     }
     elseif ($text instanceof PGPBase) {
       file_put_contents($path, $text->print_r(), FILE_APPEND);
     }
+    elseif ($text instanceof stdClass) {
+      file_put_contents($path, print_r($text, 1), FILE_APPEND);
+    }
     elseif (is_object($text)) {
-//      print_r($text);
+      file_put_contents($path, print_r($text, 1), FILE_APPEND);
     }
     elseif (is_array($text)) {
       file_put_contents($path, print_r($text, 1), FILE_APPEND);
@@ -316,19 +399,6 @@ class PGPParser {
     else {
       file_put_contents($path, $text . "\n", FILE_APPEND);
     }
-  }
-
-  /**
-   * Prints debug information regardless of debug flag.
-   *
-   * @param mixed $text
-   *   A string or array to print.
-   */
-  protected function debugPrint2($text) {
-    $debug = $this->debug;
-    $this->debug = TRUE;
-    $this->debugPrint($text);
-    $this->debug = $debug;
   }
 
   /**
@@ -395,7 +465,6 @@ class PGPParser {
         E_USER_WARNING => 'User warning',
         E_USER_NOTICE => 'User notice',
         E_RECOVERABLE_ERROR => 'Recoverable error',
-        E_DEPRECATED => 'Deprecated',
       );
 
       $backtrace = debug_backtrace();

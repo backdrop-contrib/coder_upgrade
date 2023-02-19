@@ -9,6 +9,13 @@
  */
 
 /**
+ * Possible return types in functions like search and its cousins.
+ */
+const GP_RETURN_DATA = 0;
+const GP_RETURN_NODE = 1;
+const GP_RETURN_OPERAND = 2;
+
+/**
  * Grammar Parser node class.
  *
  * This class provides a container for storing a grammar statement along with
@@ -24,9 +31,9 @@ class PGPNode {
   public $container; // Or $list
 
   /**
-   * The node statement type.
+   * The node [statement] type.
    *
-   * @var mixed (integer or string)
+   * @var string
    */
   public $type;
 
@@ -66,8 +73,10 @@ class PGPNode {
   /**
    * Sets type and data properties of the node.
    *
-   * @param integer $type
+   * @param string $type
+   *   The node [statement] type.
    * @param mixed $data
+   *   The data to store on the node.
    */
   public function setData($type, $data) {
     $this->type = $type;
@@ -79,7 +88,9 @@ class PGPNode {
    * Returns statement type.
    *
    * @todo This and next function are not called.
+   *
    * @return string
+   *   The statement type of the data stored on the node.
    */
   public function statementType() {
     if (is_object($this->data)) {
@@ -96,7 +107,9 @@ class PGPNode {
    *
    * @param string $key
    *   The key for the value to return.
+   *
    * @return string
+   *   The data stored on the node.
    */
   public function statementValue($key) {
     if (is_object($this->data)) {
@@ -116,12 +129,12 @@ class PGPNode {
    *
    * @todo Add a parameter indicating what to return: node or data.
    *
-   * @param mixed $elements
-   *   Class members.
+   * @param PGPList $elements
+   *   List of items to invoke the callback on.
    * @param string $callback
    *   Name of a callback function.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    */
   public function traverse($elements, $callback, $direction = 'forward') {
     if (!isset($elements) || !($elements instanceof PGPList)) {
@@ -138,10 +151,11 @@ class PGPNode {
   /**
    * Inserts a statement before the statement containing the expression.
    *
-   * @param mixed $statement
+   * @param PGPBase|array $statement
    *   The statement object (or array) to store in the parent container.
-   * @return mixed
-   *   The inserted statement object (or array).
+   *
+   * @return PGPNode
+   *   The inserted node object containing the statement.
    */
   public function &insertStatementBefore($statement) {
 //    $this->debugPrint(__METHOD__);
@@ -153,7 +167,7 @@ class PGPNode {
 
     if (!isset($this->container)) {
       $this->debugPrint(__METHOD__);
-      $this->debugPrint("No container to node");
+      $this->debugPrint('No container to node');
     }
 
     $node = &$this->container->insertBefore($this, $statement);
@@ -164,10 +178,11 @@ class PGPNode {
   /**
    * Inserts a statement after the statement containing the expression.
    *
-   * @param mixed $statement
+   * @param PGPBase|array $statement
    *   The statement object (or array) to store in the parent container.
-   * @return mixed
-   *   The inserted statement object (or array).
+   *
+   * @return PGPNode
+   *   The inserted node object containing the statement.
    */
   public function &insertStatementAfter($statement) {
 //    $this->debugPrint(__METHOD__);
@@ -179,7 +194,7 @@ class PGPNode {
 
     if (!isset($this->container)) {
       $this->debugPrint(__METHOD__);
-      $this->debugPrint("No container to node");
+      $this->debugPrint('No container to node');
     }
 
     $node = &$this->container->insertAfter($this, $statement);
@@ -206,6 +221,15 @@ class PGPList {
   public $parent;
 
   /**
+   * List type.
+   *
+   * Example: conditions, modifiers, parameters.
+   *
+   * @var string
+   */
+  public $type;
+
+  /**
    * The first node in the list.
    *
    * @var PGPNode
@@ -227,13 +251,34 @@ class PGPList {
   private $count;
 
   /**
+   * Whether to preserve the original whitespace formatting.
+   *
+   * @var boolean
+   */
+  public $preserveWhitespace;
+
+  /**
+   * Whether to preserve the original newline formatting.
+   *
+   * @var boolean
+   */
+  public $preserveNewline;
+
+  /**
+   * Whether to duplicate the input whitespace as in 1.2 release.
+   *
+   * @var boolean
+   */
+  public $preserveWhitespaceLikeOriginal;
+
+  /**
    * Whether to print debug information.
    *
    * @var boolean
    */
-  protected $debug = FALSE; // TRUE; //
+  protected $debug = FALSE;
 
-  public function __construct() {
+  public function __construct($type = NULL, $settings = array()) {
     $data = NULL;
     $this->first = new PGPNode($data, $this);
     $this->last = new PGPNode($data, $this);
@@ -242,6 +287,13 @@ class PGPList {
     $this->last->previous = &$this->first;
 
     $this->count = 0;
+
+    if (!empty($type)) {
+      $this->type = $type;
+    }
+    if (!empty($settings)) {
+      list($this->preserveWhitespace, $this->preserveNewline, $this->preserveWhitespaceLikeOriginal) = $settings;
+    }
   }
 
   public function isEmpty() {
@@ -250,12 +302,12 @@ class PGPList {
 
   public function &first() {
 //    return $this->isEmpty() ? NULL : $this->first->next;
-    return $this->first->next; // TODO Not defined if empty!!!
+    return $this->first->next; // @todo Not defined if empty!!!
   }
 
   public function &last() {
 //    return $this->isEmpty() ? NULL : $this->last->previous;
-    return $this->last->previous; // TODO Not defined if empty!!!
+    return $this->last->previous; // @todo Not defined if empty!!!
   }
 
   /**
@@ -263,6 +315,9 @@ class PGPList {
    *
    * @param mixed $data
    *   The data to store on the node.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return PGPNode
    *   The inserted node.
    */
@@ -277,6 +332,9 @@ class PGPList {
    *
    * @param mixed $data
    *   The data to store on the node.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return PGPNode
    *   The inserted node.
    */
@@ -293,6 +351,9 @@ class PGPList {
    *   The specified node.
    * @param mixed $data
    *   The data to store on the node.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return PGPNode
    *   The inserted node.
    */
@@ -305,12 +366,13 @@ class PGPList {
 
     // This comparison was intended for integers.
     if ($current == $this->first) {
-//      $this->debugPrint("hitting first comparison");
+//      $this->debugPrint('hitting first comparison');
       return $this->insertAfter($current, $data, $type);
     }
 
     $node = new PGPNode($data, $this);
     $node->type = $type;
+    $node->line = isset($current->line) ? $current->line : $current->previous->line;
 
     $one = 1;
     if ($one == 1) {
@@ -341,6 +403,9 @@ class PGPList {
    *   The specified node.
    * @param mixed $data
    *   The data to store on the node.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return PGPNode
    *   The inserted node.
    */
@@ -352,12 +417,13 @@ class PGPList {
 
     // This comparison was intended for integers.
     if ($current == $this->last) {
-//      $this->debugPrint("hitting last comparison");
+//      $this->debugPrint('hitting last comparison');
       return $this->insertBefore($current, $data, $type);
     }
 
     $node = new PGPNode($data, $this);
     $node->type = $type;
+    $node->line = isset($current->line) ? $current->line : $current->next->line;
 
     $node->next = &$current->next;
     $node->previous = &$current;
@@ -378,6 +444,9 @@ class PGPList {
    *   The specified node.
    * @param PGPList $list
    *   The list of nodes to store.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return boolean
    *   Indicates whether the list of nodes was successfully inserted.
    */
@@ -392,13 +461,14 @@ class PGPList {
 
     // This comparison was intended for integers.
     if ($current == $this->first) {
-//      $this->debugPrint("hitting first comparison");
+//      $this->debugPrint('hitting first comparison');
       return $this->insertListAfter($current, $list, $type);
     }
 
     $node = $list->first();
     while ($node->next != NULL) {
-      $type2 = is_null($type) ? $node->type : $type; // TODO Would seem to be preferable to always use type from the node being inserted.
+      // @todo Preferable to always use type from the node being inserted.
+      $type2 = is_null($type) ? $node->type : $type;
       $data = $node->data;
       $this->insertBefore($current, $data, $type2);
       $node = &$node->next;
@@ -414,6 +484,9 @@ class PGPList {
    *   The specified node.
    * @param PGPList $list
    *   The list of nodes to store.
+   * @param string $type
+   *   (optional) The node [statement] type.
+   *
    * @return boolean
    *   Indicates whether the list of nodes was successfully inserted.
    */
@@ -428,13 +501,14 @@ class PGPList {
 
     // This comparison was intended for integers.
     if ($current == $this->first) {
-//      $this->debugPrint("hitting first comparison");
+//      $this->debugPrint('hitting first comparison');
       return $this->insertListBefore($current, $list, $type);
     }
 
     $node = $list->last();
     while ($node->previous != NULL) {
-      $type2 = is_null($type) ? $node->type : $type; // TODO Would seem to be preferable to always use type from the node being inserted.
+      // @todo Preferable to always use type from the node being inserted.
+      $type2 = is_null($type) ? $node->type : $type;
       $data = $node->data;
       $this->insertAfter($current, $data, $type2);
       $node = &$node->previous;
@@ -450,8 +524,9 @@ class PGPList {
    *   The specified node.
    * @param mixed $data
    *   The data to store on the node.
+   *
    * @return PGPNode
-   *   The node that was updated or NULL if no node exists at $index.
+   *   The node that was updated or NULL if no node exists at $current.
    */
   public function &update(&$current, &$data) {
 //    $this->debugPrint(__METHOD__);
@@ -471,6 +546,7 @@ class PGPList {
    *   The position of the node in the list.
    * @param mixed $data
    *   The data to store on the node.
+   *
    * @return PGPNode
    *   The node that was updated or NULL if no node exists at $index.
    */
@@ -488,12 +564,12 @@ class PGPList {
       $counter++;
     }
     if ($counter == $index && $current->next != NULL) {
-//      $this->debugPrint("counter == index");
+//      $this->debugPrint('counter == index');
       $current->data = $data;
       return $current;
     }
     else {
-//      $this->debugPrint("insertLast");
+//      $this->debugPrint('insertLast');
       return $this->insertLast($data);
     }
 
@@ -503,7 +579,7 @@ class PGPList {
   /**
    * Removes all items from the list.
    *
-   * TODO Do we need to recurse into an item that contains a list?.
+   * @todo Do we need to recurse into an item that contains a list?.
    *
    * @return integer
    *   The number of nodes deleted.
@@ -570,7 +646,8 @@ class PGPList {
    * @param integer $index
    *   The position of the node in the list.
    * @param boolean $return_node
-   *   Indicates whether to return the node object (the default) or its data.
+   *   (optional) Indicates whether to return the node object or its data.
+   *
    * @return PGPNode
    *   The node or NULL if no node exists at $index.
    */
@@ -607,7 +684,7 @@ class PGPList {
    * @param string $callback
    *   Name of a callback function.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    */
   public function traverse($callback, $direction = 'forward') {
     $current = $this->first();
@@ -626,9 +703,10 @@ class PGPList {
    * @param integer $type
    *   The statement type to search for.
    * @param string $direction
-   *   The direction in which to search the list for the statement.
+   *   (optional) Direction in which to traverse the list.
    * @param boolean $return_node
-   *   Indicates whether to return the node object or its data (the default).
+   *   (optional) Indicates whether to return the node object or its data.
+   *
    * @return mixed
    *   The statement found or FALSE if not found.
    */
@@ -667,12 +745,13 @@ class PGPList {
    *
    * @todo Add a parameter indicating what to return: node or data.
    *
-   * @param string $callback
-   *   Name of a callback function.
+   * @param string $type
+   *   The node type to search for.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    * @param boolean $return_node
-   *   Indicates whether to return the node object or its data (the default).
+   *   (optional) Indicates whether to return the node object or its data.
+   *
    * @return mixed
    *   A statement object or FALSE if not found.
    */
@@ -708,7 +787,7 @@ class PGPList {
    * Unlike print_r, this omits the printing of embedded object references
    * that would result in infinite recursion.
    *
-   * TODO This is deprecated!!!
+   * @todo This is deprecated!!!
    *
    * @return string
    *   The string representation.
@@ -721,9 +800,9 @@ class PGPList {
     // Local items.
     $strings = array();
     $strings[] = get_class($this);
-    $strings[] = "(";
+    $strings[] = '(';
     $strings[] = $this->print_r(1, $this);
-    $strings[] = ")";
+    $strings[] = ')';
 
     return implode("\n", $strings) . "\n";
   }
@@ -737,6 +816,7 @@ class PGPList {
    *
    * @param PGPNode $node
    *   The node object to print.
+   *
    * @return string
    *   The string representation.
    */
@@ -750,9 +830,9 @@ class PGPList {
     // Local items.
     $strings = array();
     $strings[] = get_class($node);
-    $strings[] = "(";
+    $strings[] = '(';
     $strings[] = $this->printRecursiveArray($node->data, 1);
-    $strings[] = ")";
+    $strings[] = ')';
 
     return implode("\n", $strings) . "\n";
   }
@@ -766,6 +846,7 @@ class PGPList {
    *
    * @param array $array
    *   The array to print.
+   *
    * @return string
    *   The string representation.
    */
@@ -778,10 +859,10 @@ class PGPList {
 
     // Local items.
     $strings = array();
-    $strings[] = "Array";
-    $strings[] = "(";
+    $strings[] = 'Array';
+    $strings[] = '(';
     $strings[] = $this->printRecursiveArray($array, 1);
-    $strings[] = ")";
+    $strings[] = ')';
 
     return implode("\n", $strings) . "\n";
   }
@@ -796,9 +877,10 @@ class PGPList {
    * @param integer $indent
    *   The indent level.
    * @param PGPList $list
-   *   A PGPList object to represent.
+   *   (optional) A PGPList object to represent.
    * @param boolean $recurseNode
-   *   Indicates whether to recurse on PGPNode objects.
+   *   (optional) Indicates whether to recurse on PGPNode objects.
+   *
    * @return string
    *   A string of the $list formatted like print_r() output.
    */
@@ -811,9 +893,9 @@ class PGPList {
     if (!$indent) {
       $strings = array();
       $strings[] = get_class($list);
-      $strings[] = "(";
+      $strings[] = '(';
       $strings[] = $this->print_r(1, $list);
-      $strings[] = ")";
+      $strings[] = ')';
 
       return implode("\n", $strings) . "\n";
     }
@@ -823,8 +905,23 @@ class PGPList {
     $strings = array();
     $counter = 0;
 
-    $current = $list->first();
+    if (isset($list->type)) {
+      $strings[] = $indent0 . "[type] => {$list->type}";
+    }
 
+    $preserve = 'none';
+    if ($list->preserveWhitespace) {
+      $preserve = 'whitespace';
+    }
+    elseif ($list->preserveNewline) {
+      $preserve = 'newline';
+    }
+    elseif ($list->preserveWhitespaceLikeOriginal) {
+      $preserve = 'whitespace like original';
+    }
+    $strings[] = $indent0 . "[preserve] => $preserve";
+
+    $current = $list->first();
     while ($current->next != NULL) {
       $data = $current->data;
 
@@ -883,7 +980,8 @@ class PGPList {
    * @param integer $indent
    *   The indent level.
    * @param boolean $recurseNode
-   *   Indicates whether to recurse on PGPNode objects.
+   *   (optional) Indicates whether to recurse on PGPNode objects.
+   *
    * @return string
    *   A string of the $items formatted like print_r() output.
    */
@@ -895,7 +993,7 @@ class PGPList {
 
     foreach ($items as $key => $item) {
       if (is_array($item)) {
-        $strings[] = "@+++++++++ item is a Array ++++++++@";
+//         $strings[] = "@+++++++++ item is a Array ++++++++@";
         $strings[] = $indent0 . "[$key] => Array";
         $strings[] = $indent1 . "(";
 
@@ -907,7 +1005,7 @@ class PGPList {
         $strings[] = '';
       }
       elseif ($item instanceof PGPBase) {
-        $strings[] = "@+++++++++ item is a " . get_class($item) . " ++++++++@";
+//         $strings[] = "@+++++++++ item is a " . get_class($item) . " ++++++++@";
         $strings[] = $indent0 . "[$key] => " . get_class($item);
         $strings[] = $indent1 . "(";
         $temp = $item->print_r($indent + 2, $item);
@@ -929,10 +1027,13 @@ class PGPList {
         $strings[] = '';
       }
       elseif ($item instanceof PGPNode) {
-        $strings[] = "@+++++++++ item is a PGPNode ++++++++@";
+//         $strings[] = "@+++++++++ item is a PGPNode ++++++++@";
         $strings[] = $indent0 . "[$key] => PGPNode";
         $strings[] = $indent1 . "(";
-        $strings[] = $indent1 . "    [type] => " . $item->data['type'];
+        $temp = $this->printRecursiveArray($item->data, $indent + 2);
+        if ($temp) {
+          $strings[] = $temp;
+        }
         $strings[] = $indent1 . ")";
         $strings[] = '';
       }
@@ -965,14 +1066,13 @@ class PGPList {
    * @param string $value
    *   Element value to be matched.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    * @param PGPNode $current
-   *   The specified node to begin the search from.
+   *   (optional) The specified node to begin the search from.
    */
   public function searchCallback($callback, $class, $member, $key, $value, $direction = 'forward', &$current = NULL) {
     // Check pre-conditions.
     if (!function_exists($callback)) {
-//      cdp('!function_exists($callback)');
       return;
     }
 
@@ -1018,12 +1118,11 @@ class PGPList {
       else {
       }
       $current = /*&*/$current->$next; // With '&' the $current is not updated in caller.
-//      (is_object($current->data)) ? cdp($current->data->toString(), __FUNCTION__ . ' $current') : cdp($current->data, __FUNCTION__ . ' $current'); // cdp($current->data->toString(), __FUNCTION__ . ' $current');
     }
   }
 
   /*
-   * TODO
+   * @todo
    * Add search with direction and starting item.
    * Add traverse with similar parameters.
    * Replace the $list parameter with the $current starting item.
@@ -1043,7 +1142,7 @@ class PGPList {
    * function is part of. This would improve our ability to traverse.
    * Store the reference on the first statement in the list, or each
    * statement. The latter would safeguard against an edit that deletes
-   * the first stateement.
+   * the first statement.
    *
    * NOTE: We have a $parent member on PGPList but it is not being set.
    */
@@ -1092,11 +1191,12 @@ class PGPList {
    * @param string $value
    *   Element value to be matched.
    * @param boolean $return_node
-   *   Indicates whether to return the node object or its data (the default).
+   *   (optional) Indicates whether to return the node object or its data.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    * @param PGPNode $current
-   *   The specified node to begin the search from.
+   *   (optional) The specified node to begin the search from.
+   *
    * @return mixed
    *   The object meeting the search criteria, its node, or FALSE.
    */
@@ -1118,6 +1218,11 @@ class PGPList {
     while ($current->$next != NULL) {
       $data = &$current->data;
       if (is_array($data)) {
+        if ($current->type == $member) {
+          if (isset($data[$key]) && $data[$key] == $value) {
+            return $value; // @todo Return $current or $data?
+          }
+        }
       }
       elseif ($data instanceof PGPBase) {
         if (get_class($data) == $class) {
@@ -1133,6 +1238,7 @@ class PGPList {
           }
         }
         // Confirm the object as it may have been altered in the callback.
+        // @todo Not applicable?
         if ($data instanceof PGPBase) {
           // Recurse on this element's members.
           $result = $data->search($class, $member, $key, $value, $return_node, $direction);
@@ -1153,7 +1259,6 @@ class PGPList {
       else {
       }
       $current = /*&*/$current->$next; // With '&' the $current is not updated in caller.
-//      (is_object($current->data)) ? cdp($current->data->toString(), __FUNCTION__ . ' $current') : cdp($current->data, __FUNCTION__ . ' $current'); // cdp($current->data->toString(), __FUNCTION__ . ' $current');
     }
 
     $var = FALSE;
@@ -1177,11 +1282,12 @@ class PGPList {
    * @param string $value
    *   Element value to be matched.
    * @param boolean $return_node
-   *   Indicates whether to return the node object or its data (the default).
+   *   (optional) Indicates whether to return the node object or its data.
    * @param string $direction
-   *   Direction in which to traverse the list.
+   *   (optional) Direction in which to traverse the list.
    * @param PGPNode $current
-   *   The specified node to begin the search from.
+   *   (optional) The specified node to begin the search from.
+   *
    * @return array
    *   The list of elements meeting the search criteria.
    */
@@ -1204,6 +1310,11 @@ class PGPList {
     while ($current->$next != NULL) {
       $data = &$current->data;
       if (is_array($data)) {
+        if ($current->type == $member) {
+          if (isset($data[$key]) && $data[$key] == $value) {
+            $items[] = $value; // @todo Return $current or $data?
+          }
+        }
       }
       elseif ($data instanceof PGPBase) {
         if (get_class($data) == $class) {
@@ -1215,6 +1326,7 @@ class PGPList {
           }
         }
         // Confirm the object as it may have been altered in the callback.
+        // @todo Not applicable?
         if ($data instanceof PGPBase) {
           // Recurse on this element's members.
           $temp = $data->searchAll($class, $member, $key, $value, $return_node, $direction);
@@ -1231,7 +1343,141 @@ class PGPList {
       else {
       }
       $current = /*&*/$current->$next; // With '&' the $current is not updated in caller.
-//      (is_object($current->data)) ? cdp($current->data->toString(), __FUNCTION__ . ' $current') : cdp($current->data, __FUNCTION__ . ' $current'); // cdp($current->data->toString(), __FUNCTION__ . ' $current');
+    }
+
+    return $items;
+  }
+
+  /**
+   * Returns all elements of a PGPClass object meeting the search criteria.
+   *
+   * Unlike searchAll(), this will recurse outward into PGPList objects
+   * containing the initial PGPList object.
+   *
+   * Based on the optional parameters, the search may begin:
+   * - with the first element of the list (the default),
+   * - with the last element of the list, or
+   * - relative to a specified element.
+   *
+   * @param string $class
+   *   Name of the class to find.
+   * @param string $member
+   *   Name of the member to evaluate.
+   * @param string $key
+   *   Name of the key of member to evaluate.
+   * @param string $value
+   *   Element value to be matched.
+   * @param boolean $return_node
+   *   (optional) Indicates whether to return the node object or its data.
+   * @param string $direction
+   *   (optional) Direction in which to traverse the list.
+   * @param PGPNode $current
+   *   (optional) The specified node to begin the search from.
+   *
+   * @return array
+   *   The list of elements meeting the search criteria.
+   */
+  public function searchAllRecursive($class, $member, $key, $value, $return_node = FALSE, $direction = 'forward', &$current = NULL) {
+    $items = $this->searchAll($class, $member, $key, $value, $return_node, $direction, $current);
+    // Get the node containing this list.
+    $parent = $this->parent;
+    $statement = $parent->data;
+    if (is_object($statement) && isset($statement->type) && in_array($statement->type, array(T_INTERFACE, T_CLASS, T_TRAIT, T_FUNCTION))) {
+      // Stop outward recursion if one of these objects is found.
+      return $items;
+    }
+
+    if (isset($parent->container->parent) && is_object($parent->container->parent)) {
+      $outer_parent = $parent->container->parent;
+      $outer_statement = $outer_parent->data;
+      if (is_object($outer_statement) /* && in_array(get_class($outer_statement, array('PGPBase', 'PGPList'))) */) {
+        // If a function, then recurse its body and stop.
+        $method = $outer_statement->isType(T_FUNCTION) ? 'searchAll' : 'searchAllRecursive';
+        // Search the outer list from the statement preceding/following the outer statement.
+        $start = $direction == 'forward' ? 'next' : 'previous';
+        // Set $current so the $parent->$start pointer is not changed.
+        $current = $parent->$start;
+        $temp = $outer_parent->container->$method($class, $member, $key, $value, $return_node, $direction, $current);
+        $items = array_merge($items, $temp);
+      }
+    }
+
+    return $items;
+  }
+
+  /**
+   * Returns all elements of a PGPList object meeting the search criteria.
+   *
+   * Unlike searchAll, this function does not limit the search to a specific
+   * class, member, and key.
+   *
+   * Based on the optional parameters, the search may begin:
+   * - with the first element of the list (the default),
+   * - with the last element of the list, or
+   * - relative to a specified element.
+   *
+   * @param string $value
+   *   Element value to be matched.
+   * @param integer $return_item
+   *   (optional) Indicates whether to return the node object or its data.
+   * @param string $direction
+   *   (optional) Direction in which to traverse the list.
+   * @param PGPNode $current
+   *   (optional) The specified node to begin the search from.
+   *
+   * @return array
+   *   The list of elements meeting the search criteria.
+   */
+  public function searchAny($value, $return_item = GP_RETURN_DATA, $direction = 'forward', &$current = NULL) {
+    // Initialize.
+    if ($direction == 'forward') {
+      if (is_null($current)) {
+        $current = $this->first();
+      }
+      $next = 'next';
+    }
+    else {
+      if (is_null($current)) {
+        $current = $this->last();
+      }
+      $next = 'previous';
+    }
+    $items = array();
+    $key = 'value';
+
+    while ($current->$next != NULL) {
+      $data = &$current->data;
+      if (is_array($data)) {
+        if (isset($data[$key]) && $data[$key] == $value) {
+          $items[] = $return_item ? $current : $data;
+        }
+      }
+      elseif ($data instanceof PGPBase) {
+        // Recurse on this element's members.
+        $temp = $data->searchAny($value, $return_item, $direction);
+        $items = array_merge($items, $temp);
+      }
+      elseif ($data instanceof PGPOperand) {
+        // Recurse on this element's members.
+        $temp = $data->searchAny($value, $return_item, $direction);
+        if ($temp && $return_item == GP_RETURN_OPERAND) {
+          // The parent property is not set on an operand.
+          $items[] = $current;
+        }
+        else {
+          $items = array_merge($items, $temp);
+        }
+      }
+      elseif ($data instanceof PGPList) {
+        // Recurse on this element's members.
+        $temp = $data->searchAny($value, $return_item, $direction);
+        $items = array_merge($items, $temp);
+      }
+      elseif ($data instanceof PGPNode) {
+      }
+      else {
+      }
+      $current = /*&*/$current->$next; // With '&' the $current is not updated in caller.
     }
 
     return $items;
@@ -1276,7 +1522,7 @@ class PGPList {
    */
 
   public function insertAfterKey($key, $data) {
-    $current = $this->first; // TODO Should this be first()?
+    $current = $this->first; // @todo Should this be first()?
 
     while ($current->data != $key) {
       $current = &$current->next;
@@ -1304,7 +1550,7 @@ class PGPList {
   }
 
   public function deleteKey($key) {
-    $current = $this->first; // TODO Should this be first()?
+    $current = $this->first; // @todo Should this be first()?
 
     while ($current->data != $key) {
       $current = &$current->next;
@@ -1334,9 +1580,11 @@ class PGPList {
    * Prints debug information if debug flag is on.
    *
    * @param mixed $text
-   *   A string or array to print.
+   *   An object, array, or string to print.
+   * @param string $description
+   *   A description of the text to print.
    */
-  protected function debugPrint($text) {
+  protected function debugPrint($text, $description = '') {
     static $path = '';
 
     if (!$this->debug) {
@@ -1345,14 +1593,34 @@ class PGPList {
     if (!$path) {
       $path = $this->debugPath();
     }
+
+    if ($description) {
+      $description .= ' ==>'; // Use two '=' so easier to find in file.
+      $this->pathPrint($path, $description);
+    }
+    $this->pathPrint($path, $text);
+  }
+
+  /**
+   * Prints information to a file.
+   *
+   * @param string $path
+   *   File path.
+   * @param mixed $text
+   *   An object, array, or string to print.
+   */
+  function pathPrint($path, $text) {
     if ($text instanceof PGPList) {
       file_put_contents($path, $text->print_r(), FILE_APPEND);
     }
     elseif ($text instanceof PGPBase) {
       file_put_contents($path, $text->print_r(), FILE_APPEND);
     }
+    elseif ($text instanceof stdClass) {
+      file_put_contents($path, print_r($text, 1), FILE_APPEND);
+    }
     elseif (is_object($text)) {
-//      print_r($text);
+      file_put_contents($path, print_r($text, 1), FILE_APPEND);
     }
     elseif (is_array($text)) {
       file_put_contents($path, print_r($text, 1), FILE_APPEND);
@@ -1391,41 +1659,52 @@ class PGPList {
    * Case 2: conditions in a conditonal statement
    *
    * @param string $indent
+   *   (optional) Line indent string.
+   *
    * @return string
    *   The string representation.
    */
   public function toString($indent = '') {
     $this->debugPrint(__METHOD__);
 
-    $glue = ', ';
+    $increase_indent = FALSE;
+    $preserveWhitespace = $this->preserveWhitespace;
+    $preserveNewline = $this->preserveNewline;
+
     $strings = array();
     $current = $this->first();
     while ($current->next != NULL) {
       $item = $current->data;
 
       if ($item instanceof PGPExpression) {
-        $this->debugPrint("is a PGPExpression");
+        $this->debugPrint('is a PGPExpression');
         $strings[] = $item->toString($indent);
       }
       elseif (is_object($item)) {
-        $this->debugPrint("is an object");
+        $this->debugPrint('is an object');
         $strings[] = $item->toString($indent);
       }
       elseif ($current->type == 'operator') {
         // This only applies to conditions in a conditional.
         $strings[] = $item;
+        if (!$increase_indent && !$preserveWhitespace && $preserveNewline) {
+          // This is a pretty printing use case.
+          // Increase indent the first time we encounter an operator.
+          $increase_indent = TRUE;
+          PGPWriter::$indent++;
+        }
       }
       else {
         $this->debugPrint($item);
       }
 
-      if ($current->type == 'condition') {
-        $glue = ' ';
-      }
-
       $current = $current->next;
     }
-    // TODO This adds an extra space when there is non-standard white space between parameters.
+    $glue = isset($this->type) && in_array($this->type, array('conditions', 'modifiers')) ? '' : ',';
+    $glue .= PGPWriter::getWhitespace($this->settings());
+    $increase_indent ? PGPWriter::$indent-- : '';
+    // @todo If not set to preserve whitespace, then this adds an extra space
+    // when there is non-standard white space between parameters.
     return implode($glue, $strings);
   }
 
@@ -1433,7 +1712,8 @@ class PGPList {
    * Returns the list element at the specified index.
    *
    * @param integer $index
-   *   The index in the list.
+   *   (optional) The index in the list.
+   *
    * @return mixed
    *   The list element.
    */
@@ -1496,7 +1776,7 @@ class PGPList {
    * Deletes the list element at the specified index.
    *
    * @param integer $index
-   *   The index in the list.
+   *   (optional) The index in the list.
    */
   public function deleteElement($index = 0) {
     $this->debugPrint(__METHOD__);
@@ -1509,12 +1789,63 @@ class PGPList {
   }
 
   /**
+   * Returns the text of the list element at the specified index.
+   *
+   * @todo If set to preserveWhitespace and the element includes a newline, then
+   * this may not look as expected.
+   *
+   * @param integer $index
+   *   (optional) The index in the list.
+   * @param boolean $strip
+   *   (optional) Indicates whether to strip the expression of inline comments
+   *   and whitespace.
+   *
+   * @return string
+   *   The text of the element.
+   */
+  public function printElement($index = 0, $strip = TRUE) {
+    $this->debugPrint(__METHOD__);
+
+    if ($this->count() > $index) {
+      $element = $this->get($index, FALSE);
+      return $strip ? $element->stripComments()->toString() : $element->toString();
+    }
+    return '';
+  }
+
+  /**
+   * Returns the (comma-separated) text of the list elements.
+   *
+   * @param boolean $strip
+   *   (optional) Indicates whether to strip the expression of inline comments
+   *   and whitespace.
+   *
+   * @return string
+   *   The comma-separated text of the elements.
+   */
+  public function printElements($strip = TRUE) {
+    $this->debugPrint(__METHOD__);
+
+    if (!$strip) {
+      return $this->toString();
+    }
+
+    $glue = ', ';
+    $strings = array();
+    for ($index = 0; $index < $this->count(); $index++) {
+      $element = $this->get($index, FALSE);
+      $strings[] = $element->stripComments()->toString();
+    }
+    return implode($glue, $strings);
+  }
+
+  /**
    * Clears the members of a PGPList object.
    *
-   * @param mixed $list
-   *   The PGPList object to clear.
+   * @param PGPList $list
+   *   (optional) The PGPList object to clear.
    * @param boolean $recurseNode
-   *   Indicates whether to recurse on PGPNode objects.
+   *   (optional) Indicates whether to recurse on PGPNode objects.
    */
   public function clear_r($list = NULL, $recurseNode = TRUE) {
 //    $this->debugPrint(__METHOD__);
@@ -1523,8 +1854,6 @@ class PGPList {
     $current = $list->first();
 
     if (!is_object($current)) {
-//      cdp('current is NOT an object');
-//      cdp($list->parent->data, '$list->parent->data');
       // JB 2010-06-03 -- these are helpful based on refcount.php
       // These are not set when in this block?
 //      unset($list->parent); // unset($this->parent);
@@ -1535,13 +1864,12 @@ class PGPList {
 
     while ($current->next != NULL) {
       if (!isset($current->data)) {
-//        cdp($current->type, '$current->type');
         continue;
       }
       $data = &$current->data;
 
       if (is_array($data)) {
-//        $this->debugPrint("data is array");
+//        $this->debugPrint('data is array');
         $this->clear_array($data);
       }
       elseif ($data instanceof PGPBase) {
@@ -1578,10 +1906,10 @@ class PGPList {
   /**
    * Clears the members of an array.
    *
-   * @param mixed $items
+   * @param array $items
    *   The array to clear.
    * @param boolean $recurseNode
-   *   Indicates whether to recurse on array items.
+   *   (optional) Indicates whether to recurse on array items.
    */
   private function clear_array($items, $recurseNode = TRUE) {
 //    $this->debugPrint(__METHOD__);
@@ -1613,6 +1941,59 @@ class PGPList {
       unset($item);
     }
   }
+
+  /**
+   * Replaces all references of a string in the body statements.
+   *
+   * @param string $old_value
+   *   String to be replaced.
+   * @param string $new_value
+   *   Replacement string.
+   */
+  public function replaceString($old_value, $new_value) {
+    // Find all references in this function to this variable.
+    $nodes = $this->searchAny($old_value, GP_RETURN_NODE);
+    while (!empty($nodes)) {
+      $return_node = array_shift($nodes);
+      $return_node->data = $new_value;
+    }
+  }
+
+  /**
+  * Changes the first level index of a variable expression to an object property.
+  *
+  * @param string $value
+  *   The variable to find.
+  */
+  function indexToProperty($value) {
+    // Find all references in the body to the variable.
+    // @todo With the change to searchAny(), we should be able to use $editor->textToExpression().
+    $operand_nodes = $this->searchAny($value, GP_RETURN_OPERAND);
+    foreach ($operand_nodes as $operand_node) {
+      $operand = $operand_node->data;
+      $index_node = $operand->findNode('index', 'forward', TRUE);
+      if ($index_node) {
+        // Insert object operator.
+        $operand->insertBefore($index_node, '->', 'operator2');
+        // Change node type from array index to operand following object operator.
+        $index_node->type = 'operand';
+        // Get operand object.
+        $index = $index_node->data;
+        // Get the actual value item from the operand nodes.
+        $index_value = &$index->findNode('operand');
+        $index_value['value'] = trim($index_value['value'], "'\" ");
+      }
+    }
+  }
+
+  protected function settings() {
+//     static $settings;
+//     if (!isset($settings)) {
+//       $settings = array($this->preserveWhitespace, $this->preserveNewline, $this->preserveWhitespaceLikeOriginal);
+//     }
+//     return $settings;
+    return array($this->preserveWhitespace, $this->preserveNewline, $this->preserveWhitespaceLikeOriginal);
+  }
 }
 
 /**
@@ -1622,6 +2003,7 @@ class PGPList {
  * The body needs to know about indention and semi-colons to end statements.
  */
 class PGPBody extends PGPList {
+
   /**
    * Parser warning message.
    *
@@ -1645,43 +2027,85 @@ class PGPBody extends PGPList {
 
   public function __construct() {
     parent::__construct();
-    $this->debug = FALSE; // TRUE; //
   }
 
   /**
    * Returns a string representation of the body statements.
+   *
+   * @param string $indent
+   *   (optional) Line indent string.
    *
    * @return string
    *   A string of the expression.
    */
   public function toString($indent = '') {
     /*
-     * TODO The cases can be consolidated into a couple of types now that
+     * @todo The cases can be consolidated into a couple of types now that
      * everything is an object with a toString method.
      */
     $this->debugPrint(__METHOD__);
     $this->indent = ++PGPWriter::$indent;
-    $indent = str_repeat('  ', $this->indent);
-    $this->debugPrint("indent = " . $this->indent);
+    $indent = PGPWriter::getIndent($this->settings());
+    $this->debugPrint('indent = ' . $this->indent);
 
+    $prepend = '';
     $strings = array();
     $current = $this->first();
     while ($current->next != NULL) {
       $statement = $current->data;
-//      $this->debugPrint("while printBody");
+//      $this->debugPrint('while printBody');
 //      $this->debugPrint($statement);
       $type = is_object($statement) ? $statement->type : $statement['type'];
       switch ($type) {
+        case T_WHITESPACE:
+          if (isset($statement['lines'])) {
+            $string = str_repeat(PGPWriter::getDelimiter($this->settings()), $statement['lines'] - 1);
+          }
+          elseif (isset($statement['prepend']) && $statement['prepend']) {
+            // @todo This is a "prepend" item.
+            $prepend .= $statement['value'];
+          }
+          else {
+            $string = $statement['value'];
+          }
+          break;
+
+        case T_COMMENT:
+          // Handle a regular comment appended to a line.
+          if (isset($statement['prepend']) && $statement['prepend']) {
+            $prepend .= PGPWriter::printComment($this->settings(), $statement);
+          }
+          elseif (isset($statement['append']) && $statement['append']) {
+            // @todo Preserve whitespace in this situation.
+            if (!count($strings)) {
+              $string .= ' ' . PGPWriter::printComment($this->settings(), $statement);
+            }
+            elseif (!$this->preserveWhitespace) {
+              // @todo Does this cover all the cases?
+              $strings[count($strings) - 1] .= ' ' . PGPWriter::printComment($this->settings(), $statement);
+            }
+            else {
+              $strings[count($strings) - 1] .= $prepend . PGPWriter::printComment($this->settings(), $statement);
+              $prepend = '';
+            }
+          }
+          else {
+            $string = PGPWriter::printComment($this->settings(), $statement, $indent);
+          }
+          break;
+
         case T_STRING:
         case T_VARIABLE:
         case T_FUNCTION_CALL:
         case T_DEFINE:
-          $strings[] = $statement->toString($indent) . ";";
+          $string = $statement->toString($indent, $prepend) . ';';
           break;
 
         case T_ASSIGNMENT:
-          $strings[] = $statement->toString($indent) . ";";
+          $string = $statement->toString($indent, $prepend);
           break;
+
+        // Control structures.
 
         case T_DO:
         case T_IF:
@@ -1690,134 +2114,245 @@ class PGPBody extends PGPList {
         case T_ELSE:
         case T_WHILE:
         case T_SWITCH:
-          $strings[] = $statement->toString($indent);
-          break;
 
         case T_CASE:
         case T_DEFAULT:
-          $strings[] = $statement->toString($indent);
-          break;
 
         case T_FOR:
-          $strings[] = $statement->toString($indent);
-          break;
 
         case T_FOREACH:
-          $strings[] = $statement->toString($indent);
+
+        case T_DECLARE:
+          $string = $statement->toString($indent, $prepend);
           break;
 
-        case T_COMMENT:
-          // Handle a regular comment appended to a line.
-          if (isset($statement['append']) && $statement['append']) {
-            if (!count($strings)) {
-              $strings[] .= ' ' . PGPWriter::printComment($statement);
-            }
-            else {
-              // TODO Whitespace may be other than a single blank.
-              $strings[count($strings) - 1] .= ' ' . PGPWriter::printComment($statement);
-            }
-          }
-          else {
-            $strings[] = PGPWriter::printComment($statement, $indent);
-          }
-          break;
+        // Language constructs not functions (parens required).
+        // These come through with type = T_FUNCTION_CALL.
 
-        case T_ML_COMMENT:
-        case T_DOC_COMMENT:
-          // A regular comment (with only a double slash) includes a new line character.
-          $strings[] = PGPWriter::printComment($statement, $indent);
-          break;
+//         case T_EXIT:
+//         case T_EVAL:
+//         case T_EMPTY:
+//         case T_ISSET:
+//         case T_UNSET:
+//          $string = $statement->toString($indent, $prepend) . ';';
+//          break;
+
+        // Language constructs not functions (parens optional).
 
         case T_BREAK:
         case T_CONTINUE:
         case T_ECHO:
         case T_RETURN:
-        case T_EXIT:
+
+        case T_REQUIRE:
+        case T_REQUIRE_ONCE:
+        case T_INCLUDE:
+        case T_INCLUDE_ONCE:
+
+        case T_PRINT:
+        case T_THROW:
+          $string = $statement->toString($indent, $prepend);
+          break;
+
+        // Language constructs not functions (no parens).
+
         case T_CONST:
         case T_GLOBAL:
         case T_VAR:
-          // The value is optional with continue, return, and exit.
-          $this->debugPrint(__METHOD__ . " continue,echo,etc........");
-          $strings[] = $statement->toString($indent) . ";";
-          break;
-/*
-        case T_BREAK:
-          $strings[] = $indent . $statement['value'] . ';';
-          break;
-*/
-        case T_INTERFACE:
-        case T_CLASS:
-        case T_FUNCTION:
-          $strings[] = $statement->toString($indent);
+        case T_GOTO:
+        case T_LABEL:
+        case T_NEW:
+          $string = $statement->toString($indent, $prepend);
           break;
 
-        case T_WHITESPACE:
-          $strings[] = str_repeat("\n", $statement['value'] - 1);
+        case T_INTERFACE:
+        case T_CLASS:
+        case T_TRAIT:
+        case T_FUNCTION:
+          $string = $statement->toString($indent, $prepend);
           break;
 
         case T_TRY:
         case T_CATCH:
-          $strings[] = $statement->toString($indent);
-          break;
-
-//        case T_REQUIRE:
-//        case T_REQUIRE_ONCE:
-//        case T_INCLUDE:
-//        case T_INCLUDE_ONCE:
-//          // TODO These cases are never encountered as these come through with type = T_FUNCTION_CALL.
-//          // Parentheses are optional with these statements.
-//          $this->debugPrint("require,include....");
-//          $strings[] = $statement->toString($indent) . ";";
-//          break;
-
-//        case T_EVAL:
-//        case T_EMPTY:
-//        case T_UNSET:
-//          // TODO These cases are never encountered as these come through with type = T_FUNCTION_CALL.
-//          $this->debugPrint("eval,empty,unset....");
-//          $strings[] = $statement->toString($indent) . ";";
-//          break;
-
-//        case T_PRINT:
-//        case T_THROW:
-//          // TODO These cases are never encountered as these come through with type = T_FUNCTION_CALL.
-//          $this->debugPrint("print,throw....");
-//          $strings[] = $statement->toString($indent) . ";";
-//          break;
-
-        case T_DECLARE:
-          $strings[] = $statement->toString($indent);
+          $string = $statement->toString($indent, $prepend);
           break;
 
         case T_LIST:
-          $strings[] = $indent . $statement->toString() . ";";
+          $string = $statement->toString($indent, $prepend);
           break;
 
         case T_NAMESPACE:
         case T_USE:
-          $strings[] = $statement->toString($indent);
+          $string = $statement->toString($indent, $prepend);
           break;
 
         case T_INLINE_HTML:
-          // 2009-06-13 Inline html
-          $strings[] = $current->statementValue('value');
+          $string = $statement['value'];
           break;
 
         case T_OPEN_TAG:
         case T_OPEN_TAG_WITH_ECHO:
         case T_CLOSE_TAG:
-          // 2009-06-13 Inline html
-          // NOTE: The open tags include a new line character.
-          $strings[] = $current->statementValue('value');
+          $string = $prepend . $statement['value'];
           break;
+
+        case T_ML_COMMENT:
+        case T_DOC_COMMENT:
+          // A regular comment (with only a double slash) includes a new line character.
+          $string = PGPWriter::printComment($this->settings(), $statement, $indent);
+          break;
+
+        case T_BODY:
+          $string = $indent . $prepend . '{';
+          $this->indent = ++PGPWriter::$indent;
+          $indent = PGPWriter::getIndent($this->settings());
+          $string .= $statement->toString($indent);
+          $this->indent = --PGPWriter::$indent;
+          $indent = PGPWriter::getIndent($this->settings());
+          $string .= $indent . '}';
+          break;
+      }
+      if (isset($string)) {
+        $strings[] = $string;
+        unset($string);
+        $prepend = '';
       }
       $current = $current->next;
     }
 
-    $this->indent--; PGPWriter::$indent--;
-    $this->debugPrint("at end of " . __FUNCTION__);
+    // Prepend whitespace to last statement (before closing brace).
+    // Could be poorly formatted code or end of anonymous function.
+    if ($prepend && count($strings)) {
+      $strings[count($strings) - 1] .= $prepend;
+    }
+    elseif ($prepend) {
+      $strings[] = $prepend;
+    }
+
+    $this->indent = --PGPWriter::$indent;
+    $this->debugPrint('at end of ' . __METHOD__);
     $this->debugPrint($strings);
-    return implode("\n", $strings);
+    $delimiter = PGPWriter::getDelimiter($this->settings());
+    return implode($delimiter, $strings);
+  }
+
+  /**
+   * Replaces all references of a string in the body statements.
+   *
+  * @deprecated after copy to PGPList
+  *
+   * @param string $old_value
+   *   String to be replaced.
+   * @param string $new_value
+   *   Replacement string.
+   */
+  public function replaceString($old_value, $new_value) {
+    // Find all references in this function to this variable.
+    $nodes = $this->searchAny($old_value, GP_RETURN_NODE);
+    while (!empty($nodes)) {
+      $return_node = array_shift($nodes);
+      $return_node->data = $new_value;
+    }
+  }
+
+  /**
+  * Replaces all references of a string in the body statements (with a string expression).
+  *
+  * @param string $old_value
+  *   String to be replaced.
+  * @param string $new_value
+  *   Replacement string expression.
+  */
+  public function replaceStringByExpression($old_value, $new_value) {
+    // Create helper objects.
+    // @todo Only two references to PGPEditor. Move to that class?
+    $editor = PGPEditor::getInstance();
+
+    $temp = $editor->textToExpression($new_value)->getElement();
+
+    // Find all references in this function to this variable.
+    $nodes = $this->searchAny($old_value, GP_RETURN_OPERAND);
+    while (!empty($nodes)) {
+      $return_node = array_shift($nodes);
+      $return_node->data = $temp;
+    }
+  }
+
+  /**
+  * Replaces all references of a string expression in the body statements (with a string expression).
+  *
+  * @param string $search
+  *   String to be search for.
+  * @param string $old_value
+  *   String expression to be replaced.
+  * @param string $new_value
+  *   Replacement string expression.
+  */
+  public function replaceExpressionByString($search, $old_value, $new_value) {
+    // Create helper objects.
+    $editor = PGPEditor::getInstance();
+
+    $temp = $editor->textToExpression($new_value)->getElement();
+
+    // Find all references in this function to this string.
+    $nodes = $this->searchAny($search, GP_RETURN_OPERAND);
+    while (!empty($nodes)) {
+      $return_node = array_shift($nodes);
+      $operand = &$return_node->data;
+      $text = $return_node->data->stripComments()->toString();
+      if (strpos($text, $old_value) !== FALSE) {
+        // Replace old value with new value.
+        $code = str_replace($old_value, $new_value, $text);
+        $temp = $editor->textToExpression($code)->getElement();
+        $operand = $temp;
+      }
+    }
+  }
+
+  /**
+  * Changes the first level index of a variable expression to an object property.
+  *
+  * @deprecated after copy to PGPList
+  *
+  * @param string $value
+  *   The variable to find.
+  */
+  function indexToProperty($value) {
+    // Find all references in the body to the variable.
+    // @todo With the change to searchAny(), we should be able to use $editor->textToExpression().
+    $operand_nodes = $this->searchAny($value, GP_RETURN_OPERAND);
+    foreach ($operand_nodes as $operand_node) {
+      $operand = $operand_node->data;
+      $index_node = $operand->findNode('index', 'forward', TRUE);
+      if ($index_node) {
+        // Insert object operator.
+        $operand->insertBefore($index_node, '->', 'operator2');
+        // Change node type from array index to operand following object operator.
+        $index_node->type = 'operand';
+        // Get operand object.
+        $index = $index_node->data;
+        // Get the actual value item from the operand nodes.
+        $index_value = &$index->findNode('operand');
+        $index_value['value'] = trim($index_value['value'], "'\" ");
+      }
+    }
+  }
+
+  /**
+   * Returns the line number of the last statement (recursing into block statements).
+   *
+   * @return integer
+   *   The line number of last statement.
+   */
+  public function lastLine() {
+    $current = $this->last();
+    $statement = $current->data;
+    if (is_object($statement) && $statement instanceof PGPBase && isset($statement->body)) {
+      return $statement->body->lastLine();
+    }
+    else {
+      return $current->line;
+    }
   }
 }
 
@@ -1827,6 +2362,7 @@ class PGPBody extends PGPList {
  * An expression will have nodes of type: operand, operator.
  */
 class PGPExpression extends PGPList {
+
   /**
    * Parser warning message.
    *
@@ -1843,11 +2379,13 @@ class PGPExpression extends PGPList {
 
   public function __construct() {
     parent::__construct();
-    $this->debug = FALSE; // TRUE; //
   }
 
   /**
    * Returns a string representation of the expression.
+   *
+   * @param string $indent
+   *   (optional) Line indent string.
    *
    * @return string
    *   A string of the expression.
@@ -1858,6 +2396,11 @@ class PGPExpression extends PGPList {
     $add_space = 0;
     $space = '';
     $string = '';
+    $operands = 0;
+    $increase_indent = FALSE;
+    $preserveWhitespace = $this->preserveWhitespace;
+    $preserveNewline = $this->preserveNewline;
+    $preserveWhitespaceLikeOriginal = $this->preserveWhitespaceLikeOriginal;
 
     // Items in this list are what used to be array elements.
     $current = $this->first();
@@ -1865,9 +2408,63 @@ class PGPExpression extends PGPList {
       $type = $current->type;
       $data = $current->data;
 
-      $space = $add_space ? ' ' : '';
+      $space = PGPWriter::getWhitespace($this->settings(), $add_space);
       switch ($type) {
+        case 'whitespace': // Hits
+          if (is_array($data) && isset($data['lines'])) {
+            // This and next block are found in multiline expressions.
+            $string .= str_repeat(PGPWriter::getDelimiter($this->settings()), $data['lines']);
+            if (!$increase_indent && $operands && !$preserveWhitespace && $preserveNewline && $current->next->next != NULL) {
+              // This is a pretty printing use case.
+              // Increase indent the first time we encounter a newline.
+              // @todo Omit if no operand preceding this whitespace or no
+              // operand following this whitespace. First case occurs when
+              // comment begins an item in an array as we build expression and
+              // include whitespace, comment, and operand. Latter occurs when
+              // function call parameters are multiline and closing parentheses
+              // is on a newline.
+              // Adding $operands solves the first use case.
+              $increase_indent = TRUE;
+              PGPWriter::$indent++;
+            }
+            $string .= $preserveNewline ? PGPWriter::getIndent($this->settings()) : '';
+          }
+          elseif (is_array($data) && isset($data['value'])) {
+            // Added for array expression.
+            $string .= $data['value'];
+          }
+          else {
+            $string .= $data;
+          }
+          // Set space to zero for next item.
+          $add_space = -1;
+          break;
+
+        case 'comment': // Hits
+          // @todo What kind of value would this have? Inline comment?
+          if (isset($data['value'])) {
+            // @todo Trying to handle regular comments in an array expression.
+            // On a separate line or end-of-line.
+            $newlineShouldFollow = strpos($data['value'], '//') === 0 || strpos($data['value'], '#') === 0;
+            $preserve = $preserveWhitespace || $preserveWhitespaceLikeOriginal || $preserveNewline;
+            if (!$preserve && isset($data['append']) && !$data['append']) {
+              // This comment goes on a new line. Or should it if not set to preserve?
+              $string .= PGPWriter::getDelimiter($this->settings()) . PGPWriter::getIndent($this->settings());
+              $space = '';
+            }
+            if (!$preserve && $newlineShouldFollow) {
+              $string .= $space . $data['value'];
+              $string .= PGPWriter::getDelimiter($this->settings()) . PGPWriter::getIndent($this->settings());
+              $add_space = -1;
+            }
+            else {
+              $string .= $space . $data['value'];
+            }
+          }
+          break;
+
         case 'operand': // Hits, PGPOperand
+          $operands++;
           if (is_object($data)) {
             if (method_exists($data, 'toString')) {
               $string .= $space . $data->toString($indent);
@@ -1881,7 +2478,7 @@ class PGPExpression extends PGPList {
           }
           else {
             // This hits on numbers T_DNUMBER and T_LNUMBER
-            $string .= $space . print_r($data, 1); // TODO Use print_r for now so we can see the unhandled items
+            $string .= $space . print_r($data, 1); // @todo Use print_r for now so we can see the unhandled items
           }
           break;
 
@@ -1915,6 +2512,7 @@ class PGPExpression extends PGPList {
 
         case 'curly': // PGPOperand
           $string .= '{' . $data->toString($indent) . '}';
+          $add_space = -1;
           break;
 
         case 'index': // PGPOperand
@@ -1925,9 +2523,9 @@ class PGPExpression extends PGPList {
           $add_space = -1; // What if there is white space following?
           $string .= $space . $data;
 
-          $this->debugPrint("printing lparens in printConditionVariable");
+          $this->debugPrint('printing lparens in printConditionVariable');
           $this->debugPrint($string);
-          $this->debugPrint("");
+          $this->debugPrint('');
 
           break;
 
@@ -1937,17 +2535,6 @@ class PGPExpression extends PGPList {
 
         case 'special': // PGPString
           $string .= $space . '"' . $data->toString($indent) . '"';
-          break;
-
-        case 'comment': // Hits
-          // TODO What kind of value would this have? Inline comment?
-          $string .= isset($data['value']) ? $space . $data['value'] : '';
-          break;
-
-        case 'whitespace': // Hits
-          $string .= $data;
-          // Set space to zero for next item.
-          $add_space = -1;
           break;
 
         case 'modifier': // PGPExpression on a PGPUse statement body block
@@ -1968,7 +2555,7 @@ class PGPExpression extends PGPList {
           break;
 
         case 'inlineif': // PGPExpression 2010-02-09; No longer used 2010-11-05
-          // TODO If $data includes whitespace at beginning, then this adds an extra space.
+          // @todo If $data includes whitespace at beginning, then this adds an extra space.
           // @todo Data can be empty as of PHP 5.3; omit trailing space.
           $string .= ' ? ' . $data->toString($indent);
           break;
@@ -1988,6 +2575,7 @@ class PGPExpression extends PGPList {
 //      $this->debugPrint(__METHOD__ . " end of SWITCH on type = $type");
       $current = $current->next;
     }
+    $increase_indent ? PGPWriter::$indent-- : '';
     return $string;
   }
 
@@ -1996,6 +2584,7 @@ class PGPExpression extends PGPList {
    *
    * @param string $type
    *   A string of the type to match.
+   *
    * @return boolean
    *   TRUE if type matches.
    */
@@ -2008,21 +2597,21 @@ class PGPExpression extends PGPList {
     $operand = $this->findNode('operand');
     $this->debugPrint($operand);
 
-    if ($operand instanceof PGPExpression) { // TODO What base class to use here?
-      $this->debugPrint("checking case PGPExpression");
+    if ($operand instanceof PGPExpression) { // @todo What base class to use here?
+      $this->debugPrint('checking case PGPExpression');
       $data = $operand->findNode('type');
       return $data !== FALSE && $data == $type;
     }
     elseif ($operand instanceof PGPBase) {
-      $this->debugPrint("checking case PGPBase");
+      $this->debugPrint('checking case PGPBase');
       return isset($operand->type) && $operand->type == $type;
     }
     elseif (is_array($operand)) {
-      $this->debugPrint("checking case array");
+      $this->debugPrint('checking case array');
       return isset($operand['type']) && $operand['type'] == $type;
     }
     else {
-      $this->debugPrint("checking case ELSE");
+      $this->debugPrint('checking case ELSE');
       return FALSE;
     }
   }
@@ -2032,10 +2621,11 @@ class PGPExpression extends PGPList {
    *
    * @param integer $index
    *   The index of the operand to return.
+   *
    * @return PGPOperand
    *   The operand object with comment and whitespace items removed.
    */
-  public function stripComments_OLD($index = 0) { // TODO Review upgrade routines that call this method.
+  public function stripComments_OLD($index = 0) { // @todo Review upgrade routines that call this method.
     $operand = $this->getElement($index);
     if (!$operand) {
       return NULL;
@@ -2058,11 +2648,11 @@ class PGPExpression extends PGPList {
    *   The expression object with comment and whitespace items removed.
    */
   public function stripComments() {
+    $class = get_class($this);
+    $stripped = new $class();
     if ($this->isEmpty()) {
-      return new PGPExpression();
+      return $stripped;
     }
-
-    $stripped = new PGPExpression();
 
     $current = $this->first();
     while ($current->next != NULL) {
@@ -2107,10 +2697,11 @@ class PGPExpression extends PGPList {
   /**
    * Inserts a statement before the statement containing the expression.
    *
-   * @param mixed $statement
+   * @param PGPBase|array $statement
    *   The statement object (or array) to store in the parent container.
-   * @return mixed
-   *   The inserted statement object (or array).
+   *
+   * @return PGPNode
+   *   The inserted node object containing the statement.
    */
   public function &insertStatementBefore($statement) {
 //    $this->debugPrint(__METHOD__);
@@ -2122,7 +2713,7 @@ class PGPExpression extends PGPList {
 
     if (!isset($this->parent)) {
       $this->debugPrint(__METHOD__);
-      $this->debugPrint("No parent to expression");
+      $this->debugPrint('No parent to expression');
     }
 
     $node = &$this->parent->insertStatementBefore($statement);
@@ -2133,10 +2724,11 @@ class PGPExpression extends PGPList {
   /**
    * Inserts a statement after the statement containing the expression.
    *
-   * @param mixed $statement
+   * @param PGPBase|array $statement
    *   The statement object (or array) to store in the parent container.
-   * @return mixed
-   *   The inserted statement object (or array).
+   *
+   * @return PGPNode
+   *   The inserted node object containing the statement.
    */
   public function &insertStatementAfter($statement) {
 //    $this->debugPrint(__METHOD__);
@@ -2148,7 +2740,7 @@ class PGPExpression extends PGPList {
 
     if (!isset($this->parent)) {
       $this->debugPrint(__METHOD__);
-      $this->debugPrint("No parent to expression");
+      $this->debugPrint('No parent to expression');
     }
 
     $node = &$this->parent->insertStatementAfter($statement);
@@ -2160,7 +2752,8 @@ class PGPExpression extends PGPList {
    * Returns the count of nodes of a given type in the expression.
    *
    * @param string $type
-   *   The string of the node type to count.
+   *   The node type to count.
+   *
    * @return integer
    *   The number of nodes of the indicated type.
    */
@@ -2189,14 +2782,17 @@ class PGPExpression extends PGPList {
    * This is like findNode with an $occurrence parameter.
    *
    * @param string $type
-   *   The string of the node type to return.
-   * @param integer $count
-   *   The occurrence to return.
+   *   The node [statement] type to search for.
+   * @param integer $occurrence
+   *   (optional) The occurrence to return.
+   * @param boolean $return_node
+   *   (optional) Indicates whether to return the node object or its data.
+   *
    * @return mixed
    *   The statement object on the n-th occurrence of the node of the indicated
    *   type, or FALSE if not found.
    */
-  public function getType($type, $occurrence = 1) {
+  public function &getType($type, $occurrence = 1, $return_node = FALSE) {
 //    $this->debugPrint(__METHOD__);
 
     $count = 0;
@@ -2209,12 +2805,18 @@ class PGPExpression extends PGPList {
       if ($current->type == $type) {
         $count++;
         if ($count == $occurrence) {
-          return $current->data; // TODO Node or data?
+          if ($return_node) {
+            return $current;
+          }
+          else {
+            return $current->data;
+          }
         }
       }
       $current = $current->next;
     }
-    return FALSE;
+    $result = FALSE;
+    return $result;
   }
 }
 
@@ -2227,7 +2829,25 @@ class PGPOperand extends PGPExpression {
 
   public function __construct() {
     parent::__construct();
-    $this->debug = FALSE; // TRUE; //
+  }
+
+  /**
+   * Returns TRUE if the type of the operand matches search value.
+   *
+   * @param string $type
+   *   A string of the type to match.
+   *
+   * @return boolean
+   *   TRUE if type matches.
+   */
+  public function isType($type) {
+//    $this->debugPrint(__METHOD__);
+    if (!$type || !$this->count()) {
+      return FALSE;
+    }
+
+    $data = $this->findNode('type');
+    return $data !== FALSE && $data == $type;
   }
 
   /**
@@ -2238,7 +2858,8 @@ class PGPOperand extends PGPExpression {
    * The same items at the beginning are part of an expression.
    *
    * @param integer $index
-   *   The index of the operand to return. [Not used here.]
+   *   (optional) The index of the operand to return. [Not used here.]
+   *
    * @return PGPOperand
    *   The operand object with comment and whitespace items removed.
    */
@@ -2265,6 +2886,80 @@ class PGPOperand extends PGPExpression {
     }
     return $stripped;
   }
+
+  /**
+   * Returns all elements of a PGPOperand object meeting the search criteria.
+   *
+   * Based on the optional parameters, the search may begin:
+   * - with the first element of the list (the default),
+   * - with the last element of the list, or
+   * - relative to a specified element.
+   *
+   * @param string $value
+   *   Element value to be matched.
+   * @param integer $return_item
+   *   (optional) Indicates whether to return the node object or its data.
+   * @param string $direction
+   *   (optional) Direction in which to traverse the list.
+   * @param PGPNode $current
+   *   (optional) The specified node to begin the search from.
+   *
+   * @return array
+   *   The list of elements meeting the search criteria.
+   */
+  public function searchAny($value, $return_item = GP_RETURN_DATA, $direction = 'forward', &$current = NULL) {
+    // Initialize.
+    if ($direction == 'forward') {
+      $current = $this->first();
+      $next = 'next';
+    }
+    else {
+      $current = $this->last();
+      $next = 'previous';
+    }
+    $items = array();
+    $key = 'value';
+
+    while ($current->$next != NULL) {
+      $data = &$current->data;
+      if ($current->type == $key && $data == $value) { // test that $data is a scalar?
+        // Add item to list.
+        if ($return_item == GP_RETURN_OPERAND) {
+          // Add item to list.
+          $items[] = $this;
+          break;
+        }
+        $items[] = $return_item ? $current : $data;
+      }
+      elseif ($data instanceof PGPBase) {
+        // Not applicable.
+      }
+      elseif ($data instanceof PGPOperand) {
+        // Recurse on this element's members.
+        $temp = $data->searchAny($value, $return_item, $direction);
+        if ($temp) {
+          if ($return_item == GP_RETURN_OPERAND) {
+            // The parent property is not set on an operand.
+            $items[] = $this;
+            break;
+          }
+          else {
+            $items[] = $return_item ? $current : $data;
+          }
+        }
+      }
+      elseif ($data instanceof PGPList) {
+        // Recurse on this element's members.
+        $temp = $data->searchAny($value, $return_item, $direction);
+        $items = array_merge($items, $temp);
+      }
+      else {
+      }
+      $current = /*&*/$current->$next; // With '&' the $current is not updated in caller.
+    }
+
+    return $items;
+  }
 }
 
 /**
@@ -2277,6 +2972,7 @@ class PGPOperand extends PGPExpression {
  * statement to print the object.
  */
 class PGPString extends PGPExpression {
+
   /**
    * Statement type.
    *
@@ -2286,11 +2982,13 @@ class PGPString extends PGPExpression {
 
   public function __construct() {
     parent::__construct();
-    $this->debug = FALSE; // TRUE;
   }
 
   /**
    * Returns a string representation of the special string expression.
+   *
+   * @param string $indent
+   *   (optional) Line indent string.
    *
    * @return string
    *   A string of the expression.
@@ -2309,6 +3007,7 @@ class PGPString extends PGPExpression {
       switch ($type) {
         case 'begin':
         case 'end':
+        case 'close':
           $string .= $data;
           break;
 
@@ -2316,15 +3015,11 @@ class PGPString extends PGPExpression {
           $string .= $data['value'];
           break;
 
-        case 'close':
-          $string .= $data;
-          break;
-
         case 'operand':
           $string .= $data->toString($indent);
           break;
 
-        case 'variable_xxx': // TODO Deprecated.
+        case 'variable_xxx': // @todo Deprecated.
           $string .= $data->toString($indent);
           if ($data->first()->type == type && in_array($data->first()->data, array(T_DOLLAR_OPEN_CURLY_BRACES, T_CURLY_OPEN))) {
             $string .= '}';
@@ -2333,6 +3028,10 @@ class PGPString extends PGPExpression {
 
         case 'string':
           $string .= $data['value'];
+          break;
+
+        case 'whitespace':
+          $string .= $data;
           break;
       }
 
