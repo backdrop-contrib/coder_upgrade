@@ -324,11 +324,12 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
     );
     $function_name = $module_name . '_install';
 
-    $function = new PGPClass($function_name);
+    $function = new PGPClass();
     $function->comment = $comment;
     $function->type = T_FUNCTION;
     $function->parameters = new PGPList();
-
+    $function->name = new PGPExpression();
+    $function->name->insertFirst($function_name, 'value');
 
     $function->body = $body;
 
@@ -403,10 +404,12 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   );
   $function_name = $module_name . '_update_1000';
 
-  $function = new PGPClass($function_name);
+  $function = new PGPClass();
   $function->comment = $comment;
   $function->type = T_FUNCTION;
   $function->parameters = new PGPList();
+  $function->name = new PGPExpression();
+  $function->name->insertFirst($function_name, 'value');
 
 
   $function->body = $body;
@@ -442,10 +445,12 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
       $function_name = $module_name . '_update_last_removed';
 
       // Create the new hook function.
-      $function = new PGPClass($function_name);
+      $function = new PGPClass();
       $function->comment = $comment;
       $function->type = T_FUNCTION;
       $function->parameters = new PGPList();
+      $function->name = new PGPExpression();
+      $function->name->insertFirst($function_name, 'value');
 
       // Use the editor to set the function parameters.
       $editor = PGPEditor::getInstance();

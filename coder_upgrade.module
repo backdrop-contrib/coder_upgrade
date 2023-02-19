@@ -161,10 +161,12 @@ function coder_upgrade_build_config_function($node, $reader) {
   $name = $_coder_upgrade_module_name . '_config_info';
 
   // Create the new hook function.
-  $function = new PGPClass($name);
+  $function = new PGPClass();
   $function->comment = $comment;
   $function->type = T_FUNCTION;
   $function->parameters = new PGPList();
+  $function->name = new PGPExpression();
+  $function->name->insertFirst($name, 'value');
 
   $strings[] = '$prefixes[\'' . $_coder_upgrade_module_name . '.settings\'] = array(';
   $strings[] = "  'label' => t('{$_coder_upgrade_module_human_name} settings'),";

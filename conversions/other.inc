@@ -1897,10 +1897,12 @@ function coder_upgrade_op_to_hook($node, $case_node, $hook, $parameters) {
   $name = $_coder_upgrade_module_name . $hook;
 
   // Create the new hook function.
-  $function = new PGPClass($name);
+  $function = new PGPClass();
   $function->comment = $comment;
   $function->type = T_FUNCTION;
   $function->parameters = new PGPList();
+  $function->name = new PGPExpression();
+  $function->name->insertFirst($name, 'value');
 
   // Use the editor to set the function parameters.
   $editor = new PGPEditor();
