@@ -146,11 +146,12 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     );
     $function_name = $module_name . '_autoload_info';
 
-    $function = new PGPClass($function_name);
+    $function = new PGPClass();
     $function->comment = $comment;
     $function->type = T_FUNCTION;
     $function->parameters = new PGPList();
-
+    $function->name = new PGPExpression();
+    $function->name->insertFirst($function_name, 'value');
 
     $function->body = $body;
 
@@ -165,16 +166,16 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
 
     // Use writer to redo file.
     $writer = PGPWriter::getInstance();
-    //dpm($writer);
-    //dpm($reader->getStatements()->toString());
     coder_upgrade_memory_print('create writer');
     $new = $writer->toString($reader->getStatements());
     coder_upgrade_memory_print('writer->toString');
 
+  dpm($new, 'hoho');
     // Write the new file.
     if ($new != $cur) {
       if (file_put_contents($module_file, $new) === FALSE) {
-        coder_upgrade_log_print('File could not be written');
+       dpm('hjj$new');
+       coder_upgrade_log_print('File could not be written');
       }
       coder_upgrade_log_print('Replaced the file');
     }
