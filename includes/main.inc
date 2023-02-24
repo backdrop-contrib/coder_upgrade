@@ -436,16 +436,12 @@ function coder_upgrade_convert_function_calls(&$reader) {
       $name_value = &$item->name->last()->data->last()->data;
     }
 
-      //$type = is_object($item->name->last()->data) ? $item->name->last()->data->first()->data : NULL;
-      // dpm($item->name->last()->data->first()->data);
     // If need to change other statements that we build as a function call,
     // then modify the next line. Others: eval, empty, unset, print, throw.
     $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
     foreach($types as $wo) {
-      // dpm($wo, 'hohh');
     }
     if ($type && !is_object($type) && in_array($type, $types)) {
-      //dpm($name_value);
       // If name is an object, then it is a variable expression that is not
       // 'alterable' in the traditional sense.
       backdrop_alter('upgrade_call_' . $name_value, $node, $reader);
@@ -463,7 +459,6 @@ function coder_upgrade_convert_function_calls(&$reader) {
     if ($type && !is_object($type) && in_array($type, $types)) {
       // Set name because only variables may be passed by reference.
       // $name = $item->name['value'];
-      // dpm($item->name['value'], 'invs');
       backdrop_alter('upgrade_call', $node, $reader, $name_value);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
