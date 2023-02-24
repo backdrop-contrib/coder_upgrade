@@ -39,6 +39,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
     }
 
     $config = config('coder_upgrade_tmp.' . $module_name . '.settings');
+
     if (!empty($config->get())) {
       // Create an install file.
       $install_file = $module_path . $module_name . '.install';
@@ -170,11 +171,9 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $new = $writer->toString($reader->getStatements());
     coder_upgrade_memory_print('writer->toString');
 
-  dpm($new, 'hoho');
     // Write the new file.
     if ($new != $cur) {
       if (file_put_contents($module_file, $new) === FALSE) {
-       dpm('hjj$new');
        coder_upgrade_log_print('File could not be written');
       }
       coder_upgrade_log_print('Replaced the file');
@@ -273,7 +272,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   }
 
   // Free up memory.
-  $reader->reset();
+  //$reader->reset();
   coder_upgrade_memory_print('reset reader');
 }
 
@@ -430,7 +429,12 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
     foreach ($nodes as &$node) {
       $item = &$node->data;
       $name = &$item->name;
-      if (preg_match('@[a-zA-Z_]+(update_)(\d+)$@', $name, $matches)) {
+      if (is_object($item->name->last()->data)) {
+        $type = &$item->name->last()->data->first()->data;
+        $name_value = &$item->name->last()->data->last()->data;
+      }
+
+      if (preg_match('@[a-zA-Z_]+(update_)(\d+)$@', $name_value, $matches)) {
         $ns[$matches[2]] = $node;
       }
     }

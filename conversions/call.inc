@@ -42,6 +42,11 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
   $variable = str_replace("'", '', $item->printParameter(0));
 
+    if (is_object($item->name->last()->data)) {
+      $type = &$item->name->last()->data->first()->data;
+      $name_value = &$item->name->last()->data->last()->data;
+    }
+
   // Build a list of variables to later parse and build a config file.
   // We also store a warning message if variable or value are not strings, since
   // these will need to be manually corrected by the developer.
@@ -109,7 +114,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
 
     // Now replace the variable_get with config.
     // Process function call.
-    $name['value'] = 'config_get';
+    $name_value = 'config_get';
 
     $p1 = $item->printParameter(0);
     $temp = $_coder_upgrade_module_name . '.settings';
@@ -124,17 +129,17 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_get with config.
         // Process function call.
-        $name['value'] = 'config_get';
+        $name_value = 'config_get';
 
         $editor->setParameter($item, 0, "'" . $storage . "'");
         $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
-        $name['value'] = 'settings_get';
+        $name_value = 'settings_get';
         $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        $name['value'] = 'state_get';
+        $name_value = 'state_get';
         $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'removed') {
@@ -174,11 +179,16 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DO
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
   $variable = str_replace("'", '', $item->printParameter(0));
 
+    if (is_object($item->name->last()->data)) {
+      $type = &$item->name->last()->data->first()->data;
+      $name_value = &$item->name->last()->data->last()->data;
+    }
+
   // Only store the variable in the module's config if it starts with the module
   // name. This is necessary since we cannot know if otherwise named variables
   // are core variables or other contrib variables.
   if (strpos($variable, $_coder_upgrade_module_name) !== FALSE) { // todo change this to a check for core variables.
-    $name['value'] = 'config_set';
+    $name_value = 'config_set';
 
     $temp = $_coder_upgrade_module_name . '.settings';
     $editor->setParameter($item, 0, "'" . $temp . "'");
@@ -193,14 +203,14 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DO
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_del with config.
         // Process function call.
-        $name['value'] = 'config_set';
+        $name_value = 'config_set';
 
         $editor->setParameter($item, 0, "'" . $storage . "'");
         $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
         $editor->setParameter($item, 2, $p1);
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        $name['value'] = 'state_set';
+        $name_value = 'state_set';
         $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
@@ -242,11 +252,16 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DO
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
   $variable = str_replace("'", '', $item->printParameter(0));
 
+    if (is_object($item->name->last()->data)) {
+      $type = &$item->name->last()->data->first()->data;
+      $name_value = &$item->name->last()->data->last()->data;
+    }
+
   // Only store the variable in the module's config if it starts with the module
   // name. This is necessary since we cannot know if otherwise named variables
   // are core variables or other contrib variables.
   if (strpos($variable, $_coder_upgrade_module_name) !== FALSE) { // todo change this to a check for core variables.
-    $name['value'] = 'config_clear';
+    $name_value = 'config_clear';
 
     $p0 = $item->printParameter(0);
     $temp = $_coder_upgrade_module_name . '.settings';
@@ -261,13 +276,13 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DO
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_del with config.
         // Process function call.
-        $name['value'] = 'config_clear';
+        $name_value = 'config_clear';
 
         $editor->setParameter($item, 0, "'" . $storage . "'");
         $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        $name['value'] = 'state_del';
+        $name_value = 'state_del';
         $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {

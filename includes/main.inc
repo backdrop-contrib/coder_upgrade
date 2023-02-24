@@ -395,7 +395,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
   backdrop_alter('upgrade_file', $reader);
   coder_upgrade_log_print("Completed hook_upgrade_file_alter");
   coder_upgrade_memory_print('apply file conversions');
-/* 
   if ($is_install_file) {
     // Apply parser conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_parser_install_alter");
@@ -411,9 +410,9 @@ function coder_upgrade_apply_parser($filename, &$new) {
   coder_upgrade_memory_print('writer->toString');
 
   // Free up memory.
-  $reader->reset();
+  // $reader->reset();
   coder_upgrade_memory_print('reset reader');
- */}
+}
 
 /**
  * Upgrades function calls using grammar parser.
@@ -424,20 +423,32 @@ function coder_upgrade_apply_parser($filename, &$new) {
 function coder_upgrade_convert_function_calls(&$reader) {
   cdp("inside " . __FUNCTION__);
   $nodes = &$reader->getFunctionCalls();
-  foreach ($nodes as &$node) {
+  foreach ($nodes as $index => &$node) {
     $item = &$node->data;
     if (!isset($item) || !is_object($item) || !($item instanceof PGPFunctionCall) || $item->type != T_FUNCTION_CALL) {
       // The reference could have been changed in another routine so that it
       // no longer refers to an object.
       continue;
     }
+    $type = NULL;
+    if (is_object($item->name->last()->data)) {
+      $type = &$item->name->last()->data->first()->data;
+      $name_value = &$item->name->last()->data->last()->data;
+    }
+
+      //$type = is_object($item->name->last()->data) ? $item->name->last()->data->first()->data : NULL;
+      // dpm($item->name->last()->data->first()->data);
     // If need to change other statements that we build as a function call,
     // then modify the next line. Others: eval, empty, unset, print, throw.
     $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
-    if (is_array($item->name) && in_array($item->name['type'], $types)) {
+    foreach($types as $wo) {
+      // dpm($wo, 'hohh');
+    }
+    if ($type && !is_object($type) && in_array($type, $types)) {
+      //dpm($name_value);
       // If name is an object, then it is a variable expression that is not
       // 'alterable' in the traditional sense.
-      backdrop_alter('upgrade_call_' . $item->name['value'], $node, $reader);
+      backdrop_alter('upgrade_call_' . $name_value, $node, $reader);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
     }
@@ -445,14 +456,15 @@ function coder_upgrade_convert_function_calls(&$reader) {
     if (!isset($node) || !is_object($node) || !($node instanceof PGPNode)) {
       continue;
     }
-    $item = &$node->data;
+    //$item = &$node->data;
     if (!isset($item) || !is_object($item) || !($item instanceof PGPFunctionCall) || $item->type != T_FUNCTION_CALL) {
       continue;
     }
-    if (is_array($item->name) && in_array($item->name['type'], $types)) {
+    if ($type && !is_object($type) && in_array($type, $types)) {
       // Set name because only variables may be passed by reference.
-      $name = $item->name['value'];
-      backdrop_alter('upgrade_call', $node, $reader, $name);
+      // $name = $item->name['value'];
+      // dpm($item->name['value'], 'invs');
+      backdrop_alter('upgrade_call', $node, $reader, $name_value);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
     }

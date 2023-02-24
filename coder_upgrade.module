@@ -139,7 +139,7 @@ function coder_upgrade_upgrade_file_alter(&$reader) {
 
         foreach ($calls as &$call) {
           if ($call->printParameter(0) == "'" .$_coder_upgrade_module_name . ".settings'") {
-            $call->name['value'] = '$config->get';
+            $call->name->last()->data->last()->data = '$config->get';
             $call->deleteParameter();
           }
         }
