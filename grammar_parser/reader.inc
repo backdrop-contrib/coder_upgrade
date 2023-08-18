@@ -518,8 +518,18 @@ class PGPReader extends PGPParser {
               $this->functionCalls[] = &$node/*->data*/;
             }
             else { // TODO Added 2010-01-27
+              if ($this->previousTokenValue() == "?") {
+                $token = &$this->tokens[key($this->tokens)];
+                $token[1] = $this->previousTokenValue() . $token[1];
+              }
+
               prev($this->tokens);
               $node->data = $this->buildAssignment($modifiers);
+
+              // Allow proper handling of typed class properties introduced in
+              // PHP 7.4 by preventing modifiers from stacking against future
+              // expressions.
+              $modifiers = array();
             }
           }
           break;
@@ -2044,7 +2054,7 @@ class PGPReader extends PGPParser {
         default:
           prev($this->tokens);
           $expression->values->insertLast($this->buildExpression(array(',', ';')));
-//          $expression->warning = 'unexected syntax in ' . __METHOD__ . '(' . __LINE__ . ')';
+//          $expression->warning = 'unexpected syntax in ' . __METHOD__ . '(' . __LINE__ . ')';
 //          $expression->extra = $this->cleanToken();
 //          return $expression;
           break;
