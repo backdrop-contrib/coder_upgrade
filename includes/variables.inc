@@ -472,7 +472,7 @@ function coder_upgrade_backdrop_configs($variable) {
     'system.authorize' => array(
       'filetransfer_default',
     ) ,
-    'system.performance' => array(
+    'system.core' => array(
       '_config_static',
       'action_recursion_limit',
       'active_menus_default',
