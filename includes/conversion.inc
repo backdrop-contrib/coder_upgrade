@@ -5,6 +5,9 @@
  *
  * Copyright 2008-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
+use PhpParser\Error;
+use PhpParser\NodeDumper;
+use PhpParser\ParserFactory;
 
 module_load_include('inc', 'coder_upgrade', 'conversions/list');
 
