@@ -98,5 +98,15 @@ function coder_upgrade_requirements($phase) {
     }
   }
 
+  // Add a requirement for a maximum PHP version of 7.4. This is intended as an
+  // interim mitigation for Issue #87.
+  // @see https://github.com/backdrop-contrib/coder_upgrade/issues/87
+  if (!version_compare(phpversion(), '7.4.33', '<=')) {
+    $requirements['coder_upgrade_php_version'] = array(
+      'title' => $t('Coder Upgrade PHP Version'),
+      'description' => $t('Coder Upgrade will currently break functions that use parameters passed by reference if the PHP version is greater that 7.4.'),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
   return $requirements;
 }
