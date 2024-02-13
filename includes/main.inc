@@ -428,8 +428,8 @@ function coder_upgrade_apply_parser($filename, &$new) {
     coder_upgrade_memory_print('apply install file conversions');
   }
 
-$prettyPrinter = new PrettyPrinter\Standard();
-// dpm($prettyPrinter->prettyPrintFile($ast));
+  $prettyPrinter = new PrettyPrinter\Standard();
+  // dpm($prettyPrinter->prettyPrintFile($ast));
 
 
   // Use writer to redo file.
@@ -551,7 +551,7 @@ function coder_upgrade_convert_functions(&$reader, &$asts) {
       clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
       continue;
     }
-    // backdrop_alter('upgrade_hook', $node, $reader, $hook);
+    backdrop_alter('upgrade_hook', $node, $reader, $hook);
     // dpm($node->getDocComment());
   }
 

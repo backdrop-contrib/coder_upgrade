@@ -20,25 +20,28 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   // Changes: implementation_hook_comment
   if ($item->getDocComment()) {
     // Update document comment for hook implementations.
-    $doc = new Doc('@\*\s+[iI]mplement.*?(hook_.*?)(\(\)|)(\.|)$@m', "* Implements $1().", $item->getDocComment());
+    $item_comment = preg_replace('@\*\s+[iI]mplement.*?(hook_.*?)(\(\)|)(\.|)$@m', "* Implements $1().", $item->getDocComment());
+    $doc = new Doc($item_comment);
     $item->setDocComment($doc);
   }
   else {
     // Add a document comment.
-    $doc = new Doc("/**\n * @todo Please document this function.\n * @see http://drupal.org/node/1354\n */");
+    $doc = new Doc("/**\n * @todo Please document this function.\n * @see https://docs.backdropcms.org/doc-standards\n */");
     $item->setDocComment($doc);
   }
 
   global $_coder_upgrade_theme_registry;
-  cdp($node->data->name);
-  // if (strpos($node->data->name, 'theme_') === 0) {
-    // $theme_name = substr($node->data->name, strpos($node->data->name, "theme_") + 6);
-    // if (!isset($_coder_upgrade_theme_registry[$theme_name])) {
-      // $msg = 'TODO: Should this theme ' . $theme_name . ' be declared in hook_theme()?';
-      // clp($msg);
-      // $node->data->body->insertFirst($editor->commentToStatement($msg));
-    // }
-  // }
+  $name = $item->name->toString();
+  cdp($name);
+  if (strpos($name, 'theme_') === 0) {
+    $theme_name = substr($name, strpos($nname, "theme_") + 6);
+    if (!isset($_coder_upgrade_theme_registry[$theme_name])) {
+      $msg = '// TODO: Should this theme ' . $theme_name . ' be declared in hook_theme()?';
+      clp($msg);
+      $doc = new Doc($msg);
+      $item->stmts[0]->setDocComment($doc);
+    }
+  }
 }
 
 /**
