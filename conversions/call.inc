@@ -12,6 +12,9 @@
  * The upgrades to these functions are documented at the following urls.
  */
 
+use PhpParser\Node\Name;
+use PhpParser\Comment\Doc;
+
 /**
  * Implements hook_upgrade_call_alter().
  */
@@ -35,12 +38,14 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
   $editor = PGPEditor::getInstance();
 
   // Get the function call object.
-  $item = &$node->data;
+  $item = &$node;
 
   // Process function call.
-  $name = &$item->name;
+  $name = $item->name->toString();
+
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
-  $variable = str_replace("'", '', $item->printParameter(0));
+  dpm($item->args[0]->value->value);
+  $variable = str_replace("'", '', $item->args[0]->value->value);
 
   // Build a list of variables to later parse and build a config file.
   // We also store a warning message if variable or value are not strings, since
@@ -64,7 +69,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
       $value = 'dynamic variable in file ' . $path . ' line ' . $node->line;
     }
     else {
-      $raw_value = trim($item->printParameter(1));  // Remove extra whitespace
+      $raw_value = trim($item->args[1]->value->value);  // Remove extra whitespace
       $value_uc = strtoupper($raw_value);
 
       // Catch initialization with empty array.
@@ -109,49 +114,69 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
 
     // Now replace the variable_get with config.
     // Process function call.
-    $name['value'] = 'config_get';
+    $item->name = new Name('config_get');
 
-    $p1 = $item->printParameter(0);
+    $p1 = $item->args[0]->value->value;
     $temp = $_coder_upgrade_module_name . '.settings';
-    $editor->setParameter($item, 0, "'" . $temp . "'");
-    $editor->setParameter($item, 1, $p1);
+    // $item->args[0]->value->value = "'" . $temp . "'";
+    $item->args[0]->value->value = $temp;
+    $item->args[1]->value->value = $p1;
+    // $editor->setParameter($item, 0, "'" . $temp . "'");
+    // $editor->setParameter($item, 1, $p1);
   }
   else {
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
     $variable_data = coder_upgrade_drupal_variables($variable);
     if ($variable_data) {
+      dpm($item->getAttribute('parent'));
       if ($variable_data['storage'] == 'to_config') {
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_get with config.
         // Process function call.
         $name['value'] = 'config_get';
 
-        $editor->setParameter($item, 0, "'" . $storage . "'");
-        $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
+        $item->args[0]->value->value = $storage;
+        $item->args[1]->value->value = $variable_data['variable'];
+        // $editor->setParameter($item, 0, "'" . $storage . "'");
+        // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
-        $name['value'] = 'settings_get';
-        $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
+        $item->name = new Name('settings_get');
+        $item->args[0]->value->value = $variable_data['variable'];
+        // $name['value'] = 'settings_get';
+        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        $name['value'] = 'state_get';
-        $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
+        $item->name = new Name('state_get');
+        $item->args[0]->value->value = $variable_data['variable'];
+        // $name['value'] = 'state_get';
+        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
+      // @todo: setting comments on funCalls doesnt work?
       elseif ($variable_data['storage'] == 'removed') {
         // This variable was removed in Backdrop without replacement.
-        $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
-        $item->insertStatementBefore($statement);
+        // $item->insertStatementBefore($statement);
+        $statement = "// TODO This variable was removed in Backdrop without replacement.";
+        $doc = new Doc($statement);
+        $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
       }
       elseif ($variable_data['storage'] == 'unknown') {
         // This variable is a known Drupal variable but we're not sure about it.
-        $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-        $item->insertStatementBefore($statement);
+        // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+        // $item->insertStatementBefore($statement);
+        $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
+        $doc = new Doc($statement);
+        $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
       }
     }
     else {
       // This variable is not a known Drupal core variable.
-      $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-      $item->insertStatementBefore($statement);
+      dpm($item);
+      $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
+      $doc = new Doc($statement);
+      $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
+      // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+      // $item->insertStatementBefore($statement);
     }
   }
 }

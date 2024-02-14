@@ -34,7 +34,7 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
   $name = $item->name->toString();
   cdp($name);
   if (strpos($name, 'theme_') === 0) {
-    $theme_name = substr($name, strpos($nname, "theme_") + 6);
+    $theme_name = substr($name, strpos($name, "theme_") + 6);
     if (!isset($_coder_upgrade_theme_registry[$theme_name])) {
       $msg = '// TODO: Should this theme ' . $theme_name . ' be declared in hook_theme()?';
       clp($msg);

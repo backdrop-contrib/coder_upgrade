@@ -20,7 +20,7 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\NodeFinder;
 use PhpParser\Node\Stmt;
 use PhpParser\PrettyPrinter;
-
+use PhpParser\NodeVisitor\ParentConnectingVisitor;
 /**
  * Prepares conversion environment and starts conversion loop.
  *
@@ -369,9 +369,13 @@ function coder_upgrade_apply_parser($filename, &$new) {
     return;
   }
 
+  $traverser = new NodeTraverser;
+  $traverser->addVisitor(new ParentConnectingVisitor);
+
   $parser = (new ParserFactory())->createForNewestSupportedVersion();
   try {
       $ast = $parser->parse($new);
+      $ast    = $traverser->traverse($ast);
   } catch (Error $error) {
       echo "Parse error: {$error->getMessage()}\n";
       return;
@@ -402,7 +406,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
   // Apply parser conversion routines for function calls.
   coder_upgrade_log_print("Calling hook_upgrade_call_alter");
-  // coder_upgrade_convert_function_calls($reader);
+  coder_upgrade_convert_function_calls($reader, $ast);
   // tester_coder_upgrade_convert_function_calls($ast);
   coder_upgrade_log_print("Completed hook_upgrade_call_alter");
   coder_upgrade_memory_print('apply function call conversions');
@@ -449,41 +453,41 @@ function coder_upgrade_apply_parser($filename, &$new) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_convert_function_calls(&$reader) {
+function coder_upgrade_convert_function_calls(&$reader, &$asts) {
   cdp("inside " . __FUNCTION__);
-  $nodes = &$reader->getFunctionCalls();
+  // $nodes = &$reader->getFunctionCalls();
+  $nodeFinder = new NodeFinder;
+  
+  $ast = &$asts;
+  $nodes = $nodeFinder->findInstanceOf($ast, Node\expr\funcCall::class);
+
   foreach ($nodes as &$node) {
-    $item = &$node->data;
-    if (!isset($item) || !is_object($item) || !($item instanceof PGPFunctionCall) || $item->type != T_FUNCTION_CALL) {
-      // The reference could have been changed in another routine so that it
-      // no longer refers to an object.
-      continue;
-    }
+    $name = $node->name->toString();
+
     // If need to change other statements that we build as a function call,
     // then modify the next line. Others: eval, empty, unset, print, throw.
-    $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
-    if (is_array($item->name) && in_array($item->name['type'], $types)) {
+
+    // @todo: PHPParser funcCall only finds T_STRING names it seems; The Others
+    // like T_REQUIRE might need Node\expr\Include_::class. But we only seem
+    // to have alter hooks for strings in this module anyway, so leaving off
+    // the type checking for now.
+
+    // $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
+    // if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // If name is an object, then it is a variable expression that is not
       // 'alterable' in the traditional sense.
-      backdrop_alter('upgrade_call_' . $item->name['value'], $node, $reader);
+      backdrop_alter('upgrade_call_' . $name, $node, $reader);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
-    }
+    // }
 
-    if (!isset($node) || !is_object($node) || !($node instanceof PGPNode)) {
-      continue;
-    }
-    $item = &$node->data;
-    if (!isset($item) || !is_object($item) || !($item instanceof PGPFunctionCall) || $item->type != T_FUNCTION_CALL) {
-      continue;
-    }
-    if (is_array($item->name) && in_array($item->name['type'], $types)) {
+    // if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // Set name because only variables may be passed by reference.
-      $name = $item->name['value'];
+      // $name = $item->name['value'];
       backdrop_alter('upgrade_call', $node, $reader, $name);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
-    }
+    // }
   }
 }
 
