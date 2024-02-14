@@ -569,7 +569,7 @@ function coder_upgrade_convert_functions_bkp(&$reader, $ast) {
 
   $classes = $nodeFinder->findInstanceOf($ast, Node\Stmt\Function_::class);
   $dumper = new NodeDumper;
-  dpm($dumper->dump($classes));
+  // dpm($dumper->dump($classes));
 
   $nodes = &$reader->getFunctions();
   foreach ($nodes as &$node) {

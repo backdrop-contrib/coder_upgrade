@@ -15,10 +15,15 @@
 // @todo: use BuilderFactory for building nodes.
  
 use PhpParser\Node\Name;
+use PhpParser\NodeFinder;
 use PhpParser\BuilderFactory;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Comment\Doc;
-
+use PhpParser\Node\Stmt\Return_;
+use PhpParser\Node\Stmt\Expression;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Scalar\String_;
 /**
  * Implements hook_upgrade_call_alter().
  */
@@ -48,7 +53,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
   $name = $item->name->toString();
 
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
-  dpm($item->args[0]->value->value);
+  // dpm($item->args[0]->value->value);
   $variable = str_replace("'", '', $item->args[0]->value->value);
 
   // Build a list of variables to later parse and build a config file.
@@ -132,7 +137,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
     $variable_data = coder_upgrade_drupal_variables($variable);
     if ($variable_data) {
-      dpm($item->getAttribute('parent'));
+      // dpm($item->getAttribute('parent'));
       if ($variable_data['storage'] == 'to_config') {
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_get with config.
@@ -211,7 +216,7 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DO
     $item->name = new Name('config_set');
 
     $temp = $_coder_upgrade_module_name . '.settings';
-    dpm($item->args);
+    // dpm($item->args);
     // $item->args[0]->value->value = $temp;
     // $item->args[1]->value->value = $p0;
     $builderFactory = new BuilderFactory();
@@ -380,28 +385,38 @@ function coder_upgrade_upgrade_call_system_settings_form_alter(&$node, &$reader)
   $editor = PGPEditor::getInstance();
   global $_coder_upgrade_module_name;
 
-  $item = &$node->data;
+  $item = &$node;
   // Get the string used to represent the form (usually "$form") by checking the
   // parameter in system_settings_form return call.
-  $form = $item->printParameter();
+  // dpm($item->args);
+  $form = $item->args[0]->value->name;
 
   // Now search for the first occurence of this string.
-  $parent = &$item->parent;
-  $statements = $parent->container->searchAll('PGPAssignment', 'values', 0, $form, $parent);
-  $first_node = array_shift($statements);
-  $data = $first_node->data;
-  // Check the value assigned to this first occurence of the string. It would
-  // normally be either $form = array() or $form = array('#key...)
-  $value = $data->getValue();
-  $container = &$first_node->container;
-  $string = $editor->textToStatements("\$form['#config'] = '$_coder_upgrade_module_name.settings';")->getElement(0);
+  $parent = $item->getAttribute('parent')->getAttribute('parent');
+  $nodeFinder = new NodeFinder;
+  //$class = $nodeFinder->findFirstInstanceOf($parent, Node\expr\funcCall);
+  // $first_node = $nodeFinder->find($parent->stmts, function (\PhpParser\Node $subNode) use ($form) {
+      // return $subNode instanceof \PhpParser\Node\Expr\Assign && ((isset($subNode->var->name) && $subNode->var->name == $form);
+  // });
+  $first_node = $nodeFinder->findFirst($parent->stmts, function (\PhpParser\Node $subNode) use ($form) {
+      return $subNode instanceof \PhpParser\Node\Expr\Assign
+      && ((isset($subNode->var->name) && $subNode->var->name == $form)
+      || (isset($subNode->var->var->name) && $subNode->var->var->name == $form));
+  });
+  $var = new Variable($form . "['#config']");
+  $assignee = new String_($_coder_upgrade_module_name . '.settings');
+  $assign = new Expression(new Assign($var, $assignee));
+
+  // Find where the first node is in the parent statements.
+  $key = array_search($first_node->getAttribute('parent'), $parent->stmts);
+
   // If the form was initialized with an empty array, put our new '#config' key
   // after that, otherwise before.
-  if ($value->toString() == 'array()') {
-    $container->insertAfter($first_node, $string, 'global');
+  if ($first_node->expr->items == array()) {
+    array_splice($parent->stmts, ($key + 1), 0, array($assign));
   }
   else {
-    $container->insertBefore($first_node, $string, 'global');
+    array_splice($parent->stmts, $key, 0, array($assign));
   }
 }
 
