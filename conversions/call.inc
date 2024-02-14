@@ -232,9 +232,9 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DO
         $item->name = new Name('config_set');
         // $name['value'] = 'config_set';
 
-        $item->args[0]->value->value = $storage;
-        $item->args[1]->value->value = $variable_data['variable'];
-        $item->args[2]->value->value = $p1;
+        $builderFactory = new BuilderFactory();
+        $args = $builderFactory->args(array($storage, $variable_data['variable'], $p1));
+        $item->args = $args;
         // $editor->setParameter($item, 0, "'" . $storage . "'");
         // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
         // $editor->setParameter($item, 2, $p1);
@@ -289,23 +289,30 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DO
   $editor = PGPEditor::getInstance();
 
   // Get the function call object.
-  $item = &$node->data;
+  $item = &$node;
 
   // Process function call.
-  $name = &$item->name;
+  $name = $item->name->toString();
+
+  // Process function call.
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
-  $variable = str_replace("'", '', $item->printParameter(0));
+  $variable = str_replace("'", '', $item->args[0]->value->value);
+
 
   // Only store the variable in the module's config if it starts with the module
   // name. This is necessary since we cannot know if otherwise named variables
   // are core variables or other contrib variables.
   if (strpos($variable, $_coder_upgrade_module_name) !== FALSE) { // todo change this to a check for core variables.
-    $name['value'] = 'config_clear';
+    // $name['value'] = 'config_clear';
+    $item->name = new Name('config_clear');
 
-    $p0 = $item->printParameter(0);
+    $p0 = $item->args[0]->value->value;
     $temp = $_coder_upgrade_module_name . '.settings';
-    $editor->setParameter($item, 0, "'" . $temp . "'");
-    $editor->setParameter($item, 1, $p0);
+    $builderFactory = new BuilderFactory();
+    $args = $builderFactory->args(array($temp, $p0));
+    $item->args = $args;
+    // $editor->setParameter($item, 0, "'" . $temp . "'");
+    // $editor->setParameter($item, 1, $p0);
   }
   else {
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
@@ -315,35 +322,52 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DO
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_del with config.
         // Process function call.
-        $name['value'] = 'config_clear';
+        $item->name = new Name('config_clear');
 
-        $editor->setParameter($item, 0, "'" . $storage . "'");
-        $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
+        $builderFactory = new BuilderFactory();
+        $args = $builderFactory->args(array($storage, $variable_data['variable']));
+        $item->args = $args;
+        // $editor->setParameter($item, 0, "'" . $storage . "'");
+        // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        $name['value'] = 'state_del';
-        $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
+        // $name['value'] = 'state_del';
+        $item->name = new Name('state_del');
+        $item->args[0]->value->value = $variable_data['variable'];
+        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
         // This variable is a settings variable and cannot be deleted.
-        $statement = $editor->commentToStatement("// TODO In Backdrop this variable is a settings variable and cannot be deleted, only retrieved.");
-        $item->insertStatementBefore($statement);
+        $statement = "// TODO In Backdrop this variable is a settings variable and cannot be deleted, only retrieved.";
+        $doc = new Doc($statement);
+        $item->getAttribute('parent')->setDocComment($doc);
+        // $statement = $editor->commentToStatement("// TODO In Backdrop this variable is a settings variable and cannot be deleted, only retrieved.");
+        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'removed') {
         // This variable was removed in Backdrop without replacement.
-        $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
-        $item->insertStatementBefore($statement);
+        $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
+        $doc = new Doc($statement);
+        $item->getAttribute('parent')->setDocComment($doc);
+        // $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
+        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'unknown') {
         // This variable is a known Drupal variable but we're not sure about it.
-        $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-        $item->insertStatementBefore($statement);
+        $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
+        $doc = new Doc($statement);
+        $item->getAttribute('parent')->setDocComment($doc);
+        // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+        // $item->insertStatementBefore($statement);
       }
     }
     else {
       // This variable is not a known Drupal core variable.
-      $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-      $item->insertStatementBefore($statement);
+      $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
+      $doc = new Doc($statement);
+      $item->getAttribute('parent')->setDocComment($doc);
+      // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
+      // $item->insertStatementBefore($statement);
     }
   }
 }
