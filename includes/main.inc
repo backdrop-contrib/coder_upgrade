@@ -420,7 +420,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
   // Apply parser conversion routines for the file.
   coder_upgrade_log_print("Calling hook_upgrade_file_alter");
-  //backdrop_alter('upgrade_file', $reader);
+  backdrop_alter('upgrade_file', $reader, $ast);
   coder_upgrade_log_print("Completed hook_upgrade_file_alter");
   coder_upgrade_memory_print('apply file conversions');
 
