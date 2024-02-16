@@ -21,6 +21,7 @@ use PhpParser\NodeFinder;
 use PhpParser\Node\Stmt;
 use PhpParser\PrettyPrinter;
 use PhpParser\NodeVisitor\ParentConnectingVisitor;
+use PhpParser\NodeVisitor\CloningVisitor;
 /**
  * Prepares conversion environment and starts conversion loop.
  *
@@ -371,6 +372,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
   $traverser = new NodeTraverser;
   $traverser->addVisitor(new ParentConnectingVisitor);
+  $traverser->addVisitor(new CloningVisitor());
 
   $parser = (new ParserFactory())->createForNewestSupportedVersion();
   try {
@@ -427,7 +429,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   if ($is_install_file) {
     // Apply parser conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_parser_install_alter");
-    // backdrop_alter('upgrade_parser_install', $reader);
+    backdrop_alter('upgrade_parser_install', $reader, $ast);
     coder_upgrade_log_print("Completed hook_upgrade_parser_install_alter");
     coder_upgrade_memory_print('apply install file conversions');
   }

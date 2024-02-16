@@ -8,6 +8,11 @@
  * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
+use PhpParser\Comment;
+use PhpParser\Comment\Doc;
+use PhpParser\NodeFinder;
+use PhpParser\Node\Stmt\Nop;
+
 
 /**
  * Implements hook_upgrade_parser_install_alter().
@@ -17,8 +22,8 @@
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_upgrade_parser_install_alter(&$reader) {
-  coder_upgrade_convert_install_file_comment($reader);
+function coder_upgrade_upgrade_parser_install_alter(&$reader, &$ast) {
+  coder_upgrade_convert_install_file_comment($reader, $ast);
 }
 
 
@@ -31,16 +36,21 @@ function coder_upgrade_upgrade_parser_install_alter(&$reader) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_convert_install_file_comment(&$reader) {
+function coder_upgrade_convert_install_file_comment(&$reader, &$ast) {
   cdp("inside " . __FUNCTION__);
 
-  $comments = &$reader->getComments();
-  foreach ($comments as &$comment) {
-    if (is_array($comment) && !empty($comment)) {
-      if (preg_match('#\*\s*@file#', $comment['value'])) {
-        // The file already includes a file comment.
-        return;
-      }
+
+  if (empty($ast)) {
+    return;
+  }
+
+  $nodeFinder = new NodeFinder;
+  $comments = $ast[0]->getComments();
+
+  if (!empty($comments[0])) {
+    if (preg_match('#\*\s*@file#', $comments[0]->__toString())) {
+      // The file already includes a file comment.
+      return;
     }
   }
 
@@ -55,19 +65,13 @@ function coder_upgrade_convert_install_file_comment(&$reader) {
    * comment after the Id line or the open tag (if no Id line).
    */
 
-  $statements = &$reader->getStatements();
-  if (is_null($statements)) {
-    // Currently, the file must begin with an open tag.
-    return;
-  }
-/*
-  $statement = $statements->getElement(0);
-  if (!is_array($statement) || empty($statement) || $statement['type'] != T_OPEN_TAG) {
-    clp('ERROR: file does not begin with an open tag');
-    return;
-  }
-*/
-  $statement = $statements->getElement(1);
+  // $statement = $statements->getElement(0);
+  // if (!is_array($statement) || empty($statement) || $statement['type'] != T_OPEN_TAG) {
+    // clp('ERROR: file does not begin with an open tag');
+    // return;
+  // }
+
+/*   $statement = $statements->getElement(1);
   if (!is_array($statement) || empty($statement) || $statement['type'] != T_COMMENT || strpos($statement['value'], '// $Id:') !== 0) {
     $position = 1;
     coder_upgrade_add_install_file_comment($reader, $position);
@@ -82,26 +86,20 @@ function coder_upgrade_convert_install_file_comment(&$reader) {
   }
 
   $position = 3;
-  coder_upgrade_add_install_file_comment($reader, $position);
+ */  
+
+  coder_upgrade_add_install_file_comment($ast);
 }
 
-function coder_upgrade_add_install_file_comment(&$reader, $position) {
+function coder_upgrade_add_install_file_comment(&$ast) {
   cdp("inside " . __FUNCTION__);
   global $_coder_upgrade_module_name;
 
-  $statements = &$reader->getStatements();
-
-  // Insert a blank line.
-  $whitespace = array(
-    'type' => T_WHITESPACE,
-    'value' => 1,
-  );
-  $statements->insertElement($position, $whitespace);
-
+  $nop = new Nop();
   // Insert file document comment.
-  $comment = array(
-    'type' => T_DOC_COMMENT,
-    'value' => "/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */",
-  );
-  $statements->insertElement($position, $comment);
+  $comment = "/**\n * @file\n * Install, update and uninstall functions for the $_coder_upgrade_module_name module.\n *\n */";
+
+  $doc = new Doc($comment);
+  $nop->setDocComment($doc);
+  array_unshift($ast, $nop);
 }
