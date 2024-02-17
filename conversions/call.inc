@@ -415,11 +415,12 @@ function coder_upgrade_upgrade_call_system_settings_form_alter(&$node, &$reader)
   // @todo: this gives an error: 
   // ERROR: assert(): assert($itemStartPos >= 0 && $itemEndPos >= 0) failed on line 868 in C:\wamp64\www\backdrop\modules\coder_upgrade\PhpParser\PrettyPrinterAbstract.php (Warning)
 
-  if ($first_node->expr->items == array()) {
-    array_splice($parent->stmts, ($key + 1), 0, array($assign));
-  }
-  else {
-    array_splice($parent->stmts, $key, 0, array($assign));
-  }
+
+  // if ($first_node->expr->items == array()) {
+    // array_splice($parent->stmts, ($key + 1), 0, array($assign));
+  // }
+  // else {
+    // array_splice($parent->stmts, $key, 0, array($assign));
+  // }
 }
 
