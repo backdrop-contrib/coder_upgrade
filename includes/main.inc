@@ -11,6 +11,8 @@
  */
 
 use PhpParser\Error;
+use PhpParser\Parser\Php7;
+use PhpParser\Lexer;
 use PhpParser\NodeDumper;
 use PhpParser\ParserFactory;
 use PhpParser\Node;
@@ -370,14 +372,30 @@ function coder_upgrade_apply_parser($filename, &$new) {
     return;
   }
 
+
+  $lexer = new Lexer\Emulative([
+      'usedAttributes' => [
+          'comments',
+          'startLine', 'endLine',
+          'startTokenPos', 'endTokenPos',
+      ],
+  ]);
+  // $parser = new Parser\Php7($lexer);
+
   $traverser = new NodeTraverser;
   $traverser->addVisitor(new ParentConnectingVisitor);
   $traverser->addVisitor(new CloningVisitor());
 
-  $parser = (new ParserFactory())->createForNewestSupportedVersion();
+  $printer = new PrettyPrinter\Standard();
+
+
+
+  $parser = new Php7($lexer);
   try {
-      $ast = $parser->parse($new);
-      $ast    = $traverser->traverse($ast);
+    $oldStmts = $parser->parse($new);
+    $oldTokens = $lexer->getTokens();
+
+    $ast = $traverser->traverse($oldStmts);
   } catch (Error $error) {
       echo "Parse error: {$error->getMessage()}\n";
       return;
@@ -434,14 +452,17 @@ function coder_upgrade_apply_parser($filename, &$new) {
     coder_upgrade_memory_print('apply install file conversions');
   }
 
-  $prettyPrinter = new PrettyPrinter\Standard();
+  // $prettyPrinter = new PrettyPrinter\Standard();
   // dpm($prettyPrinter->prettyPrintFile($ast));
 
 
   // Use writer to redo file.
   $writer = PGPWriter::getInstance();
   coder_upgrade_memory_print('create writer');
-  $new = $prettyPrinter->prettyPrintFile($ast);
+
+  $new = $printer->printFormatPreserving($ast, $oldStmts, $oldTokens);
+
+
   coder_upgrade_memory_print('writer->toString');
 
   // Free up memory.

@@ -186,8 +186,8 @@ function coder_upgrade_upgrade_file_alter(&$reader, &$asts) {
           // if ($call->printParameter(0) == "'" .$_coder_upgrade_module_name . ".settings'") {
           if ($call->args[0]->value->value == $_coder_upgrade_module_name . '.settings') {
             // $call->name['value'] = '$config->get';
-             $call->name = new Name('config->get');
-             unset($call->args[0]);
+             $call->name = new Name('$config->get');
+             $call->args = array($call->args[1]);
           }
         }
       }
@@ -203,47 +203,23 @@ function coder_upgrade_build_config_function($node, &$asts) {
   // Create array items.
   $label_item_value = new FuncCall(new Name('t'), array(new String_($_coder_upgrade_module_human_name . " settings")));
   $group_item_value = new FuncCall(new Name('t'), array(new String_('Configuration')));
+
   $label_item = new ArrayItem($label_item_value, BuilderHelpers::normalizeValue('label'));
   $group_item = new ArrayItem($group_item_value, BuilderHelpers::normalizeValue('group'));
+
+  // Create the prefixes variable
   $prefixes_array_name = new Variable('prefixes[\'' . $_coder_upgrade_module_name . '.settings\']');
+
+  // Build the whole array.
   $prefixes_array = new Assign(BuilderHelpers::normalizeValue($prefixes_array_name), new Array_(array($label_item, $group_item)));
 
+  // Add to the ast.
   $factory = new BuilderFactory();
   $builder = $factory->function($_coder_upgrade_module_name . '_config_info')
     ->addStmt($prefixes_array)
     ->addStmt(new Return_(new Variable('prefixes')))
     ->setDocComment("/**\n * Implements hook_config_info().\n */")
     ->getNode();
-  $stmts = array($builder);
   $asts[] = $builder;
 
-  $prettyPrinter = new PrettyPrinter\Standard();
-  dpm($stmts);
-
-
-
-/*  
-  $name = $_coder_upgrade_module_name . '_config_info';
-
-  // Create the new hook function.
-  $function = new PGPClass($name);
-  $function->comment = $comment;
-  $function->type = T_FUNCTION;
-  $function->parameters = new PGPList();
-
-  $strings[] = "  'label' => t('{$_coder_upgrade_module_human_name} settings'),";
-  $strings[] = "  'group' => t('Configuration'),";
-  $strings[] = ');';
-  $strings[] = 'return $prefixes;';
-
-  $function->body = $editor->textToStatements(implode("\n", $strings));
-
-  // Get the statement list the function node is part of.
-  $container = &$node->container;
-
-  // Insert the new function before the old function.
-  $container->insertBefore($node, $function, 'function');
-  // Insert a blank line.
-  $container->insertBefore($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
- */
 }
