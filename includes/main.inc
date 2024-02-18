@@ -22,6 +22,7 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\NodeFinder;
 use PhpParser\Node\Stmt;
 use PhpParser\PrettyPrinter;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitor\ParentConnectingVisitor;
 use PhpParser\NodeVisitor\CloningVisitor;
 /**
@@ -385,6 +386,8 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $traverser = new NodeTraverser;
   $traverser->addVisitor(new ParentConnectingVisitor);
   $traverser->addVisitor(new CloningVisitor());
+  $nameResolver = new NameResolver;
+  $traverser->addVisitor($nameResolver);
 
   $printer = new PrettyPrinter\Standard();
 
@@ -419,10 +422,13 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $reader->buildGrammar();
   coder_upgrade_memory_print('build grammar');
 
-  $nodes = &$reader->getClasses();
-  if (!empty($nodes)) {
+  $nodeFinder = new NodeFinder;
+  $classes = $nodeFinder->findInstanceOf($ast, Node\Stmt\Class_::class);
+
+  if (!empty($classes)) {
     $_coder_upgrade_class_files[] = $filename;
   }
+  // dpm($_coder_upgrade_class_files);
 
   // Apply parser conversion routines for function calls.
   coder_upgrade_log_print("Calling hook_upgrade_call_alter");

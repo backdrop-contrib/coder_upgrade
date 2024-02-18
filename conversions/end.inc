@@ -57,7 +57,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
     }
     if (!empty($classlist)) {
       coder_upgrade_create_autoload($module_name, $module_path, $classlist);
-      // coder_upgrade_create_test_info($module_name, $module_path, $classlist);
+      coder_upgrade_create_test_info($module_name, $module_path, $classlist);
     }
 
     $config = config('coder_upgrade_tmp.' . $module_name . '.settings');
@@ -83,27 +83,43 @@ function coder_upgrade_upgrade_end_alter($dirname) {
 
 function coder_upgrade_create_test_info($module_name, $module_path, $classlist) {
   $classes = array();
+  // dpm($classlist);
   foreach ($classlist as $path => $class_nodes) {
     $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
     if ($is_test_file) {
       foreach ($class_nodes['classes'] as $class) {
-        $classes[$class->data->name]['path'] = $path;
-      }
-      foreach ($class_nodes['functions'] as $function) {
-        if ($function->data->name == 'getInfo') {
-          $body = $function->data->body;
-          $editor = PGPEditor::getInstance();
-          $nodes = $body->searchAll('PGPFunctionCall', 'name', 'value', 'return', TRUE);
-          $return = reset($nodes);
-          $string = $return->data->getParameter()->toString();
-          $array = eval("return $string;");
-          if (isset($function->container->parent->data->name)) {
-            $classes[$function->container->parent->data->name]['info'] = $array;
-          }
+        $classname = $class->name->toString();
+        $classes[$classname]['path'] = $path;
+        $nodeFinder = new NodeFinder;
+        $getInfo = $nodeFinder->findFirst($class->stmts, function(Node $node) {
+            return $node instanceof Node\Stmt\ClassMethod
+                && $node->name->name === 'getInfo';
+        });
+        $arrayitems = $nodeFinder->find($getInfo, function(Node $node) {
+            return $node instanceof Node\Expr\ArrayItem;
+        });
+        //dpm($arrayitems);
+
+        foreach ($arrayitems as $item) {
+          $classes[$classname][$item->key->value] = $item->value->value;
         }
+          
+          // if ($function->data->name == 'getInfo') {
+            // $body = $function->data->body;
+            // $editor = PGPEditor::getInstance();
+            // $nodes = $body->searchAll('PGPFunctionCall', 'name', 'value', 'return', TRUE);
+            // $return = reset($nodes);
+            // $string = $return->data->getParameter()->toString();
+            // $array = eval("return $string;");
+            // if (isset($function->container->parent->data->name)) {
+              // $classes[$function->container->parent->data->name]['info'] = $array;
+            // }
+          // }
+        // }
       }
     }
   }
+  dpm($classes);
   $test_file = '';
   foreach ($classes as $classname => $info) {
     $test_file .= "[$classname]\n";
@@ -171,7 +187,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $factory = new BuilderFactory();
     $builder = $factory->function($module_name . '_autoload_info')->addStmt(new Node\Stmt\Return_($new_array))->getNode();
 
-    dpm($builder);
+    // dpm($builder);
     $class_function = array($builder);
     $stmts[] = $builder;
 
