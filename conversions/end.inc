@@ -8,6 +8,28 @@
  * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
+use PhpParser\Error;
+use PhpParser\Parser\Php7;
+use PhpParser\Lexer;
+use PhpParser\NodeDumper;
+use PhpParser\ParserFactory;
+use PhpParser\Node;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\NodeFinder;
+use PhpParser\Node\Stmt;
+use PhpParser\PrettyPrinter;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\NodeVisitor\ParentConnectingVisitor;
+use PhpParser\NodeVisitor\CloningVisitor;
+use PhpParser\BuilderFactory;
+use PhpParser\Node\Expr\ArrayItem;
+use PhpParser\BuilderHelpers;
+use PhpParser\Node\Stmt\Return_;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Scalar\String_;
+
 /**
  * Implements hook_upgrade_end_alter().
  *
@@ -35,7 +57,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
     }
     if (!empty($classlist)) {
       coder_upgrade_create_autoload($module_name, $module_path, $classlist);
-      coder_upgrade_create_test_info($module_name, $module_path, $classlist);
+      // coder_upgrade_create_test_info($module_name, $module_path, $classlist);
     }
 
     $config = config('coder_upgrade_tmp.' . $module_name . '.settings');
@@ -50,11 +72,11 @@ function coder_upgrade_upgrade_end_alter($dirname) {
       // Creates a hook_update_1000() implementation.
       // Creates an hook_update_last_removed() implementation.
       // Adds an entry to hook_install if there are dynamically created variables.
-      coder_upgrade_install_file($module_name, $install_file, $config);
+      //coder_upgrade_install_file($module_name, $install_file, $config);
 
       // Creates a config directory and file if there were variable to config
       // conversions.
-      coder_upgrade_build_config_files($module_path, $module_name, $config); // todo
+      //coder_upgrade_build_config_files($module_path, $module_name, $config); // todo
     }
   }
 }
@@ -119,19 +141,44 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $reader->buildGrammar();
     coder_upgrade_memory_print('build grammar');
 
-    $body = new PGPBody();
+    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
-    $strings[] = 'return array(';
+    try {
+        $stmts = $parser->parse($new);
+        // $stmts is an array of statement nodes
+    } catch (Error $e) {
+        echo 'Parse Error: ', $e->getMessage();
+    }
+
+
+    // $body = new PGPBody();
+
+
+    $info_array = array();
     foreach ($classes as $path => $class_nodes) {
       $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
       if (!$is_test_file) {
         foreach ($class_nodes['classes'] as $class_node) {
-          $strings[] = "'" . $class_node->data->name . "' => '" . $path . "',";
+          $group_item_value = new String_('Configuration');
+          $label_item = new ArrayItem(BuilderHelpers::normalizeValue($path), BuilderHelpers::normalizeValue($class_node->name->name));
+          $info_array[] = $label_item;
         }
       }
     }
-    $strings[] = ');';
+    // $strings[] = ');';
 
+    $new_array = new Array_($info_array);
+    $factory = new BuilderFactory();
+    $builder = $factory->function($module_name . '_autoload_info')->addStmt(new Node\Stmt\Return_($new_array))->getNode();
+
+    dpm($builder);
+    $class_function = array($builder);
+    $stmts[] = $builder;
+
+    $prettyPrinter = new PrettyPrinter\Standard();
+    $new = $prettyPrinter->prettyPrintFile($stmts);
+
+/*       
     // Use the editor to set the function parameters.
     $editor = PGPEditor::getInstance();
     //  $editor->setParameters($function, $parameters);
@@ -140,10 +187,6 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $body->insertLast($body_content);
 
     // Set values for the new hook function.
-    $comment = array(
-      'type' => T_DOC_COMMENT,
-      'value' => "/**\n * Implements hook_autoload_info().\n */",
-    );
     $function_name = $module_name . '_autoload_info';
 
     $function = new PGPClass($function_name);
@@ -166,9 +209,16 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     // Use writer to redo file.
     $writer = PGPWriter::getInstance();
     coder_upgrade_memory_print('create writer');
+
     $new = $writer->toString($reader->getStatements());
+    // $new = $printer->printFormatPreserving($ast, $oldStmts, $oldTokens);
+
     coder_upgrade_memory_print('writer->toString');
 
+    // Free up memory.
+    $reader->reset();
+    coder_upgrade_memory_print('reset reader');
+ */  }
     // Write the new file.
     if ($new != $cur) {
       if (file_put_contents($module_file, $new) === FALSE) {
@@ -177,10 +227,6 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
       coder_upgrade_log_print('Replaced the file');
     }
 
-    // Free up memory.
-    $reader->reset();
-    coder_upgrade_memory_print('reset reader');
-  }
 }
 
 function coder_upgrade_build_config_files($module_path, $module_name, $config) {
@@ -478,7 +524,20 @@ function coder_upgrade_get_file_classes($file) {
 
   $config = config('coder_upgrade.settings');
 
-  // Create reader object.
+  $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+
+  try {
+      $stmts = $parser->parse($contents);
+      // $stmts is an array of statement nodes
+  } catch (Error $e) {
+      echo 'Parse Error: ', $e->getMessage();
+  }
+
+  $nodeFinder = new NodeFinder;
+  $classes = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Class_::class);
+  $functions = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Function_::class);
+
+/*   // Create reader object.
   $reader = PGPReader::getInstance();
   coder_upgrade_memory_print('create reader for file ' . $file);
   // Set array formatting preference.
@@ -495,7 +554,7 @@ function coder_upgrade_get_file_classes($file) {
 
   $classes = &$reader->getClasses();
   $functions = &$reader->getFunctions();
-
+ */
   // $classes doesn't seem to hold any information about contained functions so
   // return both.
   if (!empty($classes)) {
