@@ -24,6 +24,8 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\PrettyPrinter;
+
 /**
  * Implements hook_upgrade_call_alter().
  */
@@ -53,8 +55,14 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
   $name = $item->name->toString();
 
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
-  // dpm($item->args[0]->value->value);
-  $variable = str_replace("'", '', $item->args[0]->value->value);
+    $line = $item->getAttribute('startLine');
+
+    $prettyPrinter = new PrettyPrinter\Standard();
+    $variable = $prettyPrinter->prettyPrintExpr($item->args[0]->value);
+    $variable2 = $prettyPrinter->prettyPrintExpr($item->args[1]->value);
+
+    $variable = str_replace('.', '-', $variable);
+    $variable = str_replace(array("'", '"', ' '), '', $variable);
 
   // Build a list of variables to later parse and build a config file.
   // We also store a warning message if variable or value are not strings, since
@@ -75,10 +83,10 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
       // Account for dynamically generated variables that include a $variable
       // rather than a string, such as ('variable_' . $node->type).
       $variable = preg_replace('@[^a-zA-Z_]@', '', $variable);
-      $value = 'dynamic variable in file ' . $path . ' line ' . $node->line;
+      $value = 'dynamic variable in file ' . $path . ' line ' . $line;
     }
     else {
-      $raw_value = trim($item->args[1]->value->value);  // Remove extra whitespace
+      $raw_value = trim($variable2);  // Remove extra whitespace
       $value_uc = strtoupper($raw_value);
 
       // Catch initialization with empty array.
@@ -97,7 +105,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
       // Any special characters in the variable, it's beyond our handling, so
       // just insert the warning.
       elseif (!preg_match('@^\'[^\']*\'$@', $raw_value) && preg_match('@[\.\s\$\[\]\#\>\(]@', $raw_value)) {
-        $value = 'dynamic value in file ' . $path . ' line ' . $node->line;
+        $value = 'dynamic value in file ' . $path . ' line ' . $line;
       }
 
       // If what's left starts and ends with either single or double quotes then
@@ -125,11 +133,16 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
     // Process function call.
     $item->name = new Name('config_get');
 
-    $p1 = $item->args[0]->value->value;
+    // $p1 = $item->args[0]->value->value;
     $temp = $_coder_upgrade_module_name . '.settings';
     // $item->args[0]->value->value = "'" . $temp . "'";
-    $item->args[0]->value->value = $temp;
-    $item->args[1]->value->value = $p1;
+    // $item->args[0]->value->value = $temp;
+    // $item->args[1]->value->value = $variable;
+
+    $builderFactory = new BuilderFactory();
+    $args = $builderFactory->args(array($temp, $variable));
+    $item->args = $args;
+
     // $editor->setParameter($item, 0, "'" . $temp . "'");
     // $editor->setParameter($item, 1, $p1);
   }
@@ -142,7 +155,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_get with config.
         // Process function call.
-        $name['value'] = 'config_get';
+        $item->name = new Name('config_get');
 
         $item->args[0]->value->value = $storage;
         $item->args[1]->value->value = $variable_data['variable'];

@@ -29,6 +29,8 @@ use PhpParser\BuilderHelpers;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\Comment\Doc;
+use PhpParser\Node\Stmt\Nop;
 
 /**
  * Implements hook_upgrade_end_alter().
@@ -72,7 +74,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
       // Creates a hook_update_1000() implementation.
       // Creates an hook_update_last_removed() implementation.
       // Adds an entry to hook_install if there are dynamically created variables.
-      //coder_upgrade_install_file($module_name, $install_file, $config);
+      coder_upgrade_install_file($module_name, $install_file, $config);
 
       // Creates a config directory and file if there were variable to config
       // conversions.
@@ -291,36 +293,54 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   $reader->buildGrammar();
   coder_upgrade_memory_print('build grammar');
 
-  $nodes = &$reader->getFunctions();
-  if (!empty($nodes)) {
-    foreach ($nodes as &$node) {
-      $item = &$node->data;
-      $name = &$item->name;
-      if ($name == 'xxx') {
-        $dummy = $node;
-      }
-    }
+
+  $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+
+  try {
+      $stmts = $parser->parse($new);
+      // $stmts is an array of statement nodes
+  } catch (Error $e) {
+      echo 'Parse Error: ', $e->getMessage();
   }
+
+  $nodeFinder = new NodeFinder;
+  $nodes = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Function_::class);
+
+  // $nodes = &$reader->getFunctions();
+  // if (!empty($nodes)) {
+    // foreach ($nodes as &$node) {
+      // $item = &$node->data;
+      // $name = &$item->name;
+      // if ($name == 'xxx') {
+        // $dummy = $node;
+      // }
+    // }
+  // }
 
   $config_data = $config->get();
 
   // If dynamic variables, create or update hook_install() implementation.
-  coder_upgrade_create_update_install($module_name, $reader, $nodes, $config_data);
+  coder_upgrade_create_update_install($module_name, $reader, $nodes, $config_data, $stmts);
 
   // Create a hook_update_1000() implementation.
-  coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data);
+  // coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data);
 
   // Create an hook_update_last_removed() implementation.
-  coder_upgrade_create_update_last_removed($module_name, $reader, $nodes);
+  // coder_upgrade_create_update_last_removed($module_name, $reader, $nodes);
 
-  if (!empty($dummy)) {
-    $dummy->container->delete($dummy);
-  }
+  // if (!empty($dummy)) {
+    // $dummy->container->delete($dummy);
+  // }
+
+    $prettyPrinter = new PrettyPrinter\Standard();
+    $new = $prettyPrinter->prettyPrintFile($stmts);
+    dpm($new);
+
 
   // Use writer to redo file.
   $writer = PGPWriter::getInstance();
   coder_upgrade_memory_print('create writer');
-  $new = $writer->toString($reader->getStatements());
+  // $new = $writer->toString($reader->getStatements());
   coder_upgrade_memory_print('writer->toString');
 
   // Write the new file.
@@ -337,7 +357,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
 }
 
 
-function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $config_data) {
+function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $config_data, &$stmts) {
   // Use the editor to set the function parameters.
   $editor = PGPEditor::getInstance();
   $strings = array();
@@ -353,63 +373,63 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
       $line_matches[] = $matches[2];
     }
   }
+  dpm($config_data);
 
   $install_function = NULL;
   foreach ($nodes as &$node) {
-    $item = &$node->data;
-    $name = &$item->name;
+    $item = &$node;
+    // $name = &$item->name;
+    $name = $node->name->toString();
     if ($name == $module_name . '_install') {
       $install_function = &$node;
       break;
     }
   }
 
-  if (!$install_function) {
-    $body = new PGPBody();
+  if (!$install_function && $line_matches) {
 
-    $string = "// Dynamically generated variable data was detected.";
-    $body_content = $editor->commentToStatement($string);
-    $body->insertLast($body_content);
+    $factory = new BuilderFactory();
+    $builder = $factory->function($module_name . '_install');
+
+    // $body = new PGPBody();
+
+    // $string = "// Dynamically generated variable data was detected.";
+    // $body_content = $editor->commentToStatement($string);
+    // $body->insertLast($body_content);
 
     foreach ($line_matches as $match) {
-      $body_content = $editor->commentToStatement($match);
-      $body->insertLast($body_content);
+      $doc = new Doc($match);
+      $nop = new Nop();
+      $nop->setDocComment($doc);
+      $builder->addStmt($nop);
     }
 
     // Set values for the new hook function.
-    $comment = array(
-      'type' => T_DOC_COMMENT,
-      'value' => "/**\n * Implements hook_install().\n */",
-    );
-    $function_name = $module_name . '_install';
+    $comment = "/**\n * Implements hook_install().\n */";
+    $doc = new Doc($comment);
+    $builder->setDocComment($doc);
+    $builder = $builder->getNode();
 
-    $function = new PGPClass($function_name);
-    $function->comment = $comment;
-    $function->type = T_FUNCTION;
-    $function->parameters = new PGPList();
-
-
-    $function->body = $body;
-
-    $node = end($nodes);
-    $container = &$node->container;
-
-    // Insert the new function before the old function.
-    $container->insertAfter($node, $function, 'function');
-    // Insert a blank line.
-    $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
+    array_push($stmts, $builder);
   }
-  else {
-    $item = &$install_function->data;
-    $body = &$item->body;
+  elseif ($line_matches) {
+    $item = &$install_function;
+    $body = &$item->stmts;
 
     $string = "// Dynamically generated variable data was detected on the following lines.";
-    $body_content = $editor->commentToStatement($string);
-    $body->insertLast($body_content);
+    // $body[] = new Node\Scalar\String_($string);
+      $doc = new Doc($string);
+      $nop = new Nop();
+      $nop->setDocComment($doc);
+      array_push($item->stmts, $nop);
 
     foreach ($line_matches as $match) {
-      $body_content = $editor->commentToStatement($match);
-      $body->insertLast($body_content);
+      $doc = new Doc($match);
+      $nop = new Nop();
+      $nop->setDocComment($doc);
+      array_push($item->stmts, $nop);
+    dpm($item);
+    
     }
   }
 }
