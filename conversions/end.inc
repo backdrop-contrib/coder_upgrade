@@ -457,20 +457,21 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   
 
   foreach ($config_data as $key => $line) {
-    if ($line == array()) {
+    dpm($line);
+    if ($line == 'array()') {
       // Check initialization with empty array.
       $string = "  \$config->set('$key', update_variable_get('$key', array()));";
-      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", $factory->funcCall('update_variable_get', array("$key", array())))));
     }
     elseif (is_bool($line)) {
       // Check initialization with a Boolean variable
       $line = $line ? 'TRUE' : 'FALSE';
       $string = "  \$config->set('$key', update_variable_get('$key', $line));";
-      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", $factory->funcCall('update_variable_get', array("$key", $line)))));
     }
     else {
       $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
-      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", $factory->funcCall('update_variable_get', array("$key", $line)))));
     }
     $body_content = $editor->textToStatements($string)->getElement(0);
     $body->insertLast($body_content);
