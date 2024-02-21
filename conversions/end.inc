@@ -31,6 +31,8 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Nop;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\Variable;
 
 /**
  * Implements hook_upgrade_end_alter().
@@ -121,7 +123,7 @@ function coder_upgrade_create_test_info($module_name, $module_path, $classlist) 
       }
     }
   }
-  dpm($classes);
+
   $test_file = '';
   foreach ($classes as $classname => $info) {
     $test_file .= "[$classname]\n";
@@ -323,7 +325,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   coder_upgrade_create_update_install($module_name, $reader, $nodes, $config_data, $stmts);
 
   // Create a hook_update_1000() implementation.
-  // coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data);
+  coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data, $stmts);
 
   // Create an hook_update_last_removed() implementation.
   // coder_upgrade_create_update_last_removed($module_name, $reader, $nodes);
@@ -334,7 +336,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $new = $prettyPrinter->prettyPrintFile($stmts);
-    dpm($new);
+    //dpm($new);
 
 
   // Use writer to redo file.
@@ -398,7 +400,7 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
     // $body->insertLast($body_content);
 
     foreach ($line_matches as $match) {
-      $doc = new Doc($match);
+      $doc = new Doc('// ' . $match);
       $nop = new Nop();
       $nop->setDocComment($doc);
       $builder->addStmt($nop);
@@ -424,7 +426,7 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
       array_push($item->stmts, $nop);
 
     foreach ($line_matches as $match) {
-      $doc = new Doc($match);
+      $doc = new Doc('//' . $match);
       $nop = new Nop();
       $nop->setDocComment($doc);
       array_push($item->stmts, $nop);
@@ -434,7 +436,7 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
   }
 }
 
-function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $config_data) {
+function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $config_data, &$stmts) {
   // Use the editor to set the function parameters.
   $editor = PGPEditor::getInstance();
   $strings = array();
@@ -442,22 +444,33 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
 
   $body = new PGPBody();
 
+  $factory = new BuilderFactory();
+  $builder = $factory->function($module_name . '_update_1000');
+
+
   $string = "\$config = config('$module_name.settings');";
   $body_content = $editor->textToStatements($string)->getElement(0);
   $body->insertLast($body_content);
+  
+  $config_call = $factory->funcCall('config', array("$module_name.settings"));
+  $builder->addStmt(new Assign(new Variable('config'), $config_call));
+  
 
   foreach ($config_data as $key => $line) {
     if ($line == array()) {
       // Check initialization with empty array.
       $string = "  \$config->set('$key', update_variable_get('$key', array()));";
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
     }
     elseif (is_bool($line)) {
       // Check initialization with a Boolean variable
       $line = $line ? 'TRUE' : 'FALSE';
       $string = "  \$config->set('$key', update_variable_get('$key', $line));";
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
     }
     else {
       $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
+      $builder->addStmt($factory->funcCall('$config->set', array("$key", 'kok')));
     }
     $body_content = $editor->textToStatements($string)->getElement(0);
     $body->insertLast($body_content);
@@ -466,6 +479,8 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
   $string = "\$config->save();";
   $body_content = $editor->textToStatements($string)->getElement(0);
   $body->insertLast($body_content);
+      // $builder->funcCall('$config->save', array());
+      $builder->addStmt($factory->funcCall('$config->save', array()));
 
   $body->insertLast(CODER_UPGRADE_WHITESPACE, 'whitespace');
 
@@ -473,7 +488,21 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
     $string = '  update_variable_del(\'' . $key . '\');';
     $body_content = $editor->textToStatements($string)->getElement(0);
     $body->insertLast($body_content);
+      $builder->addStmt($factory->funcCall('update_variable_del', array($key)));
   }
+
+  $comment = "/**\n * Migrate {$module_name} variables to config.\n */";
+  $doc = new Doc($comment);
+  $builder->setDocComment($doc);
+
+
+    $builder = $builder->getNode();
+
+    $prettyPrinter = new PrettyPrinter\Standard();
+    $new = $prettyPrinter->prettyPrintFile(array($builder));
+    dpm($new);
+
+    $stmts[] = $builder;
 
   // Set values for the new hook function.
   $comment = array(
@@ -490,14 +519,14 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
 
   $function->body = $body;
 
-  $node = end($nodes);
+/*   $node = end($nodes);
   $container = &$node->container;
 
   // Insert the new function before the old function.
   $container->insertAfter($node, $function, 'function');
   // Insert a blank line.
   $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
-}
+ */}
 
 function coder_upgrade_create_update_last_removed($module_name, &$reader, &$nodes) {
   $ns = array();
