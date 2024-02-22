@@ -407,19 +407,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
   // $dumper = new NodeDumper;
   // dpm($dumper->dump($ast));
 
-  // Create reader object.
-  $reader = PGPReader::getInstance();
-  coder_upgrade_memory_print('create reader for file ' . $filename);
-  // Set array formatting preference.
-  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
-  // Set debug output preference.
-  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
-  $reader->setSnippet($new);
-  coder_upgrade_memory_print('set snippet');
-  // // $reader->addTokenNames();
-  coder_upgrade_memory_print('add token names');
-  // Parse code file.
-  $reader->buildGrammar();
   coder_upgrade_memory_print('build grammar');
 
   $nodeFinder = new NodeFinder;
@@ -432,28 +419,28 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
   // Apply parser conversion routines for function calls.
   coder_upgrade_log_print("Calling hook_upgrade_call_alter");
-  coder_upgrade_convert_function_calls($reader, $ast);
+  coder_upgrade_convert_function_calls($ast);
   // tester_coder_upgrade_convert_function_calls($ast);
   coder_upgrade_log_print("Completed hook_upgrade_call_alter");
   coder_upgrade_memory_print('apply function call conversions');
 
   // Apply parser conversion routines for hook functions.
   coder_upgrade_log_print("Calling hook_upgrade_hook_alter");
-  coder_upgrade_convert_functions($reader, $ast);
+  coder_upgrade_convert_functions($ast);
   // tester_coder_upgrade_convert_functions($ast);
   coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
   coder_upgrade_memory_print('apply hook function conversions');
 
   // Apply parser conversion routines for the file.
   coder_upgrade_log_print("Calling hook_upgrade_file_alter");
-  backdrop_alter('upgrade_file', $reader, $ast);
+  backdrop_alter('upgrade_file', $ast);
   coder_upgrade_log_print("Completed hook_upgrade_file_alter");
   coder_upgrade_memory_print('apply file conversions');
 
   if ($is_install_file) {
     // Apply parser conversion routines for install file.
     coder_upgrade_log_print("Calling hook_upgrade_parser_install_alter");
-    backdrop_alter('upgrade_parser_install', $reader, $ast);
+    backdrop_alter('upgrade_parser_install', $ast);
     coder_upgrade_log_print("Completed hook_upgrade_parser_install_alter");
     coder_upgrade_memory_print('apply install file conversions');
   }
@@ -463,7 +450,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
 
 
   // Use writer to redo file.
-  $writer = PGPWriter::getInstance();
   coder_upgrade_memory_print('create writer');
 
   $new = $printer->printFormatPreserving($ast, $oldStmts, $oldTokens);
@@ -472,7 +458,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
   coder_upgrade_memory_print('writer->toString');
 
   // Free up memory.
-  $reader->reset();
   coder_upgrade_memory_print('reset reader');
 }
 
@@ -482,9 +467,9 @@ function coder_upgrade_apply_parser($filename, &$new) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_convert_function_calls(&$reader, &$asts) {
+function coder_upgrade_convert_function_calls(&$asts) {
   cdp("inside " . __FUNCTION__);
-  // $nodes = &$reader->getFunctionCalls();
+
   $nodeFinder = new NodeFinder;
   
   $ast = &$asts;
@@ -505,15 +490,13 @@ function coder_upgrade_convert_function_calls(&$reader, &$asts) {
     // if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // If name is an object, then it is a variable expression that is not
       // 'alterable' in the traditional sense.
-      backdrop_alter('upgrade_call_' . $name, $node, $reader);
-      // TODO The alter hooks can get the $reader from PGPReader::getInstance();
-      // We could do the same in this function.
+      backdrop_alter('upgrade_call_' . $name, $node);
     // }
 
     // if (is_array($item->name) && in_array($item->name['type'], $types)) {
       // Set name because only variables may be passed by reference.
       // $name = $item->name['value'];
-      backdrop_alter('upgrade_call', $node, $reader, $name);
+      backdrop_alter('upgrade_call', $node, $name);
       // TODO The alter hooks can get the $reader from PGPReader::getInstance();
       // We could do the same in this function.
     // }
@@ -526,7 +509,7 @@ function coder_upgrade_convert_function_calls(&$reader, &$asts) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_convert_functions(&$reader, &$asts) {
+function coder_upgrade_convert_functions(&$asts) {
   cdp("inside " . __FUNCTION__);
   global $_coder_upgrade_module_name;
 
@@ -536,19 +519,11 @@ function coder_upgrade_convert_functions(&$reader, &$asts) {
   $nodes = $nodeFinder->findInstanceOf($ast, Node\Stmt\Function_::class);
 
   $dumper = new NodeDumper;
-  //dpm($dumper->dump($nodes));
 
-  // $nodes = &$reader->getFunctions();
   foreach ($nodes as $node) {
     $name = $node->name->toString();
     cdp("name = $name");
 
-    // Convert theme_xxx function calls.
-//    if (strpos($name, 'theme_') === 0) {
-//      backdrop_alter('upgrade_theme', $node, $reader);
-//      continue;
-//    }
-
     /*
      * If the function name does not begin with the module name, then ignore it.
      * This assumes such a function would be an instance of an API hook defined
@@ -578,88 +553,15 @@ function coder_upgrade_convert_functions(&$reader, &$asts) {
       $hook = 'update_N';
     }
 
-    backdrop_alter('upgrade_hook_' . $hook, $node, $reader);
+    backdrop_alter('upgrade_hook_' . $hook, $node);
 
     if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
       clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
       continue;
     }
-    backdrop_alter('upgrade_hook', $node, $reader, $hook);
-    // dpm($node->getDocComment());
+    backdrop_alter('upgrade_hook', $node, $hook);
   }
 
-}
-
-function coder_upgrade_convert_functions_bkp(&$reader, $ast) {
-  cdp("inside " . __FUNCTION__);
-  global $_coder_upgrade_module_name;
-
-  $nodeFinder = new NodeFinder;
-
-  $classes = $nodeFinder->findInstanceOf($ast, Node\Stmt\Function_::class);
-  $dumper = new NodeDumper;
-  // dpm($dumper->dump($classes));
-
-  $nodes = &$reader->getFunctions();
-  foreach ($nodes as &$node) {
-    $item = &$node->data;
-    if (!isset($item) || !is_object($item) || !($item instanceof PGPClass) || $item->type != T_FUNCTION) {
-      // The reference could have been changed in another routine so that it
-      // no longer refers to an object.
-      continue;
-    }
-
-    $name = &$item->name;
-    cdp("name = $name");
-
-    // Convert theme_xxx function calls.
-//    if (strpos($name, 'theme_') === 0) {
-//      backdrop_alter('upgrade_theme', $node, $reader);
-//      continue;
-//    }
-
-    /*
-     * If the function name does not begin with the module name, then ignore it.
-     * This assumes such a function would be an instance of an API hook defined
-     * by the contributed module but implemented on behalf of another module.
-     * For this use case, the contributed module would define upgrade routines
-     * to allow other contributed modules that implement said API to upgrade
-     * their code.
-     *
-     * Example: the Views module defines hooks and implements them on behalf of
-     * core modules.
-     *
-     * Strip the module name from the function name and use this as the key in
-     * a switch statement. In some cases (e.g. hook_update_N), some additional
-     * manipulation and checking needs to be done.
-     */
-    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
-      clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
-      continue;
-    }
-
-    // By convention, the module name should be followed by an underscore.
-    $hook = substr($name, strlen($_coder_upgrade_module_name) + 1);
-    cdp("hook = $hook");
-
-    // Update hooks need additional manipulation.
-    if (preg_match('@update_\d+$@', $hook, $matches)) {
-      $hook = 'update_N';
-    }
-
-    // TODO The alter hooks can get the $reader from PGPReader::getInstance();
-    // We could do the same in this function.
-    backdrop_alter('upgrade_hook_' . $hook, $node, $reader);
-
-    if (!isset($item) || !is_object($item) || !($item instanceof PGPClass) || $item->type != T_FUNCTION) {
-      continue;
-    }
-    if (strpos($name, $_coder_upgrade_module_name . '_') !== 0 && strpos($name, '_' . $_coder_upgrade_module_name . '_') !== 0 && strpos($name, 'theme_') !== 0) {
-      clp("Ignoring function '$name' as its name does not begin with the module name or 'theme_'");
-      continue;
-    }
-    backdrop_alter('upgrade_hook', $node, $reader, $hook);
-  }
 }
 
 /**

@@ -22,8 +22,8 @@ use PhpParser\Node\Stmt\Nop;
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_upgrade_parser_install_alter(&$reader, &$ast) {
-  coder_upgrade_convert_install_file_comment($reader, $ast);
+function coder_upgrade_upgrade_parser_install_alter(&$ast) {
+  coder_upgrade_convert_install_file_comment($ast);
 }
 
 
@@ -36,7 +36,7 @@ function coder_upgrade_upgrade_parser_install_alter(&$reader, &$ast) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_convert_install_file_comment(&$reader, &$ast) {
+function coder_upgrade_convert_install_file_comment(&$ast) {
   cdp("inside " . __FUNCTION__);
 
 
@@ -64,30 +64,6 @@ function coder_upgrade_convert_install_file_comment(&$reader, &$ast) {
    * Look for these types of statements in this order. Insert the file
    * comment after the Id line or the open tag (if no Id line).
    */
-
-  // $statement = $statements->getElement(0);
-  // if (!is_array($statement) || empty($statement) || $statement['type'] != T_OPEN_TAG) {
-    // clp('ERROR: file does not begin with an open tag');
-    // return;
-  // }
-
-/*   $statement = $statements->getElement(1);
-  if (!is_array($statement) || empty($statement) || $statement['type'] != T_COMMENT || strpos($statement['value'], '// $Id:') !== 0) {
-    $position = 1;
-    coder_upgrade_add_install_file_comment($reader, $position);
-    return;
-  }
-
-  $statement = $statements->getElement(2);
-  if (!is_array($statement) || empty($statement) || $statement['type'] != T_WHITESPACE) {
-    $position = 2;
-    coder_upgrade_add_install_file_comment($reader, $position);
-    return;
-  }
-
-  $position = 3;
- */  
-
   coder_upgrade_add_install_file_comment($ast);
 }
 

@@ -13,7 +13,7 @@ use PhpParser\Comment\Doc;
 /**
  * Implements hook_upgrade_hook_alter().
  */
-function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
+function coder_upgrade_upgrade_hook_alter(&$node, $hook) {
   cdp("inside " . __FUNCTION__);
   $item = &$node;
 
@@ -47,9 +47,8 @@ function coder_upgrade_upgrade_hook_alter(&$node, &$reader, $hook) {
 /**
  * Implements hook_upgrade_hook_update_N_alter().
  */
-function coder_upgrade_upgrade_hook_update_N_alter(&$node, &$reader) {
+function coder_upgrade_upgrade_hook_update_N_alter(&$node) {
   cdp("inside " . __FUNCTION__);
-  $editor = PGPEditor::getInstance();
 
   $item = &$node;
   // dpm($item);

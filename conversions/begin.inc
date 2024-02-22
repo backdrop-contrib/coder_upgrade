@@ -157,45 +157,6 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
           }
           $_coder_upgrade_theme_registry = array_merge($_coder_upgrade_theme_registry, $module_theme);
         }
-
-
-        // Create reader object.
-        $reader = PGPReader::getInstance();
-        coder_upgrade_memory_print('create reader for file ' . $filename);
-        $reader->setSnippet($cur);
-//         // $reader->addTokenNames(); // @todo This is unnecessary.
-        if (FALSE) {
-          $reader->buildGrammar();
-          coder_upgrade_memory_print('build grammar');
-        }
-        else {
-          $reader->buildSpecific(T_FUNCTION, $values);
-          coder_upgrade_memory_print('build specific grammar');
-        }
-
-        $functions = $reader->getFunctions();
-        foreach ($functions as $function) {
-//          cdp("name = {$function->data->name}");
-          if ($function->data->name == $_coder_upgrade_module_name . '_theme') {
-            $module_theme = @eval($function->data->body->toString());
-            dpm($module_theme, 'wala');
-            foreach ($module_theme as $key => &$value) {
-              $value['variables'] = isset($value['arguments']) ? $value['arguments'] : array();
-              unset($value['arguments']);
-//              $module_theme[$key] = $value;
-            }
-            $_coder_upgrade_theme_registry = array_merge($_coder_upgrade_theme_registry, $module_theme);
-//            break 2;
-          }
-          elseif ($function->data->name == $_coder_upgrade_module_name . '_menu') {
-            //coder_upgrade_convert_return($function->data->body, 'menu', '', 1, 1);
-            dpm($function->data->body->toString(), 'lpp');
-//            break 2;
-          }
-        }
-        // Free up memory.
-        $reader->reset();
-        coder_upgrade_memory_print('reset reader');
       }
     }
   }

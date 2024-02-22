@@ -98,44 +98,11 @@ function coder_upgrade_config_info() {
 }
 
 /**
- * Implements hook_autoload_info().
- */
-function coder_upgrade_autoload_info() {
-  return array(
-    'PGPEditor' => 'grammar_parser/editor.inc',
-    'PGPNode' => 'grammar_parser/list.inc',
-    'PGPList' => 'grammar_parser/list.inc',
-    'PGPBody' => 'grammar_parser/list.inc',
-    'PGPExpression' => 'grammar_parser/list.inc',
-    'PGPOperand' => 'grammar_parser/list.inc',
-    'PGPString' => 'grammar_parser/list.inc',
-    'PGPBase' => 'grammar_parser/object.inc',
-    'PGPArray' => 'grammar_parser/object.inc',
-    'PGPFunctionCall' => 'grammar_parser/object.inc',
-    'PGPAssignment' => 'grammar_parser/object.inc',
-    'PGPClass' => 'grammar_parser/object.inc',
-    'PGPConditional' => 'grammar_parser/object.inc',
-    'PGPFor' => 'grammar_parser/object.inc',
-    'PGPForeach' => 'grammar_parser/object.inc',
-    'PGPCase' => 'grammar_parser/object.inc',
-    'PGPDeclare' => 'grammar_parser/object.inc',
-    'PGPTryCatch' => 'grammar_parser/object.inc',
-    'PGPListStatement' => 'grammar_parser/object.inc',
-    'PGPNamespace' => 'grammar_parser/object.inc',
-    'PGPUse' => 'grammar_parser/object.inc',
-    'PGPParser' => 'grammar_parser/parser.inc',
-    'PGPReader' => 'grammar_parser/reader.inc',
-    'PGPWriter' => 'grammar_parser/writer.inc',
-  );
-}
-
-/**
  * Implements hook_upgrade_upgrade_file_alter().
  */
-function coder_upgrade_upgrade_file_alter(&$reader, &$asts) {
+function coder_upgrade_upgrade_file_alter(&$asts) {
   global $_coder_upgrade_module_name, $_coder_upgrade_filename;
-  // cdp("inside " . __FUNCTION__);
-  // $nodes = &$reader->getFunctions();
+  cdp("inside " . __FUNCTION__);
   $config_function_exists = FALSE;
 
   $nodeFinder = new NodeFinder;

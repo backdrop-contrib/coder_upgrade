@@ -978,7 +978,7 @@ function coder_upgrade_convert_functions(&$reader) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function coder_upgrade_callback_functions(&$node, &$reader) {
+function coder_upgrade_callback_functions(&$node) {
   cdp("inside " . __FUNCTION__);
   $item = &$node->data;
 

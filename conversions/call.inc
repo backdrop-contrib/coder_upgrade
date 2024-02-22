@@ -29,9 +29,8 @@ use PhpParser\PrettyPrinter;
 /**
  * Implements hook_upgrade_call_alter().
  */
-function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WORK
+function coder_upgrade_upgrade_call_alter(&$node, $name) { // NEEDS WORK
   // Create helper objects.
-  $editor = PGPEditor::getInstance();
 
   // Get the function call object.
   $item = &$node->data;
@@ -44,9 +43,8 @@ function coder_upgrade_upgrade_call_alter(&$node, &$reader, $name) { // NEEDS WO
 /**
  * Implements hook_upgrade_call_variable_get_alter().
  */
-function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DONE
+function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
   // Create helper objects.
-  $editor = PGPEditor::getInstance();
 
   // Get the function call object.
   $item = &$node;
@@ -205,9 +203,8 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$reader) { // DO
 /**
  * Implements hook_upgrade_call_variable_set_alter().
  */
-function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DONE
+function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
   // Create helper objects.
-  $editor = PGPEditor::getInstance();
 
   // Get the function call object.
   $item = &$node;
@@ -302,9 +299,8 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$reader) { // DO
 /**
  * Implements hook_upgrade_call_variable_del_alter().
  */
-function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DONE
+function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
   // Create helper objects.
-  $editor = PGPEditor::getInstance();
 
   // Get the function call object.
   $item = &$node;
@@ -393,9 +389,8 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$reader) { // DO
 /**
  * Implements hook_upgrade_call_system_settings_form_alter().
  */
-function coder_upgrade_upgrade_call_system_settings_form_alter(&$node, &$reader) { // DONE
+function coder_upgrade_upgrade_call_system_settings_form_alter(&$node) { // DONE
   // Create helper objects.
-  $editor = PGPEditor::getInstance();
   global $_coder_upgrade_module_name;
 
   $item = &$node;

@@ -80,7 +80,7 @@ function hook_upgrade_info() {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function hook_upgrade_call_FUNCTION_NAME_alter(&$node, &$reader) {
+function hook_upgrade_call_FUNCTION_NAME_alter(&$node) {
   // Get the function call object.
   $item = &$node->data;
 
@@ -121,7 +121,7 @@ function hook_upgrade_call_FUNCTION_NAME_alter(&$node, &$reader) {
  * @param $name
  *   The name of the function.
  */
-function hook_upgrade_call_alter(&$node, &$reader, $name) {
+function hook_upgrade_call_alter(&$node, $name) {
   // Get the function call object.
   $item = &$node->data;
 
@@ -174,7 +174,7 @@ function hook_upgrade_call_alter(&$node, &$reader, $name) {
  * @param PGPReader $reader
  *   The object containing the grammar statements of the file to convert.
  */
-function hook_upgrade_hook_HOOK_NAME_alter(&$node, &$reader) {
+function hook_upgrade_hook_HOOK_NAME_alter(&$node) {
   global $_coder_upgrade_module_name;
 
   // Get the function object.
@@ -234,7 +234,7 @@ function hook_upgrade_hook_HOOK_NAME_alter(&$node, &$reader) {
  * @param $hook
  *   The name of the function (excluding the module name).
  */
-function hook_upgrade_hook_alter(&$node, &$reader, &$hook) {
+function hook_upgrade_hook_alter(&$node, &$hook) {
   global $_coder_upgrade_module_name;
 
   // Get the function object.
@@ -456,7 +456,7 @@ function your_module_name_upgrade_info() {
 /**
  * Implements hook_upgrade_call_FUNCTION_NAME_alter().
  */
-function your_module_name_upgrade_call_function_name_alter(&$node, &$reader) {
+function your_module_name_upgrade_call_function_name_alter(&$node) {
   // Get the function call object.
   $item = &$node->data;
 
@@ -472,7 +472,7 @@ function your_module_name_upgrade_call_function_name_alter(&$node, &$reader) {
 /**
  * Implements hook_upgrade_hook_HOOK_NAME_alter().
  */
-function your_module_name_upgrade_hook_hook_name_alter(&$node, &$reader) {
+function your_module_name_upgrade_hook_hook_name_alter(&$node) {
   global $_coder_upgrade_module_name;
 
   // Get the function object.
