@@ -87,7 +87,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
 
 function coder_upgrade_create_test_info($module_name, $module_path, $classlist) {
   $classes = array();
-  // dpm($classlist);
+  // // dpm($classlist);
   foreach ($classlist as $path => $class_nodes) {
     $is_test_file = pathinfo($path, PATHINFO_EXTENSION) == 'test';
     if ($is_test_file) {
@@ -102,7 +102,7 @@ function coder_upgrade_create_test_info($module_name, $module_path, $classlist) 
         $arrayitems = $nodeFinder->find($getInfo, function(Node $node) {
             return $node instanceof Node\Expr\ArrayItem;
         });
-        //dpm($arrayitems);
+        //// dpm($arrayitems);
 
         foreach ($arrayitems as $item) {
           $classes[$classname][$item->key->value] = $item->value->value;
@@ -146,20 +146,6 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $cur = file_get_contents($module_file);
     $new = $cur;
 
-    // Create reader object.
-    $reader = PGPReader::getInstance();
-    coder_upgrade_memory_print('create reader for file ' . $module_file);
-    // Set array formatting preference.
-    $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
-    // Set debug output preference.
-    $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
-    $reader->setSnippet($new);
-    coder_upgrade_memory_print('set snippet');
-    // $reader->addTokenNames();
-    coder_upgrade_memory_print('add token names');
-    // Parse code file.
-    $reader->buildGrammar();
-    coder_upgrade_memory_print('build grammar');
 
     $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
@@ -191,61 +177,21 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $factory = new BuilderFactory();
     $builder = $factory->function($module_name . '_autoload_info')->addStmt(new Node\Stmt\Return_($new_array))->getNode();
 
-    // dpm($builder);
+    // // dpm($builder);
     $class_function = array($builder);
     $stmts[] = $builder;
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $new = $prettyPrinter->prettyPrintFile($stmts);
 
-/*       
-    // Use the editor to set the function parameters.
-    $editor = PGPEditor::getInstance();
-    //  $editor->setParameters($function, $parameters);
-    $body_content = $editor->textToStatements(implode("\n", $strings))->getElement();
-
-    $body->insertLast($body_content);
-
-    // Set values for the new hook function.
-    $function_name = $module_name . '_autoload_info';
-
-    $function = new PGPClass($function_name);
-    $function->comment = $comment;
-    $function->type = T_FUNCTION;
-    $function->parameters = new PGPList();
-
-
-    $function->body = $body;
-
-    $nodes = &$reader->getFunctions();
-    $node = end($nodes);
-    $container = &$node->container;
-
-    // Insert the new function before the old function.
-    $container->insertAfter($node, $function, 'function');
-    // Insert a blank line.
-    $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
-
-    // Use writer to redo file.
-    $writer = PGPWriter::getInstance();
-    coder_upgrade_memory_print('create writer');
-
-    $new = $writer->toString($reader->getStatements());
-    // $new = $printer->printFormatPreserving($ast, $oldStmts, $oldTokens);
-
-    coder_upgrade_memory_print('writer->toString');
-
-    // Free up memory.
-    $reader->reset();
-    coder_upgrade_memory_print('reset reader');
- */  }
-    // Write the new file.
-    if ($new != $cur) {
-      if (file_put_contents($module_file, $new) === FALSE) {
-        coder_upgrade_log_print('File could not be written');
-      }
-      coder_upgrade_log_print('Replaced the file');
+  }
+  // Write the new file.
+  if ($new != $cur) {
+    if (file_put_contents($module_file, $new) === FALSE) {
+      coder_upgrade_log_print('File could not be written');
     }
+    coder_upgrade_log_print('Replaced the file');
+  }
 
 }
 
@@ -280,22 +226,6 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
 
   $settings = config('coder_upgrade.settings');
 
-  // Create reader object.
-  $reader = PGPReader::getInstance();
-  coder_upgrade_memory_print('create reader for file ' . $install_file);
-  // Set array formatting preference.
-  $reader->setPreserveArrayFormat($settings->get('coder_upgrade_preserve_array_format'));
-  // Set debug output preference.
-  $reader->setDebug($settings->get('coder_upgrade_enable_parser_debug_output'));
-  $reader->setSnippet($new);
-  coder_upgrade_memory_print('set snippet');
-  // $reader->addTokenNames();
-  coder_upgrade_memory_print('add token names');
-  // Parse code file.
-  $reader->buildGrammar();
-  coder_upgrade_memory_print('build grammar');
-
-
   $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
   try {
@@ -308,42 +238,20 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   $nodeFinder = new NodeFinder;
   $nodes = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Function_::class);
 
-  // $nodes = &$reader->getFunctions();
-  // if (!empty($nodes)) {
-    // foreach ($nodes as &$node) {
-      // $item = &$node->data;
-      // $name = &$item->name;
-      // if ($name == 'xxx') {
-        // $dummy = $node;
-      // }
-    // }
-  // }
-
   $config_data = $config->get();
 
   // If dynamic variables, create or update hook_install() implementation.
-  coder_upgrade_create_update_install($module_name, $reader, $nodes, $config_data, $stmts);
+  coder_upgrade_create_update_install($module_name, $nodes, $config_data, $stmts);
 
   // Create a hook_update_1000() implementation.
-  coder_upgrade_create_update_1000($module_name, $reader, $nodes, $config_data, $stmts);
+  coder_upgrade_create_update_1000($module_name, $nodes, $config_data, $stmts);
 
   // Create an hook_update_last_removed() implementation.
-  coder_upgrade_create_update_last_removed($module_name, $reader, $nodes, $stmts);
-
-  // if (!empty($dummy)) {
-    // $dummy->container->delete($dummy);
-  // }
+  coder_upgrade_create_update_last_removed($module_name, $nodes, $stmts);
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $new = $prettyPrinter->prettyPrintFile($stmts);
-    //dpm($new);
-
-
-  // Use writer to redo file.
-  $writer = PGPWriter::getInstance();
-  coder_upgrade_memory_print('create writer');
-  // $new = $writer->toString($reader->getStatements());
-  coder_upgrade_memory_print('writer->toString');
+    //// dpm($new);
 
   // Write the new file.
   if ($new != $cur) {
@@ -352,16 +260,11 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
     }
     coder_upgrade_log_print('Replaced the file');
   }
-
-  // Free up memory.
-  $reader->reset();
-  coder_upgrade_memory_print('reset reader');
 }
 
 
-function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $config_data, &$stmts) {
+function coder_upgrade_create_update_install($module_name, &$nodes, $config_data, &$stmts) {
   // Use the editor to set the function parameters.
-  $editor = PGPEditor::getInstance();
   $strings = array();
   $delstrings = array();
 
@@ -375,7 +278,7 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
       $line_matches[] = $matches[2];
     }
   }
-  dpm($config_data);
+  // dpm($config_data);
 
   $install_function = NULL;
   foreach ($nodes as &$node) {
@@ -430,34 +333,26 @@ function coder_upgrade_create_update_install($module_name, &$reader, &$nodes, $c
       $nop = new Nop();
       $nop->setDocComment($doc);
       array_push($item->stmts, $nop);
-    dpm($item);
+    // dpm($item);
     
     }
   }
 }
 
-function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $config_data, &$stmts) {
+function coder_upgrade_create_update_1000($module_name, &$nodes, $config_data, &$stmts) {
   // Use the editor to set the function parameters.
-  $editor = PGPEditor::getInstance();
   $strings = array();
   $delstrings = array();
 
-  $body = new PGPBody();
-
   $factory = new BuilderFactory();
   $builder = $factory->function($module_name . '_update_1000');
-
-
-  $string = "\$config = config('$module_name.settings');";
-  $body_content = $editor->textToStatements($string)->getElement(0);
-  $body->insertLast($body_content);
   
   $config_call = $factory->funcCall('config', array("$module_name.settings"));
   $builder->addStmt(new Assign(new Variable('config'), $config_call));
   
 
   foreach ($config_data as $key => $line) {
-    dpm($line);
+    // dpm($line);
     if ($line == 'array()') {
       // Check initialization with empty array.
       $string = "  \$config->set('$key', update_variable_get('$key', array()));";
@@ -473,22 +368,10 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
       $string = "  \$config->set('$key', update_variable_get('$key', '$line'));";
       $builder->addStmt($factory->funcCall('$config->set', array("$key", $factory->funcCall('update_variable_get', array("$key", $line)))));
     }
-    $body_content = $editor->textToStatements($string)->getElement(0);
-    $body->insertLast($body_content);
   }
-
-  $string = "\$config->save();";
-  $body_content = $editor->textToStatements($string)->getElement(0);
-  $body->insertLast($body_content);
-      // $builder->funcCall('$config->save', array());
-      $builder->addStmt($factory->funcCall('$config->save', array()));
-
-  $body->insertLast(CODER_UPGRADE_WHITESPACE, 'whitespace');
 
   foreach ($config_data as $key => $line) {
     $string = '  update_variable_del(\'' . $key . '\');';
-    $body_content = $editor->textToStatements($string)->getElement(0);
-    $body->insertLast($body_content);
       $builder->addStmt($factory->funcCall('update_variable_del', array($key)));
   }
 
@@ -501,35 +384,13 @@ function coder_upgrade_create_update_1000($module_name, &$reader, &$nodes, $conf
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $new = $prettyPrinter->prettyPrintFile(array($builder));
-    dpm($new);
+    // dpm($new);
 
     $stmts[] = $builder;
 
-  // Set values for the new hook function.
-  $comment = array(
-    'type' => T_DOC_COMMENT,
-    'value' => "/**\n * Migrate {$module_name} variables to config.\n */",
-  );
-  $function_name = $module_name . '_update_1000';
+}
 
-  $function = new PGPClass($function_name);
-  $function->comment = $comment;
-  $function->type = T_FUNCTION;
-  $function->parameters = new PGPList();
-
-
-  $function->body = $body;
-
-/*   $node = end($nodes);
-  $container = &$node->container;
-
-  // Insert the new function before the old function.
-  $container->insertAfter($node, $function, 'function');
-  // Insert a blank line.
-  $container->insertAfter($node, CODER_UPGRADE_WHITESPACE, 'whitespace');
- */}
-
-function coder_upgrade_create_update_last_removed($module_name, &$reader, &$nodes, &$stmts) {
+function coder_upgrade_create_update_last_removed($module_name, &$nodes, &$stmts) {
   $nps = array();
   $last_removed = '';
   if (!empty($nodes)) {
@@ -541,7 +402,7 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
           return TRUE;
         }
     });
-    dpm($nps);
+    // dpm($nps);
 
     if (!empty($nps)) {
       $last_removed = max(array_keys($nps));
@@ -560,7 +421,7 @@ function coder_upgrade_create_update_last_removed($module_name, &$reader, &$node
 
       $prettyPrinter = new PrettyPrinter\Standard();
       $new = $prettyPrinter->prettyPrintFile(array($builder));
-      dpm($new);
+      // dpm($new);
 
       $stmts[] = $builder;
 
@@ -592,24 +453,6 @@ function coder_upgrade_get_file_classes($file) {
   $classes = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Class_::class);
   $functions = $nodeFinder->findInstanceOf($stmts, Node\Stmt\Function_::class);
 
-/*   // Create reader object.
-  $reader = PGPReader::getInstance();
-  coder_upgrade_memory_print('create reader for file ' . $file);
-  // Set array formatting preference.
-  $reader->setPreserveArrayFormat($config->get('coder_upgrade_preserve_array_format'));
-  // Set debug output preference.
-  $reader->setDebug($config->get('coder_upgrade_enable_parser_debug_output'));
-  $reader->setSnippet($contents);
-  coder_upgrade_memory_print('set snippet');
-  // $reader->addTokenNames();
-  coder_upgrade_memory_print('add token names');
-  // Parse code file.
-  $reader->buildGrammar();
-  coder_upgrade_memory_print('build grammar');
-
-  $classes = &$reader->getClasses();
-  $functions = &$reader->getFunctions();
- */
   // $classes doesn't seem to hold any information about contained functions so
   // return both.
   if (!empty($classes)) {
