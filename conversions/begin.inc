@@ -8,6 +8,16 @@
  * Copyright 2009-11 by Jim Berry ("solotandem", http://drupal.org/user/240748)
  */
 
+use PhpParser\ParserFactory;
+use PhpParser\Node;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\NodeFinder;
+use PhpParser\Node\Stmt;
+use PhpParser\PrettyPrinter;
+use PhpParser\NodeVisitor\NameResolver;
+
+use PhpParser\NodeTraverser;
+
 /**
  * Implements hook_upgrade_begin_alter().
  *
@@ -118,6 +128,37 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
           $_coder_upgrade_module_name . '_menu',
         );
         $cur = file_get_contents($dirname . '/' . $filename);
+
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $nameResolver = new PhpParser\NodeVisitor\NameResolver;
+        $nodeTraverser = new PhpParser\NodeTraverser;
+        $nodeTraverser->addVisitor($nameResolver);
+        try {
+            $pstmts = $parser->parse($cur);
+            $stmts = $nodeTraverser->traverse($pstmts);
+            // $stmts is an array of statement nodes
+        } catch (Error $e) {
+            echo 'Parse Error: ', $e->getMessage();
+        }
+        $nodeFinder = new NodeFinder;
+        $nodes = $nodeFinder->find($stmts, function(Node $node) use ($_coder_upgrade_module_name) {
+            return $node instanceof Node\Stmt\Function_ && $node->name->toString() == $_coder_upgrade_module_name . '_theme';
+        });
+        if (!empty($nodes)) {
+          $prettyPrinter = new PhpParser\PrettyPrinter\Standard;
+          $newCode = $prettyPrinter->prettyPrint($nodes[0]->stmts);
+          dpm(@eval($newCode));
+          $module_theme = @eval($newCode);
+          dpm($module_theme, 'wala');
+          foreach ($module_theme as $key => &$value) {
+            $value['variables'] = isset($value['arguments']) ? $value['arguments'] : array();
+            unset($value['arguments']);
+  //              $module_theme[$key] = $value;
+          }
+          $_coder_upgrade_theme_registry = array_merge($_coder_upgrade_theme_registry, $module_theme);
+        }
+
+
         // Create reader object.
         $reader = PGPReader::getInstance();
         coder_upgrade_memory_print('create reader for file ' . $filename);
@@ -137,6 +178,7 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
 //          cdp("name = {$function->data->name}");
           if ($function->data->name == $_coder_upgrade_module_name . '_theme') {
             $module_theme = @eval($function->data->body->toString());
+            dpm($module_theme, 'wala');
             foreach ($module_theme as $key => &$value) {
               $value['variables'] = isset($value['arguments']) ? $value['arguments'] : array();
               unset($value['arguments']);
@@ -146,7 +188,8 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
 //            break 2;
           }
           elseif ($function->data->name == $_coder_upgrade_module_name . '_menu') {
-            coder_upgrade_convert_return($function->data->body, 'menu', '', 1, 1);
+            //coder_upgrade_convert_return($function->data->body, 'menu', '', 1, 1);
+            dpm($function->data->body->toString(), 'lpp');
 //            break 2;
           }
         }
