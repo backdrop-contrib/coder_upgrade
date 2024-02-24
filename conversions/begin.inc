@@ -25,7 +25,7 @@ use PhpParser\NodeTraverser;
  *   Array of a directory containing the files to convert.
  */
 function coder_upgrade_upgrade_begin_alter($item) {
-//  cdp("inside " . __FUNCTION__);
+  cdp("inside " . __FUNCTION__);
   global $_coder_upgrade_menu_registry;
   if (!$_coder_upgrade_menu_registry) {
     $_coder_upgrade_menu_registry = array();
@@ -82,7 +82,7 @@ function coder_upgrade_theme_build_registry() {
   // $hook_info = module_hook_info();
   foreach ($list as $module => $stuff) { // foreach (module_implements('theme') as $module) {
     module_load_include('module', $module);
-    if (module_hook($module, $hook)) { // || (isset($hook_info[$hook]['group']) && $include_file = module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']) && module_hook($module, $hook))) {
+    if (module_hook($module, $hook)) {
       _theme_process_registry($cache, $module, 'module', $module, $path = backdrop_get_path('module', $module));
     }
   }
@@ -147,9 +147,9 @@ function coder_upgrade_cache_info_hooks($item, $recursive = TRUE) {
         if (!empty($nodes)) {
           $prettyPrinter = new PhpParser\PrettyPrinter\Standard;
           $newCode = $prettyPrinter->prettyPrint($nodes[0]->stmts);
-          dpm(@eval($newCode));
+
           $module_theme = @eval($newCode);
-          dpm($module_theme, 'wala');
+
           foreach ($module_theme as $key => &$value) {
             $value['variables'] = isset($value['arguments']) ? $value['arguments'] : array();
             unset($value['arguments']);

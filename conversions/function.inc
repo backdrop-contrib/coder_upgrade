@@ -51,7 +51,7 @@ function coder_upgrade_upgrade_hook_update_N_alter(&$node) {
   cdp("inside " . __FUNCTION__);
 
   $item = &$node;
-  // dpm($item);
+
   $doc = new Doc("// TODO The old hook_update_N functions cannot be applied to Backdrop.");
   $item->setDocComment($doc);
   $item->stmts = array();

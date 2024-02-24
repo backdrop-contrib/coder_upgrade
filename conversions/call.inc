@@ -131,24 +131,16 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
     // Process function call.
     $item->name = new Name('config_get');
 
-    // $p1 = $item->args[0]->value->value;
     $temp = $_coder_upgrade_module_name . '.settings';
-    // $item->args[0]->value->value = "'" . $temp . "'";
-    // $item->args[0]->value->value = $temp;
-    // $item->args[1]->value->value = $variable;
 
     $builderFactory = new BuilderFactory();
     $args = $builderFactory->args(array($temp, $variable));
     $item->args = $args;
-
-    // $editor->setParameter($item, 0, "'" . $temp . "'");
-    // $editor->setParameter($item, 1, $p1);
   }
   else {
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
     $variable_data = coder_upgrade_drupal_variables($variable);
     if ($variable_data) {
-      // dpm($item->getAttribute('parent'));
       if ($variable_data['storage'] == 'to_config') {
         $storage = coder_upgrade_backdrop_configs($variable_data['variable']);
         // Now replace the variable_get with config.
@@ -157,33 +149,24 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
 
         $item->args[0]->value->value = $storage;
         $item->args[1]->value->value = $variable_data['variable'];
-        // $editor->setParameter($item, 0, "'" . $storage . "'");
-        // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
         $item->name = new Name('settings_get');
         $item->args[0]->value->value = $variable_data['variable'];
-        // $name['value'] = 'settings_get';
-        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
         $item->name = new Name('state_get');
         $item->args[0]->value->value = $variable_data['variable'];
-        // $name['value'] = 'state_get';
-        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       // @todo: setting comments on funCalls doesnt work?
       elseif ($variable_data['storage'] == 'removed') {
         // This variable was removed in Backdrop without replacement.
-        // $item->insertStatementBefore($statement);
         $statement = "// TODO This variable was removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
       }
       elseif ($variable_data['storage'] == 'unknown') {
         // This variable is a known Drupal variable but we're not sure about it.
-        // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-        // $item->insertStatementBefore($statement);
         $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
@@ -194,8 +177,6 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
       $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
       $doc = new Doc($statement);
       $item->getAttribute('parent')->getAttribute('parent')->setDocComment($doc);
-      // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-      // $item->insertStatementBefore($statement);
     }
   }
 }
@@ -226,15 +207,9 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
     $item->name = new Name('config_set');
 
     $temp = $_coder_upgrade_module_name . '.settings';
-    // dpm($item->args);
-    // $item->args[0]->value->value = $temp;
-    // $item->args[1]->value->value = $p0;
     $builderFactory = new BuilderFactory();
     $args = $builderFactory->args(array($temp, $p0, $p1));
     $item->args = $args;
-    // $editor->setParameter($item, 0, "'" . $temp . "'");
-    // $editor->setParameter($item, 1, $p0);
-    // $editor->setParameter($item, 2, $p1);
   }
   else {
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
@@ -245,44 +220,32 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
         // Now replace the variable_del with config.
         // Process function call.
         $item->name = new Name('config_set');
-        // $name['value'] = 'config_set';
 
         $builderFactory = new BuilderFactory();
         $args = $builderFactory->args(array($storage, $variable_data['variable'], $p1));
         $item->args = $args;
-        // $editor->setParameter($item, 0, "'" . $storage . "'");
-        // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
-        // $editor->setParameter($item, 2, $p1);
       }
       elseif ($variable_data['storage'] == 'to_states') {
         $item->name = new Name('state_set');
-        // $name['value'] = 'state_set';
         $item->args[0]->value->value = $variable_data['variable'];
-        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
         // This variable is a settings variable and cannot be set.
         $statement = "// TODO In Backdrop this variable is a settings variable and cannot be set, only retrieved.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO In Backdrop this variable is a settings variable and cannot be set, only retrieved.");
-        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'removed') {
         // This variable was removed in Backdrop without replacement.
         $statement = "// TODO This variable was removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
-        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'unknown') {
         // This variable is a known Drupal variable but we're not sure about it.
         $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-        // $item->insertStatementBefore($statement);
       }
     }
     else {
@@ -290,8 +253,6 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
         $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-      // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-      // $item->insertStatementBefore($statement);
     }
   }
 }
@@ -325,8 +286,6 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
     $builderFactory = new BuilderFactory();
     $args = $builderFactory->args(array($temp, $p0));
     $item->args = $args;
-    // $editor->setParameter($item, 0, "'" . $temp . "'");
-    // $editor->setParameter($item, 1, $p0);
   }
   else {
     module_load_include('inc', 'coder_upgrade', 'includes/variables');
@@ -341,38 +300,28 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
         $builderFactory = new BuilderFactory();
         $args = $builderFactory->args(array($storage, $variable_data['variable']));
         $item->args = $args;
-        // $editor->setParameter($item, 0, "'" . $storage . "'");
-        // $editor->setParameter($item, 1, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_states') {
-        // $name['value'] = 'state_del';
         $item->name = new Name('state_del');
         $item->args[0]->value->value = $variable_data['variable'];
-        // $editor->setParameter($item, 0, "'" . $variable_data['variable'] . "'");
       }
       elseif ($variable_data['storage'] == 'to_settings') {
         // This variable is a settings variable and cannot be deleted.
         $statement = "// TODO In Backdrop this variable is a settings variable and cannot be deleted, only retrieved.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO In Backdrop this variable is a settings variable and cannot be deleted, only retrieved.");
-        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'removed') {
         // This variable was removed in Backdrop without replacement.
         $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO This variable was removed in Backdrop without replacement.");
-        // $item->insertStatementBefore($statement);
       }
       elseif ($variable_data['storage'] == 'unknown') {
         // This variable is a known Drupal variable but we're not sure about it.
         $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
         $doc = new Doc($statement);
         $item->getAttribute('parent')->setDocComment($doc);
-        // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-        // $item->insertStatementBefore($statement);
       }
     }
     else {
@@ -380,8 +329,6 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
       $statement = "// TODO This variable was probably removed in Backdrop without replacement.";
       $doc = new Doc($statement);
       $item->getAttribute('parent')->setDocComment($doc);
-      // $statement = $editor->commentToStatement("// TODO This variable was probably removed in Backdrop without replacement.");
-      // $item->insertStatementBefore($statement);
     }
   }
 }
@@ -396,16 +343,12 @@ function coder_upgrade_upgrade_call_system_settings_form_alter(&$node) { // DONE
   $item = &$node;
   // Get the string used to represent the form (usually "$form") by checking the
   // parameter in system_settings_form return call.
-  // dpm($item->args);
   $form = $item->args[0]->value->name;
 
   // Now search for the first occurence of this string.
   $parent = $item->getAttribute('parent')->getAttribute('parent');
   $nodeFinder = new NodeFinder;
-  //$class = $nodeFinder->findFirstInstanceOf($parent, Node\expr\funcCall);
-  // $first_node = $nodeFinder->find($parent->stmts, function (\PhpParser\Node $subNode) use ($form) {
-      // return $subNode instanceof \PhpParser\Node\Expr\Assign && ((isset($subNode->var->name) && $subNode->var->name == $form);
-  // });
+
   $first_node = $nodeFinder->findFirst($parent->stmts, function (\PhpParser\Node $subNode) use ($form) {
       return $subNode instanceof \PhpParser\Node\Expr\Assign
       && ((isset($subNode->var->name) && $subNode->var->name == $form)

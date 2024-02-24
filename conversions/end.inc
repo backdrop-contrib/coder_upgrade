@@ -102,24 +102,10 @@ function coder_upgrade_create_test_info($module_name, $module_path, $classlist) 
         $arrayitems = $nodeFinder->find($getInfo, function(Node $node) {
             return $node instanceof Node\Expr\ArrayItem;
         });
-        //// dpm($arrayitems);
 
         foreach ($arrayitems as $item) {
           $classes[$classname][$item->key->value] = $item->value->value;
         }
-          
-          // if ($function->data->name == 'getInfo') {
-            // $body = $function->data->body;
-            // $editor = PGPEditor::getInstance();
-            // $nodes = $body->searchAll('PGPFunctionCall', 'name', 'value', 'return', TRUE);
-            // $return = reset($nodes);
-            // $string = $return->data->getParameter()->toString();
-            // $array = eval("return $string;");
-            // if (isset($function->container->parent->data->name)) {
-              // $classes[$function->container->parent->data->name]['info'] = $array;
-            // }
-          // }
-        // }
       }
     }
   }
@@ -153,7 +139,6 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
             'startTokenPos', 'endTokenPos',
         ],
     ]);
-    // $parser = new Parser\Php7($lexer);
 
     $traverser = new NodeTraverser;
     $traverser->addVisitor(new CloningVisitor());
@@ -183,13 +168,11 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
         }
       }
     }
-    // $strings[] = ');';
 
     $new_array = new Array_($info_array);
     $factory = new BuilderFactory();
     $builder = $factory->function($module_name . '_autoload_info')->addStmt(new Node\Stmt\Return_($new_array))->getNode();
 
-    // // dpm($builder);
     $class_function = array($builder);
     $stmts[] = $builder;
 
@@ -302,12 +285,10 @@ function coder_upgrade_create_update_install($module_name, &$nodes, $config_data
       $line_matches[] = $matches[2];
     }
   }
-  // dpm($config_data);
 
   $install_function = NULL;
   foreach ($nodes as &$node) {
     $item = &$node;
-    // $name = &$item->name;
     $name = $node->name->toString();
     if ($name == $module_name . '_install') {
       $install_function = &$node;
@@ -319,12 +300,6 @@ function coder_upgrade_create_update_install($module_name, &$nodes, $config_data
 
     $factory = new BuilderFactory();
     $builder = $factory->function($module_name . '_install');
-
-    // $body = new PGPBody();
-
-    // $string = "// Dynamically generated variable data was detected.";
-    // $body_content = $editor->commentToStatement($string);
-    // $body->insertLast($body_content);
 
     foreach ($line_matches as $match) {
       $doc = new Doc('// ' . $match);
@@ -346,7 +321,6 @@ function coder_upgrade_create_update_install($module_name, &$nodes, $config_data
     $body = &$item->stmts;
 
     $string = "// Dynamically generated variable data was detected on the following lines.";
-    // $body[] = new Node\Scalar\String_($string);
       $doc = new Doc($string);
       $nop = new Nop();
       $nop->setDocComment($doc);
@@ -356,9 +330,7 @@ function coder_upgrade_create_update_install($module_name, &$nodes, $config_data
       $doc = new Doc('//' . $match);
       $nop = new Nop();
       $nop->setDocComment($doc);
-      array_push($item->stmts, $nop);
-    // dpm($item);
-    
+      array_push($item->stmts, $nop);    
     }
   }
 }
@@ -376,7 +348,6 @@ function coder_upgrade_create_update_1000($module_name, &$nodes, $config_data, &
   
 
   foreach ($config_data as $key => $line) {
-    // dpm($line);
     if ($line == 'array()') {
       // Check initialization with empty array.
       $string = "  \$config->set('$key', update_variable_get('$key', array()));";
@@ -408,7 +379,6 @@ function coder_upgrade_create_update_1000($module_name, &$nodes, $config_data, &
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $new = $prettyPrinter->prettyPrintFile(array($builder));
-    // dpm($new);
 
     $stmts[] = $builder;
 
@@ -426,7 +396,6 @@ function coder_upgrade_create_update_last_removed($module_name, &$nodes, &$stmts
           return TRUE;
         }
     });
-    // dpm($nps);
 
     if (!empty($nps)) {
       $last_removed = max(array_keys($nps));
@@ -445,10 +414,8 @@ function coder_upgrade_create_update_last_removed($module_name, &$nodes, &$stmts
 
       $printer = new CoderUpgradePrettyPrinterStandard();
       $new = $printer->prettyPrintFile(array($builder));
-      // dpm($new);
 
       $stmts[] = $builder;
-
     }
   }
 }

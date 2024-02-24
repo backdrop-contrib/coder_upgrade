@@ -299,7 +299,6 @@ function coder_upgrade_conversions_apply($form_state) {
   list($upgrades, $extensions, $items) = coder_upgrade_conversions_prepare($form_state);
 
   // Apply conversion routines.
-//   module_load_include('inc', 'coder_upgrade', 'includes/main');
   if (config_get('coder_upgrade.settings', 'coder_upgrade_use_separate_process')) {
     // Conversion routines will be run in a separate process.
     backdrop_set_message(t('Module conversion routines will run in a separate process.'));

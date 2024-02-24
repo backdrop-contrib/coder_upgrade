@@ -43,7 +43,6 @@ use PhpParser\NodeVisitor\CloningVisitor;
 function coder_upgrade_start($upgrades, $extensions, $items, $recursive = TRUE) {
   // Declare global variables.
   global $_coder_upgrade_log, $_coder_upgrade_debug, $_coder_upgrade_module_name, $_coder_upgrade_module_human_name, $_coder_upgrade_replace_files, $_coder_upgrade_class_files;
-//  global $_coder_upgrade_dirname; // Not used.
 
   // Check lists in case this function is called apart from form submit.
   if (!is_array($upgrades) || empty($upgrades)) {
@@ -381,7 +380,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
           'startTokenPos', 'endTokenPos',
       ],
   ]);
-  // $parser = new Parser\Php7($lexer);
 
   $traverser = new NodeTraverser;
   $traverser->addVisitor(new ParentConnectingVisitor);
@@ -390,8 +388,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $traverser->addVisitor($nameResolver);
 
   $printer = new CoderUpgradePrettyPrinterStandard();
-
-
 
   $parser = new Php7($lexer);
   try {
@@ -403,9 +399,6 @@ function coder_upgrade_apply_parser($filename, &$new) {
       echo "Parse error: {$error->getMessage()}\n";
       return;
   }
-
-  // $dumper = new NodeDumper;
-  // dpm($dumper->dump($ast));
 
   coder_upgrade_memory_print('build grammar');
 
@@ -420,14 +413,12 @@ function coder_upgrade_apply_parser($filename, &$new) {
   // Apply parser conversion routines for function calls.
   coder_upgrade_log_print("Calling hook_upgrade_call_alter");
   coder_upgrade_convert_function_calls($ast);
-  // tester_coder_upgrade_convert_function_calls($ast);
   coder_upgrade_log_print("Completed hook_upgrade_call_alter");
   coder_upgrade_memory_print('apply function call conversions');
 
   // Apply parser conversion routines for hook functions.
   coder_upgrade_log_print("Calling hook_upgrade_hook_alter");
   coder_upgrade_convert_functions($ast);
-  // tester_coder_upgrade_convert_functions($ast);
   coder_upgrade_log_print("Completed hook_upgrade_hook_alter");
   coder_upgrade_memory_print('apply hook function conversions');
 
@@ -445,15 +436,10 @@ function coder_upgrade_apply_parser($filename, &$new) {
     coder_upgrade_memory_print('apply install file conversions');
   }
 
-  // $prettyPrinter = new PrettyPrinter\Standard();
-  // dpm($prettyPrinter->prettyPrintFile($ast));
-
-
   // Use writer to redo file.
   coder_upgrade_memory_print('create writer');
 
   $new = $printer->printFormatPreserving($ast, $oldStmts, $oldTokens);
-
 
   coder_upgrade_memory_print('writer->toString');
 
