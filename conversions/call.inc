@@ -57,7 +57,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
 
     $prettyPrinter = new PrettyPrinter\Standard();
     $variable = $prettyPrinter->prettyPrintExpr($item->args[0]->value);
-    $variable2 = $prettyPrinter->prettyPrintExpr($item->args[1]->value);
+    $variable2 = !empty($item->args[1]->value) ? $prettyPrinter->prettyPrintExpr($item->args[1]->value) : NULL;
 
     $variable = str_replace('.', '-', $variable);
     $variable = str_replace(array("'", '"', ' '), '', $variable);
