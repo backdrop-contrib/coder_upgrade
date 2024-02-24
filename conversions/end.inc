@@ -80,7 +80,7 @@ function coder_upgrade_upgrade_end_alter($dirname) {
 
       // Creates a config directory and file if there were variable to config
       // conversions.
-      //coder_upgrade_build_config_files($module_path, $module_name, $config); // todo
+      coder_upgrade_build_config_files($module_path, $module_name, $config); // todo
     }
   }
 }
