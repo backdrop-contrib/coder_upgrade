@@ -146,19 +146,31 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $cur = file_get_contents($module_file);
     $new = $cur;
 
+    $lexer = new Lexer\Emulative([
+        'usedAttributes' => [
+            'comments',
+            'startLine', 'endLine',
+            'startTokenPos', 'endTokenPos',
+        ],
+    ]);
+    // $parser = new Parser\Php7($lexer);
 
-    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+    $traverser = new NodeTraverser;
+    $traverser->addVisitor(new CloningVisitor());
+
+    $printer = new PrettyPrinter\Standard();
+
+    $parser = new Php7($lexer);
 
     try {
-        $stmts = $parser->parse($new);
-        // $stmts is an array of statement nodes
-    } catch (Error $e) {
-        echo 'Parse Error: ', $e->getMessage();
+      $oldStmts = $parser->parse($new);
+      $oldTokens = $lexer->getTokens();
+
+      $stmts = $traverser->traverse($oldStmts);
+    } catch (Error $error) {
+        echo "Parse error: {$error->getMessage()}\n";
+        return;
     }
-
-
-    // $body = new PGPBody();
-
 
     $info_array = array();
     foreach ($classes as $path => $class_nodes) {
@@ -181,8 +193,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $class_function = array($builder);
     $stmts[] = $builder;
 
-    $prettyPrinter = new PrettyPrinter\Standard();
-    $new = $prettyPrinter->prettyPrintFile($stmts);
+    $new = $printer->printFormatPreserving($stmts, $oldStmts, $oldTokens);
 
   }
   // Write the new file.
@@ -226,13 +237,28 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
 
   $settings = config('coder_upgrade.settings');
 
-  $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+  $lexer = new Lexer\Emulative([
+      'usedAttributes' => [
+          'comments',
+          'startLine', 'endLine',
+          'startTokenPos', 'endTokenPos',
+      ],
+  ]);
 
+  $traverser = new NodeTraverser;
+  $traverser->addVisitor(new CloningVisitor());
+
+  $printer = new PrettyPrinter\Standard();
+
+  $parser = new Php7($lexer);
   try {
-      $stmts = $parser->parse($new);
-      // $stmts is an array of statement nodes
-  } catch (Error $e) {
-      echo 'Parse Error: ', $e->getMessage();
+    $oldStmts = $parser->parse($new);
+    $oldTokens = $lexer->getTokens();
+
+    $stmts = $traverser->traverse($oldStmts);
+  } catch (Error $error) {
+      echo "Parse error: {$error->getMessage()}\n";
+      return;
   }
 
   $nodeFinder = new NodeFinder;
@@ -249,9 +275,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   // Create an hook_update_last_removed() implementation.
   coder_upgrade_create_update_last_removed($module_name, $nodes, $stmts);
 
-    $prettyPrinter = new PrettyPrinter\Standard();
-    $new = $prettyPrinter->prettyPrintFile($stmts);
-    //// dpm($new);
+  $new = $printer->printFormatPreserving($stmts, $oldStmts, $oldTokens);
 
   // Write the new file.
   if ($new != $cur) {
