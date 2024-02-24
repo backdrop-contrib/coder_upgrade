@@ -389,7 +389,7 @@ function coder_upgrade_apply_parser($filename, &$new) {
   $nameResolver = new NameResolver;
   $traverser->addVisitor($nameResolver);
 
-  $printer = new PrettyPrinter\Standard();
+  $printer = new CoderUpgradePrettyPrinterStandard();
 
 
 

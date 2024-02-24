@@ -190,3 +190,9 @@ function coder_upgrade_build_config_function($node, &$asts) {
   $asts[] = $builder;
 
 }
+
+function coder_upgrade_autoload_info() {
+  return array(
+    'CoderUpgradePrettyPrinterStandard' => 'CoderUpgradePrettyPrinterStandard.inc',
+  );
+}

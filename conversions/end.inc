@@ -158,7 +158,7 @@ function coder_upgrade_create_autoload($module_name, $module_path, $classes) {
     $traverser = new NodeTraverser;
     $traverser->addVisitor(new CloningVisitor());
 
-    $printer = new PrettyPrinter\Standard();
+    $printer = new CoderUpgradePrettyPrinterStandard();
 
     $parser = new Php7($lexer);
 
@@ -248,7 +248,7 @@ function coder_upgrade_install_file($module_name, $install_file, $config) {
   $traverser = new NodeTraverser;
   $traverser->addVisitor(new CloningVisitor());
 
-  $printer = new PrettyPrinter\Standard();
+  $printer = new CoderUpgradePrettyPrinterStandard();
 
   $parser = new Php7($lexer);
   try {
@@ -443,8 +443,8 @@ function coder_upgrade_create_update_last_removed($module_name, &$nodes, &$stmts
 
       $builder = $builder->getNode();
 
-      $prettyPrinter = new PrettyPrinter\Standard();
-      $new = $prettyPrinter->prettyPrintFile(array($builder));
+      $printer = new CoderUpgradePrettyPrinterStandard();
+      $new = $printer->prettyPrintFile(array($builder));
       // dpm($new);
 
       $stmts[] = $builder;
