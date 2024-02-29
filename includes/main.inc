@@ -487,7 +487,6 @@ function coder_upgrade_convert_function_calls(&$asts) {
         // TODO The alter hooks can get the $reader from PGPReader::getInstance();
         // We could do the same in this function.
       // 
-      }
     }
   }
 }
