@@ -43,7 +43,7 @@ function coder_upgrade_upgrade_call_alter(&$node, $name) { // NEEDS WORK
 /**
  * Implements hook_upgrade_call_variable_get_alter().
  */
-function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
+function coder_upgrade_upgrade_call_variable_get_alter(&$node, &$asts) { // DONE
   // Create helper objects.
 
   // Get the function call object.
@@ -184,7 +184,7 @@ function coder_upgrade_upgrade_call_variable_get_alter(&$node) { // DONE
 /**
  * Implements hook_upgrade_call_variable_set_alter().
  */
-function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
+function coder_upgrade_upgrade_call_variable_set_alter(&$node, &$asts) { // DONE
   // Create helper objects.
 
   // Get the function call object.
@@ -260,7 +260,7 @@ function coder_upgrade_upgrade_call_variable_set_alter(&$node) { // DONE
 /**
  * Implements hook_upgrade_call_variable_del_alter().
  */
-function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
+function coder_upgrade_upgrade_call_variable_del_alter(&$node, &$asts) { // DONE
   // Create helper objects.
 
   // Get the function call object.
@@ -336,7 +336,7 @@ function coder_upgrade_upgrade_call_variable_del_alter(&$node) { // DONE
 /**
  * Implements hook_upgrade_call_system_settings_form_alter().
  */
-function coder_upgrade_upgrade_call_system_settings_form_alter(&$node) { // DONE
+function coder_upgrade_upgrade_call_system_settings_form_alter(&$node, &$asts) { // DONE
   // Create helper objects.
   global $_coder_upgrade_module_name;
 
@@ -345,11 +345,20 @@ function coder_upgrade_upgrade_call_system_settings_form_alter(&$node) { // DONE
   // parameter in system_settings_form return call.
   $form = $item->args[0]->value->name;
 
-  // Now search for the first occurence of this string.
+  // Find the parent function.
   $parent = $item->getAttribute('parent')->getAttribute('parent');
+  $parent_function = NULL;
+  foreach ($asts as $ast_key => $ast) {
+    if ($ast->name->toString() == $parent->name->toString()) {
+      $parent_function = $ast;
+      break;
+    }
+  }
+
   $nodeFinder = new NodeFinder;
 
-  $first_node = $nodeFinder->findFirst($parent->stmts, function (\PhpParser\Node $subNode) use ($form) {
+  // Now search for the first occurence of this string.
+  $first_node = $nodeFinder->findFirst($parent_function->stmts, function (\PhpParser\Node $subNode) use ($form) {
       return $subNode instanceof \PhpParser\Node\Expr\Assign
       && ((isset($subNode->var->name) && $subNode->var->name == $form)
       || (isset($subNode->var->var->name) && $subNode->var->var->name == $form));
@@ -359,19 +368,15 @@ function coder_upgrade_upgrade_call_system_settings_form_alter(&$node) { // DONE
   $assign = new Expression(new Assign($var, $assignee));
 
   // Find where the first node is in the parent statements.
-  $key = array_search($first_node->getAttribute('parent'), $parent->stmts);
+  $key = array_search($first_node->getAttribute('parent'), $parent_function->stmts);
 
   // If the form was initialized with an empty array, put our new '#config' key
   // after that, otherwise before.
-  // @todo: this gives an error: 
-  // ERROR: assert(): assert($itemStartPos >= 0 && $itemEndPos >= 0) failed on line 868 in C:\wamp64\www\backdrop\modules\coder_upgrade\PhpParser\PrettyPrinterAbstract.php (Warning)
-
-
-  // if ($first_node->expr->items == array()) {
-    // array_splice($parent->stmts, ($key + 1), 0, array($assign));
-  // }
-  // else {
-    // array_splice($parent->stmts, $key, 0, array($assign));
-  // }
+  if ($first_node->expr->items == array()) {
+    array_splice($parent_function->stmts, ($key + 1), 0, array($assign));
+  }
+  else {
+    array_splice($parent_function->stmts, $key, 0, array($assign));
+  }
 }
 

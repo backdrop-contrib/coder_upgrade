@@ -477,7 +477,7 @@ function coder_upgrade_convert_function_calls(&$asts) {
       // if (is_array($item->name) && in_array($item->name['type'], $types)) {
         // If name is an object, then it is a variable expression that is not
         // 'alterable' in the traditional sense.
-        backdrop_alter('upgrade_call_' . $name, $node);
+        backdrop_alter('upgrade_call_' . $name, $node, $asts);
       // }
 
       // if (is_array($item->name) && in_array($item->name['type'], $types)) {
