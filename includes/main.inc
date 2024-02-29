@@ -462,30 +462,33 @@ function coder_upgrade_convert_function_calls(&$asts) {
   $nodes = $nodeFinder->findInstanceOf($ast, Node\expr\funcCall::class);
 
   foreach ($nodes as &$node) {
-    $name = $node->name->toString();
+    if ($node->name instanceof PhpParser\Node\Name\FullyQualified) {
+      $name = $node->name->toString();
 
-    // If need to change other statements that we build as a function call,
-    // then modify the next line. Others: eval, empty, unset, print, throw.
+      // If need to change other statements that we build as a function call,
+      // then modify the next line. Others: eval, empty, unset, print, throw.
 
-    // @todo: PHPParser funcCall only finds T_STRING names it seems; The Others
-    // like T_REQUIRE might need Node\expr\Include_::class. But we only seem
-    // to have alter hooks for strings in this module anyway, so leaving off
-    // the type checking for now.
+      // @todo: PHPParser funcCall only finds T_STRING names it seems; The Others
+      // like T_REQUIRE might need Node\expr\Include_::class. But we only seem
+      // to have alter hooks for strings in this module anyway, so leaving off
+      // the type checking for now.
 
-    // $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
-    // if (is_array($item->name) && in_array($item->name['type'], $types)) {
-      // If name is an object, then it is a variable expression that is not
-      // 'alterable' in the traditional sense.
-      backdrop_alter('upgrade_call_' . $name, $node);
-    // }
+      // $types = array(T_STRING, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE);
+      // if (is_array($item->name) && in_array($item->name['type'], $types)) {
+        // If name is an object, then it is a variable expression that is not
+        // 'alterable' in the traditional sense.
+        backdrop_alter('upgrade_call_' . $name, $node);
+      // }
 
-    // if (is_array($item->name) && in_array($item->name['type'], $types)) {
-      // Set name because only variables may be passed by reference.
-      // $name = $item->name['value'];
-      backdrop_alter('upgrade_call', $node, $name);
-      // TODO The alter hooks can get the $reader from PGPReader::getInstance();
-      // We could do the same in this function.
-    // }
+      // if (is_array($item->name) && in_array($item->name['type'], $types)) {
+        // Set name because only variables may be passed by reference.
+        // $name = $item->name['value'];
+        backdrop_alter('upgrade_call', $node, $name);
+        // TODO The alter hooks can get the $reader from PGPReader::getInstance();
+        // We could do the same in this function.
+      // 
+      }
+    }
   }
 }
 
