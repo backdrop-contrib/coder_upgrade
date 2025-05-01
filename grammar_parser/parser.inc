@@ -409,7 +409,7 @@ class PGPParser {
    *
    * @see set_exception_handler
    */
-  protected function exceptionHandler($exception) {
+  public function exceptionHandler($exception) {
     $backtrace = $exception->getTrace();
     // Push on top of the backtrace the call that generated the exception.
     array_unshift($backtrace, array(
